@@ -1,0 +1,23 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Create
+       [FileStreamFileGroup] (Filegroup)
+       [dbo].[brand] (Table)
+       [dbo].[campaign_type] (Table)
+       [dbo].[category] (Table)
+       [dbo].[territory] (Table)
+       Default Constraint on [dbo].[brand].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[campaign_type].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[category].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[territory].[create_ts] (Default Constraint)
+
+** Supporting actions

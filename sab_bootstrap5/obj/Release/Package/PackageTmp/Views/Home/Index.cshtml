@@ -1,0 +1,240 @@
+@using BootstrapSupport
+@model Models.HomeModel 
+@Html.Partial("_SecurityCheck") 
+<div class="row bufferBottom20">
+    <div class="span10">
+        <img src="~/Content/images/welcome.png" class="width100pc" />
+    </div>
+    <div class="span2">
+        <img src="~/Content/images/scene.png" class="pull-right" />
+    </div>
+</div>
+<h4>What would you like to do?</h4>
+<div class="row">
+    <div class="span4">
+        <h5 class="green-bg">View <small class="text-whitesmoke">recently added content</small></h5>
+        <h5 class="yellow-bg">Recent <small class="text-black">(1 month)</small></h5>
+        <table id="thisweek_table" class="table">
+            <tbody>
+            @foreach (var campaign in Model.RecentDocuments)
+             {
+                 <tr>
+                     <td colspan="3">
+                         <strong>
+                             @if(campaign.IsOwnedByCurrentUser())
+                             {
+                                 <a href='~/Home/EditCampaign?campaign_id=@campaign.Id'>@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</a>
+                             }
+                             else
+                             {
+                                 <span>@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</span>
+                             }              
+                         </strong>
+                         <span class="pull-right"><strong>@Html.Raw(campaign.Uploaded.GetValueOrDefault().ToString("dd/MM/yyyy"))</strong></span>
+                     </td>
+                 </tr>
+                 foreach (var file in campaign.Documents)
+                 {
+                     <tr>
+                         <td><img src="@Url.Content(String.Format("~/Content/images/32/{0}.png", file.DocumentType))" /></td>
+                         <td>@Html.Raw(file.FileName)</td>
+                         <td>@Html.ActionLink("Open", "ViewDocument", "Home", new {@campaign_id = campaign.Id, @document_id = "0"}, new {@class = "btn pull-right"})</td>
+                     </tr>
+                 }
+             }    
+            </tbody>
+        </table>
+        <h5 class="green-bg">Search Results <small class="text-whitesmoke"> of campaigns based upon your search criteria</small></h5>
+        <h5 class="yellow-bg">Selection <small class="text-black">(Mainstream, Affordable, Opaque, Style, Promotion, Kilimanjaro)</small></h5>
+        <table id="thismonth_table" class="table">
+            <tbody>
+             @{int m = 0;}
+             @foreach (var campaign in Model.SearchDocuments)
+             {
+                 ViewData["document_" + m.ToString()] = campaign;
+                 <tr>
+                     <td colspan="3">
+                         <strong>
+                             @if(campaign.IsOwnedByCurrentUser())
+                             {
+                                 <a href='~/Home/EditCampaign'>@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</a>
+                             }
+                             else
+                             {
+                                 <span>@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</span>
+                             }
+                         </strong>
+                         <span class="pull-right"><strong>@Html.Raw(campaign.Uploaded.GetValueOrDefault().ToString("dd/MM/yyyy"))</strong></span>
+                     </td>
+                 </tr>
+                 m++;
+
+                 foreach (var file in campaign.Documents)
+                 {
+                     <tr>
+                         <td><img src="@Url.Content(String.Format("~/Content/images/32/{0}.png", file.DocumentType))" /></td>
+                         <td>@Html.Raw(file.FileName)</td>
+                         <td>@Html.ActionLink("Open", "ViewDocument", "Home", new {@campaign_id = campaign.Id, @document_id = "0"}, new {@class = "btn pull-right"})</td>
+                     </tr>
+                 }
+             }    
+            </tbody>
+        </table>
+    </div>
+    <div class="span4">
+        <h5 class="green-bg">Search <small class="text-whitesmoke">for Context by filtering</small></h5>
+        @using (Html.BeginForm("Search", "Home", FormMethod.Post))
+        {
+            @Html.ValidationSummary(false)
+            <fieldset class="form-horizontal">
+                @using(Html.ControlGroupFor("Search")){
+                    @Html.Label("Enter Search Word", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.EditorFor(x => x.Search.Search)
+                        </div>
+                }
+
+                <!--<div><u>Search by Category</u></div>-->
+                @*foreach (var category in Model.Lookup.Categories)
+                {
+                    <div class="controls">
+                    @Html.RadioButtonFor(x => x.Upload.Category, category.Value, new { id = "upload_category_" + i })       
+                    @category.Text
+                    </div>
+                }*@
+                
+                <div><u>Search by Territory</u></div>
+                @for (int tindex = 0; tindex < Model.Search.Territories.Count(); tindex++)
+                {
+                    <div class="controls">
+                        @Html.HiddenFor(model => model.Search.Territories[tindex].Id)
+                        @Html.CheckBoxFor(model => model.Search.Territories[tindex].IsChecked)     
+                        @Model.Search.Territories[tindex].Name  
+                    </div>
+                }
+
+                <div><u>Search Theme Of Campaign</u></div>
+                @for (int tcindex = 0; tcindex < Model.Search.CampaignTypes.Count(); tcindex++)
+                {
+                    <div class="controls">
+                        @Html.CheckBoxFor(model => model.Search.CampaignTypes[tcindex].IsChecked)     
+                        @Model.Search.CampaignTypes[tcindex].Name  
+                    </div>
+                }
+
+                <div><u>Search Brand</u></div>
+                @using(Html.ControlGroupFor("Brand")){
+                    @Html.Label("", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.DropDownListFor(
+                                model => model.Search.Brand,
+                                Model.Lookup.Brands, 
+                                "Select Brand"
+                            )
+                            @Html.ValidationMessage("Brand", null, new { @class = "help-inline" })
+                        </div>
+                }
+
+                <div><u>Search Country</u></div>
+                @using(Html.ControlGroupFor("Country")){
+                    @Html.Label("", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.DropDownListFor(
+                                model => model.Search.Country,
+                                Model.Lookup.Countries, 
+                                "Select Country"
+                            )
+                            @Html.ValidationMessage("Country", null, new { @class = "help-inline" })
+                        </div>
+                }
+            
+		        <div>
+                    <input type="submit" class="btn btn-primary pull-right" value="Search" />
+                  </div>
+            </fieldset>
+        }
+    </div>
+    <div class="span4">
+        <h5 class="green-bg">Upload <small class="text-whitesmoke">your content to share with others</small></h5>
+        <h5 class="yellow-bg">Please complete the following before uploading <small class="text-black"></small></h5>
+        @{int i = 0;}
+        @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(false)
+            <fieldset class="form-horizontal">
+                
+                
+                <!--<div><u>Select a Category</u></div>-->
+                @*foreach (var category in Model.Lookup.Categories)
+                {
+                    <div class="controls">
+                    @Html.RadioButtonFor(x => x.Upload.Category, category.Value, new { id = "upload_category_" + i })       
+                    @category.Text
+                    </div>
+                }*@
+                
+                <div><u>Select a Territory</u></div>
+                @foreach (var territory in Model.Lookup.Territories)
+                {
+                    <div class="controls">
+                    @Html.RadioButtonFor(x => x.Upload.TerritoryId, territory.Value, new { id = "upload_territory_" + i })       
+                    @territory.Text
+                    </div>
+                }
+
+                <div><u>Select Theme of Campaign</u></div>
+                @foreach (var campaign in Model.Lookup.CampaignTypes)
+                {
+                    <div class="controls">
+                    @Html.RadioButtonFor(x => x.Upload.CampaignTypeId, campaign.Value, new { id = "upload_campaign_" + i })       
+                    @campaign.Text
+                    </div>
+                }
+
+                <div><u>Select a Brand</u></div>
+                @using(Html.ControlGroupFor("Brand")){
+                    @Html.Label("", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.DropDownListFor(
+                                x => x.Upload.BrandId,
+                                Model.Lookup.Brands, 
+                                "Select Brand"
+                            )
+                            @Html.ValidationMessage("Brand", null, new { @class = "help-inline" })
+                        </div>
+                }
+
+                <div><u>Select a Country</u></div>
+                @using(Html.ControlGroupFor("Country")){
+                    @Html.Label("", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.DropDownListFor(
+                                x => x.Upload.CountryId,
+                                Model.Lookup.Countries, 
+                                "Select Country"
+                            )
+                            @Html.ValidationMessage("Brand", null, new { @class = "help-inline" })
+                        </div>
+                }
+
+                <div><u>Add Title for your upload</u></div>
+                @using (Html.ControlGroupFor("Title")) {
+                    @Html.Label("", new { @class = "control-label"})
+                        <div class="controls">
+                            @Html.TextBoxFor(
+                                x => x.Upload.Title
+                            )
+                        </div>
+                }
+                <div><u>Browse to locate document</u></div>
+                <div class="controls">
+                    <input type="file" id="file" name="file" / >
+                </div>
+		        <div>
+                    <input type="submit" class="btn btn-primary pull-right" value="Save" />
+                  </div>
+            </fieldset>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,48 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Create
+       [FileStreamFileGroup] (Filegroup)
+       [dbo].[brand] (Table)
+       [dbo].[campaign] (Table)
+       [dbo].[campaign_document] (Table)
+       [dbo].[campaign_type] (Table)
+       [dbo].[category] (Table)
+       [dbo].[country] (Table)
+       [dbo].[territory] (Table)
+       [dbo].[usage] (Table)
+       [dbo].[usage_type] (Table)
+       Default Constraint on [dbo].[brand].[active] (Default Constraint)
+       Default Constraint on [dbo].[brand].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[campaign].[category_id] (Default Constraint)
+       Default Constraint on [dbo].[campaign].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[campaign_document].[id] (Default Constraint)
+       Default Constraint on [dbo].[campaign_type].[active] (Default Constraint)
+       Default Constraint on [dbo].[campaign_type].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[category].[active] (Default Constraint)
+       Default Constraint on [dbo].[category].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[country].[active] (Default Constraint)
+       Default Constraint on [dbo].[country].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[territory].[active] (Default Constraint)
+       Default Constraint on [dbo].[territory].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[usage].[active] (Default Constraint)
+       Default Constraint on [dbo].[usage].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[usage_type].[active] (Default Constraint)
+       Default Constraint on [dbo].[usage_type].[create_ts] (Default Constraint)
+       [dbo].[campaign_category_fk] (Foreign Key)
+       [dbo].[campaign_territory_fk] (Foreign Key)
+       [dbo].[campaign_campaign_type_fk] (Foreign Key)
+       [dbo].[campaign_brand_fk] (Foreign Key)
+       [dbo].[campaign_country_fk] (Foreign Key)
+       [dbo].[campaign_document_campaign_fk] (Foreign Key)
+       [dbo].[usage_usage_type_fk] (Foreign Key)
+
+** Supporting actions

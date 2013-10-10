@@ -1,0 +1,64 @@
+﻿@using BootstrapSupport
+@model Models.UsageReportModel
+@Html.Partial("_SecurityCheck") 
+@{
+    ViewBag.Title = "Usage Report";
+    ViewBag.PageHeaderImage = "usagereport.png";
+    
+    ViewBag.StartDate = (Model.StartDate != null ? ((DateTime)Model.StartDate).ToString("yyyy/MM/dd") : "");
+    ViewBag.EndDate = (Model.EndDate != null ? ((DateTime)Model.EndDate).ToString("yyyy/MM/dd") : "");
+}
+
+@Html.Partial("_PageHeader")
+<h4>Who is going into the portal?</h4>
+<div class="row">
+    <div class="span5">
+        <h5 class="green-bg">Report filter <small class="text-whitesmoke"></small></h5>
+        @using (Html.BeginForm("Report", "UsageReport", FormMethod.Post, new {@role = "form", @class="form-inline"}))
+        {
+            @Html.ValidationSummary(false)
+            <fieldset class="form-horizontal">
+                @if(ViewBag.StartDate == "" && ViewBag.EndDate == "") {
+                    <div id="doc_alert" class="alert alert-warning">You are currently looking at all entries. Enter specific dates as required.</div>
+                }
+                <div class="form-group">
+                    <label id="startDateLabel" for="startDate">From</label>
+                    <input class="datepicker" id="startDate" name="startDate" value="@ViewBag.StartDate" data-datepicker-format="YYYY/MM/DD"/>
+                    <label id="endDateLabel" for="endDate">To</label>
+                    <input class="datepicker" id="endDate" name="endDate" value="@ViewBag.EndDate" data-datepicker-format="YYYY/MM/DD" />
+                    <input type="submit" value="Filter" class="btn btn-primary" />
+                </div>
+            </fieldset>
+        }
+    </div>
+    <div class="span4">
+        <h5 class="green-bg">Report results <small class="text-whitesmoke"></small></h5>
+        <table id="thisweek_table" class="table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Country</th>
+                    <th>Last entry date</th>
+                    <th>No. of entries</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Items)
+            {
+                 <tr>
+                     <td>@Html.Raw(item.Email)</td>
+                     <td>@Html.Raw(item.Country)</td>
+                     <td>@Html.Raw(item.LastEntry != null ? ((DateTime)item.LastEntry).ToString("yyyy/MM/dd") : "")</td>
+                     <td>@Html.Raw(item.EntryCount)</td>
+                 </tr>
+             }    
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('.datepicker').datepicker()
+    </script>
+}

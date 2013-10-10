@@ -1,0 +1,152 @@
+﻿@using BootstrapSupport
+@model Models.CampaignModel
+@Html.Partial("_SecurityCheck") 
+@{
+    ViewBag.Title = "Edit Campaign";
+    ViewBag.PageHeaderImage = "campaign.png";
+}
+
+@Html.Partial("_PageHeader")
+<h4>Change selection and save.</h4>
+<div class="row">
+    <div class="span4">
+        <h5 class="green-bg">@Model.Title <small class="text-whitesmoke"></small></h5>
+        @{int i = 0;}
+        @using (Html.BeginForm("SaveCampaign", "Home", FormMethod.Post))
+        {
+            @Html.ValidationSummary(false)
+            @Html.HiddenFor(x => x.Id, Model.Id)
+            <fieldset class="form-horizontal">
+                <div><u>Select a Territory</u></div>
+                @foreach (var territory in Model.Territories)
+                {
+                    <div class="controls">
+                    @Html.RadioButtonFor(x => x.TerritoryId, territory.Value, new { id = "upload_territory_" + i })       
+                    @territory.Text
+                    </div>
+                }
+
+                <div><u>Select Theme of Campaign</u></div>
+                @foreach (var campaign in Model.CampaignTypes)
+                {
+                    <div class="controls">
+                    @Html.RadioButtonFor(x => x.CampaignTypeId, campaign.Value, new { id = "upload_campaign_" + i })       
+                    @campaign.Text
+                    </div>
+                }
+
+                <div><u>Select a Brand</u></div>
+                @using(Html.ControlGroupFor("Brand")){
+                    @Html.Label("", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.DropDownListFor(
+                                x => x.BrandId,
+                                Model.Brands,
+                                "Select Brand"
+                            )
+                            @Html.ValidationMessage("Brand", null, new { @class = "help-inline" })
+                        </div>
+                }
+
+                <div><u>Select a Country</u></div>
+                @using(Html.ControlGroupFor("Country")){
+                    @Html.Label("", new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.DropDownListFor(
+                                x => x.CountryId,
+                                Model.Countries,
+                                "Select Country"
+                            )
+                            @Html.ValidationMessage("Country", null, new { @class = "help-inline" })
+                        </div>
+                }
+
+                <div><u>Add Title for your upload</u></div>
+                @using (Html.ControlGroupFor("Title")) {
+                    @Html.Label("", new { @class = "control-label"})
+                        <div class="controls">
+                            @Html.TextBoxFor(
+                                x => x.Title
+                            )
+                        </div>
+                }
+            </fieldset>
+            <input type="submit" class="btn btn-primary pull-right" value="Save" />
+        }
+        </div>
+        <div class="span4">
+            <h5 class="green-bg">Documents <small class="text-whitesmoke"></small></h5>
+            <table id="thisweek_table" class="table">
+            <tbody>
+            @{int documentCount = 0;}
+            @foreach (var file in Model.Documents)
+            {
+                 <tr>
+                    <td style="width:3%"><img src="@Url.Content(String.Format("~/Content/images/32/{0}.png", file.DocumentType))" /></td>
+                    <td style="width:80%">@Html.Raw(file.FileName)</td>
+                    <td  style="width:17%">
+                        <a class="btn btn-primary btn-lg" onclick="showRemoveDocument(@Model.Id, '@file.Id');">Remove</a> 
+                    </td>
+                </tr>
+                documentCount++;
+            }    
+            </tbody>
+            </table>
+            <div><input type="hidden" id="doc_count" value="@documentCount" /></div>
+            
+            <div id="doc_alert" class="alert alert-warning">If all documents are removed the upload will also be removed.</div>
+            
+            <h5 class="green-bg">Upload additional documents <small class="text-whitesmoke"></small></h5>
+            @using (Html.BeginForm("UploadDocument", "Home", FormMethod.Post, new { @id = "upload_doc", enctype = "multipart/form-data" }))
+            {
+                @Html.ValidationSummary(false)
+                @Html.HiddenFor(x => x.Id, Model.Id)
+                @Html.HiddenFor(x => x.TerritoryId, Model.TerritoryId)
+                @Html.HiddenFor(x => x.CampaignTypeId, Model.CampaignTypeId)
+                @Html.HiddenFor(x => x.BrandId, Model.BrandId)
+                @Html.HiddenFor(x => x.CountryId, Model.CountryId)
+                @Html.HiddenFor(x => x.Title, Model.Title)
+                <div><u>Browse to locate document</u></div>
+                <div class="controls">
+                    <input type="file" id="file" name="file" / >
+                    <input type="submit" class="btn btn-primary pull-right" value="Upload" />
+                </div>
+            }
+        </div><!--span4 Documents-->
+</div>
+
+
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Confirmation</h4>
+        </div>
+        @using (Html.BeginForm("RemoveDocument", "Home", FormMethod.Post, new { @id = "remove_doc" }))
+        {
+        <div class="modal-body">
+            Are you sure you would like to remove this document?   
+            <input type="hidden" id="remove_campaign_id" name="campaign_id" value="-1" />
+            <input type="hidden" id="remove_document_id" name="document_id" value="-1" />
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" onclick="">Remove</button>
+        </div>
+        }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showRemoveDocument(campaignId, documentId) {
+            $("#remove_campaign_id").val(campaignId);
+            $("#remove_document_id").val(documentId);
+            $('#removeModal').modal('show')
+            return true;
+        }
+    </script>
+    
+}

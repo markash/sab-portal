@@ -1,0 +1,38 @@
+﻿@using BootstrapSupport
+@model Models.MyUploadsModel
+@Html.Partial("_SecurityCheck")  
+@{
+    ViewBag.Title = "My Uploads";
+    ViewBag.PageHeaderImage = "myuploads.png";
+}
+
+@Html.Partial("_PageHeader")
+<h4>Below are the campaigns that you  have uploaded. Click on the name to edit.</h4>
+<div class="row">
+    <div class="span12">
+        <h5 class="green-bg">View <small class="text-whitesmoke">uploaded content</small></h5>
+        <table id="thisweek_table" class="table">
+            <tbody>
+            @foreach (var campaign in Model.Documents)
+             {
+                 <tr>
+                     <td colspan="3">
+                         <strong><a href="~/Home/EditCampaign?campaign_id=@campaign.Id">@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</a></strong>
+                         <span class="pull-right"><strong>@Html.Raw(campaign.Uploaded.GetValueOrDefault().ToString("dd/MM/yyyy"))</strong></span>
+                     </td>
+                 </tr>
+                 foreach (var file in campaign.Documents)
+                 {
+                     <tr>
+                         <td style="width:3%"><img src="@Url.Content(String.Format("~/Content/images/32/{0}.png", file.DocumentType))" /></td>
+                         <td style="width:80%">@Html.Raw(file.FileName)</td>
+                         <td  style="width:17%">
+                             @Html.ActionLink("Download", "ViewDocument", "Home", new {@campaign_id = campaign.Id, @document_id = "0"}, new {@class = "btn pull-right"})
+                         </td>
+                     </tr>
+                 }
+             }    
+            </tbody>
+        </table>
+    </div>
+</div>

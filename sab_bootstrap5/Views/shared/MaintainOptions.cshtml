@@ -1,0 +1,9 @@
+﻿<h5 class="green-bg">Maintainance Options <small class="text-whitesmoke"></small></h5>
+<ul class="nav nav-pills nav-stacked">
+    @foreach (Models.MaintainOptionModel option in ViewBag.Options)
+    {
+        <li class="@(ViewBag.CurrentController == option.Controller ? "active" : "")">
+            @Html.ActionLink(option.Text, option.Action, option.Controller)
+        </li>
+    }
+</ul>

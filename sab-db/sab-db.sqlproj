@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>sab_db</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{74b4f5b1-25bb-454b-8612-dcc4769bebb5}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql100DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>sab_db</RootNamespace>
+    <AssemblyName>sab_db</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <GenerateCreateScript>True</GenerateCreateScript>
+    <DefaultFileStreamFilegroup>FileStreamFileGroup</DefaultFileStreamFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <!-- VS10 without SP1 will not have VisualStudioVersion set, so do that here -->
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <!-- Default to the v10.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Tables" />
+    <Folder Include="Data" />
+    <Folder Include="Database" />
+    <Folder Include="Tables\ForeignKeys" />
+    <Folder Include="Views" />
+    <Folder Include="Procedures" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\campaign_type.sql">
+      <CopyToOutputDirectory>DoNotCopy</CopyToOutputDirectory>
+    </Build>
+    <Build Include="Tables\territory.sql" />
+    <Build Include="Tables\category.sql" />
+    <Build Include="Tables\brand.sql" />
+    <Build Include="Database\FileStreamFileGroup.sql" />
+    <Build Include="Tables\campaign_document.sql" />
+    <Build Include="Tables\campaign.sql" />
+    <Build Include="Tables\ForeignKeys\campaign_document_campaign_fk.sql" />
+    <Build Include="Tables\ForeignKeys\campaign_category_fk.sql" />
+    <Build Include="Tables\ForeignKeys\campaign_territory_fk.sql" />
+    <Build Include="Tables\ForeignKeys\campaign_campaign_type_fk.sql" />
+    <Build Include="Tables\ForeignKeys\campaign_brand_fk.sql" />
+    <Build Include="Tables\usage.sql" />
+    <Build Include="Tables\usage_type.sql" />
+    <Build Include="Tables\ForeignKeys\usage_usage_type_fk.sql" />
+    <Build Include="Tables\country.sql" />
+    <Build Include="Tables\ForeignKeys\campaign_country_fk.sql" />
+    <Build Include="Procedures\usage_report.sql" />
+    <Build Include="Procedures\upload_report.sql" />
+    <Build Include="Procedures\statistics_campaign_types_report.sql" />
+    <Build Include="Procedures\statistics_territories_report.sql" />
+    <Build Include="Procedures\statistics_categories_report.sql" />
+    <Build Include="Procedures\statistics_brands_report.sql" />
+    <Build Include="Procedures\statistics_countries_report.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="sab-db.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sab-db.publish.xml" />
+    <None Include="sab-db-azure.publish.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Data.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Data\Script.PostDeployment.sql" />
+  </ItemGroup>
+</Project>

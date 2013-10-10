@@ -1,0 +1,118 @@
+﻿@using BootstrapSupport
+@model Models.MaintainBrandsModel
+@Html.Partial("_SecurityCheck") 
+@{
+    ViewBag.Title = "Maintain Brands";
+    ViewBag.PageHeaderImage = "maintenance.png";
+    ViewBag.Item = "brand";
+    ViewBag.Controller = "Brands";
+    ViewBag.Options = Model.Options;
+    ViewBag.CurrentController = Model.CurrentController;
+}
+
+@Html.Partial("_PageHeader")
+<h4>Maintain brands</h4>
+<div class="row">
+    <div class="span4">
+        @Html.Partial("MaintainOptions")
+    </div>
+    <div class="span4">
+        @{int index = 0;}
+        @using (Html.BeginForm("Save", "Brands", FormMethod.Post, new {@role = "form", @class="form-inline"}))
+        {
+            @Html.ValidationSummary(false)
+            <fieldset class="form-horizontal">
+                @if (Model.Brands.Any()) {
+                <h5 class="green-bg">Existing brands <small class="text-whitesmoke"></small></h5>
+                    foreach (var brand in Model.Brands)
+                    {
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.Brands.ElementAt(index).Id)
+                            @Html.TextBoxFor(x => x.Brands.ElementAt(index).Name)
+                            @if(brand.Active)
+                            {
+                            <a class="pull-right" onclick="showDeactivate(@brand.Id);">Deactivate</a>  
+                            }
+                            else
+                            {
+                            <a class="pull-right" onclick="showActivate(@brand.Id);">Activate</a>  
+                            }
+                        </div>
+                        index++;
+                    }
+                }
+                
+                <div class="form-group">
+                    <h5 class="green-bg">New brand <small class="text-whitesmoke"></small></h5>
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(x => x.NewBrand, new { id = "brand_name_" + index })       
+                    <input type="submit" class="btn btn-primary pull-right" value="Save" />
+                </div>
+            </fieldset>
+            
+        }
+    </div>
+    <div class="span4">
+    </div>
+</div>
+
+<div class="modal fade" id="deactivateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Confirmation</h4>
+        </div>
+        @using (Html.BeginForm("Deactivate", "Brands", FormMethod.Post, new { @id = "deactivate_form" }))
+        {
+        <div class="modal-body">
+            Are you sure you would like to remove this @ViewBag.Item?   
+            <input type="hidden" id="deactivate_id" name="id" value="-1" />
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" onclick="">Deactivate</button>
+        </div>
+        }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="activateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Confirmation</h4>
+        </div>
+        @using (Html.BeginForm("Activate", "Brands", FormMethod.Post, new { @id = "activate_form" }))
+        {
+        <div class="modal-body">
+            Are you sure you would like to activate this @ViewBag.Item?   
+            <input type="hidden" id="activate_id" name="id" value="-1" />
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" onclick="">Activate</button>
+        </div>
+        }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showDeactivate(id) {
+            $("#deactivate_id").val(id);
+            $('#deactivateModal').modal('show')
+            return true;
+        }
+        function showActivate(id) {
+            $("#activate_id").val(id);
+            $('#activateModal').modal('show')
+            return true;
+        }
+    </script>
+    
+}

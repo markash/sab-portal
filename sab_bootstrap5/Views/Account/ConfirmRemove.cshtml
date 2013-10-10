@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Confirm Remove";
+    Layout = "~/Views/shared/_BootstrapLayout.empty.cshtml";
+}
+
+<h2>ConfirmRemove</h2>
+@Html.BeginForm() 
+{
+    <h6>Are you sure you want to remove this file?</h6>
+    <button type="submit" value="Yes" class="btn btn-primary" />
+    <button value="No" class="btn" />
+}

@@ -1,0 +1,29 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+#lining {
+    background: url("images/colorbar.png") repeat-x;
+    height: 5px;
+}
+
+.green-bg {
+    background: url("images/green.png") repeat;
+    padding: 3px;
+    color: whitesmoke;
+}
+
+.yellow-bg {
+    background: url("images/yellow.png") repeat;
+    padding: 3px;
+    color: #0f0f0f;
+}
+
+.text-whitesmoke {
+    color: whitesmoke;
+}
+
+.text-black {
+    color: black;
+}

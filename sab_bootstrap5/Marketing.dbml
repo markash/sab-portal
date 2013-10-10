@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="sab-db" Class="MarketingDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=L01MARKA\SQLSERVER2008R2;Initial Catalog=sab-db;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="sab_dbConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.campaign" Member="campaigns">
+    <Type Name="campaign">
+      <Column Name="campaign_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="category_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="territory_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="country_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="brand_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="title" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="username" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="campaign_campaign_document" Member="campaign_documents" ThisKey="campaign_id" OtherKey="campaign_id" Type="campaign_document" />
+      <Association Name="brand_campaign" Member="brand" ThisKey="brand_id" OtherKey="brand_id" Type="brand" IsForeignKey="true" />
+      <Association Name="campaign_type_campaign" Member="campaign_type" ThisKey="campaign_type_id" OtherKey="campaign_type_id" Type="campaign_type" IsForeignKey="true" />
+      <Association Name="category_campaign" Member="category" ThisKey="category_id" OtherKey="category_id" Type="category" IsForeignKey="true" />
+      <Association Name="country_campaign" Member="country" ThisKey="country_id" OtherKey="country_id" Type="country" IsForeignKey="true" />
+      <Association Name="territory_campaign" Member="territory" ThisKey="territory_id" OtherKey="territory_id" Type="territory" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.brand" Member="brands">
+    <Type Name="brand">
+      <Column Name="brand_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="brand_description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="brand_campaign" Member="campaigns" ThisKey="brand_id" OtherKey="brand_id" Type="campaign" />
+    </Type>
+  </Table>
+  <Table Name="dbo.campaign_document" Member="campaign_documents">
+    <Type Name="campaign_document">
+      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="document" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="content_length" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="content_type" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="file_name" Type="System.String" DbType="VarChar(512) NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="campaign_campaign_document" Member="campaign" ThisKey="campaign_id" OtherKey="campaign_id" Type="campaign" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.campaign_type" Member="campaign_types">
+    <Type Name="campaign_type">
+      <Column Name="campaign_type_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="campaign_type_description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="campaign_type_campaign" Member="campaigns" ThisKey="campaign_type_id" OtherKey="campaign_type_id" Type="campaign" />
+    </Type>
+  </Table>
+  <Table Name="dbo.category" Member="categories">
+    <Type Name="category">
+      <Column Name="category_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="category_description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="category_campaign" Member="campaigns" ThisKey="category_id" OtherKey="category_id" Type="campaign" />
+    </Type>
+  </Table>
+  <Table Name="dbo.country" Member="countries">
+    <Type Name="country">
+      <Column Name="country_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="country_description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="country_campaign" Member="campaigns" ThisKey="country_id" OtherKey="country_id" Type="campaign" />
+    </Type>
+  </Table>
+  <Table Name="dbo.territory" Member="territories">
+    <Type Name="territory">
+      <Column Name="territory_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="territory_description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="territory_campaign" Member="campaigns" ThisKey="territory_id" OtherKey="territory_id" Type="campaign" />
+    </Type>
+  </Table>
+  <Table Name="dbo.usage" Member="usages">
+    <Type Name="usage">
+      <Column Name="usage_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="username" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="usage_type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="usage_type_usage" Member="usage_type" ThisKey="usage_type_id" OtherKey="usage_type_id" Type="usage_type" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.usage_type" Member="usage_types">
+    <Type Name="usage_type">
+      <Column Name="usage_type_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="usage_type_description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="usage_type_usage" Member="usages" ThisKey="usage_type_id" OtherKey="usage_type_id" Type="usage" />
+    </Type>
+  </Table>
+  <Function Name="dbo.usage_report" Method="usage_report">
+    <Parameter Name="start" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="end" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="usage_reportResult">
+      <Column Name="username" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="country" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="last_entry" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="entry_count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.statistics_brands_report" Method="statistics_brands_report">
+    <Parameter Name="start" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="end" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="statistics_brands_reportResult">
+      <Column Name="description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="upload_count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.statistics_campaign_types_report" Method="statistics_campaign_types_report">
+    <Parameter Name="start" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="end" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="statistics_campaign_types_reportResult">
+      <Column Name="description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="upload_count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.statistics_categories_report" Method="statistics_categories_report">
+    <Parameter Name="start" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="end" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="statistics_categories_reportResult">
+      <Column Name="description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="upload_count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.statistics_countries_report" Method="statistics_countries_report">
+    <Parameter Name="start" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="end" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="statistics_countries_reportResult">
+      <Column Name="description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="upload_count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.statistics_territories_report" Method="statistics_territories_report">
+    <Parameter Name="start" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="end" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="statistics_territories_reportResult">
+      <Column Name="description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="upload_count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.upload_report" Method="upload_report">
+    <Parameter Name="start" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="end" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="upload_reportResult">
+      <Column Name="username" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="country" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="upload_count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+</Database>

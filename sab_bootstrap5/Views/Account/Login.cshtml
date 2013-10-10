@@ -1,0 +1,22 @@
+﻿@model Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/shared/_BootstrapLayout.empty.cshtml";
+}
+
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new {@class = "form-signin"})) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+        <h2 class="form-signin-heading">Please sign in</h2>
+    
+        @Html.TextBoxFor(m => m.UserName, new { @class = "input-block-level", @placeholder="User name"})
+        @Html.PasswordFor(m => m.Password, new { @class = "input-block-level", placeholder="Password"})
+
+        <label class="checkbox">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            Remember me
+        </label>
+        <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+}

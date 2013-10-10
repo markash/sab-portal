@@ -1,0 +1,24 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       The type for column update_ts in table [dbo].[campaign_type] is currently  NCHAR (10) NULL but is being changed to 
+         DATETIME NULL. Data loss could occur.
+
+** User actions
+     Alter
+       [dbo].[campaign_type] (Table)
+     Create
+       [dbo].[category] (Table)
+       [dbo].[territory] (Table)
+       Default Constraint on [dbo].[category].[create_ts] (Default Constraint)
+       Default Constraint on [dbo].[territory].[create_ts] (Default Constraint)
+
+** Supporting actions
+
+The type for column update_ts in table [dbo].[campaign_type] is currently  NCHAR (10) NULL but is being changed to  DATETIME NULL. Data loss could occur.
+
