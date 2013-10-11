@@ -1,8 +1,3 @@
-C:\SDE\projects\github\carat-sab-dotnet\sab-db\bin\Debug\sab-db.dacpac
-C:\SDE\projects\github\carat-sab-dotnet\sab-db\bin\Debug\sab_db.dll
-C:\SDE\projects\github\carat-sab-dotnet\sab-db\bin\Debug\sab_db.pdb
-C:\SDE\projects\github\carat-sab-dotnet\sab-db\obj\Debug\sab_db.dll
-C:\SDE\projects\github\carat-sab-dotnet\sab-db\obj\Debug\sab_db.pdb
 C:\SDE\projects\carat-sab-dotnet\sab-db\bin\Debug\sab-db.dacpac
 C:\SDE\projects\carat-sab-dotnet\sab-db\bin\Debug\sab-db_Create.sql
 C:\SDE\projects\carat-sab-dotnet\sab-db\bin\Debug\sab_db.dll
@@ -13,7 +8,8 @@ C:\SDE\projects\carat-sab-dotnet\sab-db\obj\Debug\postdeploy.sql
 C:\SDE\projects\carat-sab-dotnet\sab-db\obj\Debug\predeploy.sql
 C:\SDE\projects\carat-sab-dotnet\sab-db\obj\Debug\sab_db.dll
 C:\SDE\projects\carat-sab-dotnet\sab-db\obj\Debug\sab_db.pdb
-C:\SDE\projects\github\carat-sab-dotnet\sab-db\obj\Debug\Model.xml
-C:\SDE\projects\github\carat-sab-dotnet\sab-db\obj\Debug\refactor.xml
-C:\SDE\projects\github\carat-sab-dotnet\sab-db\obj\Debug\postdeploy.sql
-C:\SDE\projects\github\carat-sab-dotnet\sab-db\obj\Debug\predeploy.sql
+C:\SDE\projects\github\carat-sab-dotnet\sab-db\bin\Debug\sab-db.dacpac
+C:\SDE\projects\github\carat-sab-dotnet\sab-db\obj\Debug\sab_db.dll
+C:\SDE\projects\github\carat-sab-dotnet\sab-db\obj\Debug\sab_db.pdb
+C:\SDE\projects\github\carat-sab-dotnet\sab-db\bin\Debug\sab_db.dll
+C:\SDE\projects\github\carat-sab-dotnet\sab-db\bin\Debug\sab_db.pdb

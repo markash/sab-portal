@@ -492,7 +492,7 @@ namespace Models
             return documentCount;
         }
 
-        public DocumentModel ReadDocument(string username, int campaignId, int documentId)
+        public DocumentModel ReadDocumentUsingFileStream(string username, int campaignId, int documentId)
         {
             using (SqlConnection conn = (SqlConnection)ctx.Connection)
             {
@@ -533,6 +533,52 @@ namespace Models
                                 ContentLength = contentLength,
                                 DocumentType = ContentTypeToDocumentType(contentType),
                                 Data = buffer
+                            };
+                        }
+                    }
+
+                    txn.Commit();
+                }
+            }
+
+            return null;
+        }
+
+        public DocumentModel ReadDocument(string username, int campaignId, int documentId)
+        {
+            using (SqlConnection conn = (SqlConnection)ctx.Connection)
+            {
+                conn.Open();
+                using (SqlTransaction txn = conn.BeginTransaction())
+                {
+                    CreateUsageCommand(username, USAGE_READ_DOCUMENT, conn, txn).ExecuteNonQuery();
+
+                    string sql = "SELECT " +
+                                "content_length" +
+                                ",content_type" +
+                                ",file_name" +
+                                ",document" +
+                                " FROM campaign_document " +
+                                " WHERE campaign_id = " + campaignId.ToString();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn, txn);
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        if (rdr.Read())
+                        {
+                            string filePath = rdr[0].ToString();
+                            byte[] document = (byte[])rdr["document"];
+                            string fileName = rdr["file_name"].ToString();
+                            string contentType = rdr["content_type"].ToString();
+                            int contentLength = (int)rdr["content_length"];
+
+                            return new DocumentModel
+                            {
+                                FileName = fileName,
+                                ContentType = contentType,
+                                ContentLength = contentLength,
+                                DocumentType = ContentTypeToDocumentType(contentType),
+                                Data = document
                             };
                         }
                     }
@@ -689,6 +735,49 @@ namespace Models
                         //{
                         if (file != null && file.ContentLength > 0)
                         {
+                            byte[] buffer = new byte[file.ContentLength + 1];
+                            file.InputStream.Read(buffer, 0, file.ContentLength + 1);
+
+                            sql = @"INSERT INTO campaign_document(" +
+                                    "id, campaign_id, content_length, content_type, file_name, document" + 
+                                    ") VALUES (" + 
+                                    "default, @campaign_id, @content_length, @content_type, @file_name, @document" +
+                                    ")";
+
+                            command = new SqlCommand(sql, conn, txn);
+
+                            param = command.CreateParameter();
+                            param.ParameterName = "@campaign_id";
+                            param.DbType = System.Data.DbType.Int32;
+                            param.Value = document.Id;
+                            command.Parameters.Add(param);
+
+                            param = command.CreateParameter();
+                            param.ParameterName = "@content_length";
+                            param.DbType = System.Data.DbType.Int32;
+                            param.Value = file.ContentLength;
+                            command.Parameters.Add(param);
+
+                            param = command.CreateParameter();
+                            param.ParameterName = "@content_type";
+                            param.DbType = System.Data.DbType.String;
+                            param.Value = file.ContentType;
+                            command.Parameters.Add(param);
+
+                            param = command.CreateParameter();
+                            param.ParameterName = "@file_name";
+                            param.DbType = System.Data.DbType.String;
+                            param.Value = file.FileName;
+                            command.Parameters.Add(param);
+
+                            param = command.CreateParameter();
+                            param.ParameterName = "@document";
+                            param.DbType = System.Data.DbType.Binary;
+                            param.Value = buffer;
+                            command.Parameters.Add(param);
+
+                            command.ExecuteNonQuery();
+                            /*
                             sql = @"INSERT INTO campaign_document (id, campaign_id, content_length, content_type, file_name, document) " +
                                 "OUTPUT INSERTED.document.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() " +
                                 "VALUES (default" + 
@@ -713,6 +802,7 @@ namespace Models
                             {
                                 file.InputStream.CopyTo(sfs);
                             }
+                            */
                         }
                         //}
                     }

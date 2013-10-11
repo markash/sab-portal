@@ -78,7 +78,29 @@ insert into dbo.usage_type(usage_type_id, usage_type_description) values (8, 'Ma
 insert into dbo.usage_type(usage_type_id, usage_type_description) values (9, 'Read Document');
 set identity_insert dbo.usage_type off;
 
+INSERT [dbo].[aspnet_SchemaVersions] ([Feature], [CompatibleSchemaVersion], [IsCurrentVersion]) VALUES (N'common', N'1', 1)
+INSERT [dbo].[aspnet_SchemaVersions] ([Feature], [CompatibleSchemaVersion], [IsCurrentVersion]) VALUES (N'health monitoring', N'1', 1)
+INSERT [dbo].[aspnet_SchemaVersions] ([Feature], [CompatibleSchemaVersion], [IsCurrentVersion]) VALUES (N'membership', N'1', 1)
+INSERT [dbo].[aspnet_SchemaVersions] ([Feature], [CompatibleSchemaVersion], [IsCurrentVersion]) VALUES (N'personalization', N'1', 1)
+INSERT [dbo].[aspnet_SchemaVersions] ([Feature], [CompatibleSchemaVersion], [IsCurrentVersion]) VALUES (N'profile', N'1', 1)
+INSERT [dbo].[aspnet_SchemaVersions] ([Feature], [CompatibleSchemaVersion], [IsCurrentVersion]) VALUES (N'role manager', N'1', 1)
 
+INSERT [dbo].[aspnet_Applications] ([ApplicationName], [LoweredApplicationName], [ApplicationId], [Description]) VALUES (N'sab', N'sab', N'f7082b24-dc45-42d5-8299-74d424e339ba', NULL)
+
+INSERT [dbo].[aspnet_Users] ([ApplicationId], [UserId], [UserName], [LoweredUserName], [MobileAlias], [IsAnonymous], [LastActivityDate]) VALUES (N'f7082b24-dc45-42d5-8299-74d424e339ba', N'1a83cd68-2faa-4f2e-9598-9765418e29da', N'admin', N'admin', NULL, 0, CAST(0x0000A2530114A391 AS DateTime))
+INSERT [dbo].[aspnet_Users] ([ApplicationId], [UserId], [UserName], [LoweredUserName], [MobileAlias], [IsAnonymous], [LastActivityDate]) VALUES (N'f7082b24-dc45-42d5-8299-74d424e339ba', N'35605711-388b-4a4a-87ee-96cfb111dfd3', N'brianf', N'brianf', NULL, 0, CAST(0x0000A253006CDFEB AS DateTime))
+INSERT [dbo].[aspnet_Users] ([ApplicationId], [UserId], [UserName], [LoweredUserName], [MobileAlias], [IsAnonymous], [LastActivityDate]) VALUES (N'f7082b24-dc45-42d5-8299-74d424e339ba', N'52a38262-b199-448d-9153-aaaa7512068c', N'marka', N'marka', NULL, 0, CAST(0x0000A2520152796F AS DateTime))
+
+INSERT [dbo].[aspnet_Roles] ([ApplicationId], [RoleId], [RoleName], [LoweredRoleName], [Description]) VALUES (N'f7082b24-dc45-42d5-8299-74d424e339ba', N'c16d8212-71a0-4d4c-af0c-a91a44953825', N'Administrator', N'administrator', NULL)
+INSERT [dbo].[aspnet_Roles] ([ApplicationId], [RoleId], [RoleName], [LoweredRoleName], [Description]) VALUES (N'f7082b24-dc45-42d5-8299-74d424e339ba', N'bd82e64d-f8d1-4f2e-9581-c73b7556ad01', N'User', N'user', NULL)
+
+INSERT [dbo].[aspnet_UsersInRoles] ([UserId], [RoleId]) VALUES (N'1a83cd68-2faa-4f2e-9598-9765418e29da', N'c16d8212-71a0-4d4c-af0c-a91a44953825')
+INSERT [dbo].[aspnet_UsersInRoles] ([UserId], [RoleId]) VALUES (N'35605711-388b-4a4a-87ee-96cfb111dfd3', N'bd82e64d-f8d1-4f2e-9581-c73b7556ad01')
+INSERT [dbo].[aspnet_UsersInRoles] ([UserId], [RoleId]) VALUES (N'52a38262-b199-448d-9153-aaaa7512068c', N'bd82e64d-f8d1-4f2e-9581-c73b7556ad01')
+
+INSERT [dbo].[aspnet_Membership] ([ApplicationId], [UserId], [Password], [PasswordFormat], [PasswordSalt], [MobilePIN], [Email], [LoweredEmail], [PasswordQuestion], [PasswordAnswer], [IsApproved], [IsLockedOut], [CreateDate], [LastLoginDate], [LastPasswordChangedDate], [LastLockoutDate], [FailedPasswordAttemptCount], [FailedPasswordAttemptWindowStart], [FailedPasswordAnswerAttemptCount], [FailedPasswordAnswerAttemptWindowStart], [Comment]) VALUES (N'f7082b24-dc45-42d5-8299-74d424e339ba', N'1a83cd68-2faa-4f2e-9598-9765418e29da', N'tMjKKnHJ4KbLxceVIFebXFykOwk=', 1, N'7IRSoeGypIATyE0dq5lLxQ==', NULL, N'admin@talentfactor.co.za', N'admin@talentfactor.co.za', NULL, NULL, 1, 0, CAST(0x0000A252014A120C AS DateTime), CAST(0x0000A2530114A391 AS DateTime), CAST(0x0000A252014A120C AS DateTime), CAST(0xFFFF2FB300000000 AS DateTime), 0, CAST(0xFFFF2FB300000000 AS DateTime), 0, CAST(0xFFFF2FB300000000 AS DateTime), NULL)
+INSERT [dbo].[aspnet_Membership] ([ApplicationId], [UserId], [Password], [PasswordFormat], [PasswordSalt], [MobilePIN], [Email], [LoweredEmail], [PasswordQuestion], [PasswordAnswer], [IsApproved], [IsLockedOut], [CreateDate], [LastLoginDate], [LastPasswordChangedDate], [LastLockoutDate], [FailedPasswordAttemptCount], [FailedPasswordAttemptWindowStart], [FailedPasswordAnswerAttemptCount], [FailedPasswordAnswerAttemptWindowStart], [Comment]) VALUES (N'f7082b24-dc45-42d5-8299-74d424e339ba', N'35605711-388b-4a4a-87ee-96cfb111dfd3', N'iN7BmDigfzmmJOns+qRwU4jJJbo=', 1, N'JrrFibs8DPuZnZX+eKH4Ug==', NULL, N'brianf@talentfactor.co.za', N'brianf@talentfactor.co.za', NULL, NULL, 1, 0, CAST(0x0000A252014A39E4 AS DateTime), CAST(0x0000A253006CDFEB AS DateTime), CAST(0x0000A252014A39E4 AS DateTime), CAST(0xFFFF2FB300000000 AS DateTime), 0, CAST(0xFFFF2FB300000000 AS DateTime), 0, CAST(0xFFFF2FB300000000 AS DateTime), NULL)
+INSERT [dbo].[aspnet_Membership] ([ApplicationId], [UserId], [Password], [PasswordFormat], [PasswordSalt], [MobilePIN], [Email], [LoweredEmail], [PasswordQuestion], [PasswordAnswer], [IsApproved], [IsLockedOut], [CreateDate], [LastLoginDate], [LastPasswordChangedDate], [LastLockoutDate], [FailedPasswordAttemptCount], [FailedPasswordAttemptWindowStart], [FailedPasswordAnswerAttemptCount], [FailedPasswordAnswerAttemptWindowStart], [Comment]) VALUES (N'f7082b24-dc45-42d5-8299-74d424e339ba', N'52a38262-b199-448d-9153-aaaa7512068c', N'MGOkuhU/w82jm3AIBpWXTLC1AVg=', 1, N'8y0PwiEzkUGHHyQUZtUh5Q==', NULL, N'mp.ashworth@gmail.com', N'mp.ashworth@gmail.com', NULL, NULL, 1, 0, CAST(0x0000A252014A5604 AS DateTime), CAST(0x0000A2520152796F AS DateTime), CAST(0x0000A252014A5604 AS DateTime), CAST(0xFFFF2FB300000000 AS DateTime), 0, CAST(0xFFFF2FB300000000 AS DateTime), 0, CAST(0xFFFF2FB300000000 AS DateTime), NULL)
 
 
 
