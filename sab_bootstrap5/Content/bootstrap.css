@@ -289,55 +289,55 @@ a:focus {
 .navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
-  width: 1536px;
+  width: 1440px;
 }
 
 .span12 {
-  width: 1536px;
+  width: 1440px;
 }
 
 .span11 {
-  width: 860px;
+  width: 1320px;
 }
 
 .span10 {
-  width: 780px;
+  width: 1200px;
 }
 
 .span9 {
-  width: 700px;
+  width: 1080px;
 }
 
 .span8 {
-  width: 620px;
+  width: 960px;
 }
 
 .span7 {
-  width: 540px;
+  width: 840px;
 }
 
 .span6 {
-  width: 460px;
+  width: 720px;
 }
 
 .span5 {
-  width: 380px;
+  width: 600px;
 }
 
 .span4 {
-  width: 300px;
+  width: 480px;
 }
 
 .span3 {
-  width: 220px;
+  width: 360px;
 }
 
 .span2 {
-  width: 140px;
+  width: 240px;
 }
 
 .span1 {
-  width: 60px;
+  width: 120px;
 }
 
 .offset12 {
