@@ -828,6 +828,49 @@ namespace Models
                     //{
                     if (file != null && file.ContentLength > 0)
                     {
+                        byte[] buffer = new byte[file.ContentLength + 1];
+                        file.InputStream.Read(buffer, 0, file.ContentLength + 1);
+
+                        string sql = @"INSERT INTO campaign_document(" +
+                                "id, campaign_id, content_length, content_type, file_name, document" +
+                                ") VALUES (" +
+                                "default, @campaign_id, @content_length, @content_type, @file_name, @document" +
+                                ")";
+
+                        SqlCommand command = new SqlCommand(sql, conn, txn);
+
+                        SqlParameter param = command.CreateParameter();
+                        param.ParameterName = "@campaign_id";
+                        param.DbType = System.Data.DbType.Int32;
+                        param.Value = campaign.Id;
+                        command.Parameters.Add(param);
+
+                        param = command.CreateParameter();
+                        param.ParameterName = "@content_length";
+                        param.DbType = System.Data.DbType.Int32;
+                        param.Value = file.ContentLength;
+                        command.Parameters.Add(param);
+
+                        param = command.CreateParameter();
+                        param.ParameterName = "@content_type";
+                        param.DbType = System.Data.DbType.String;
+                        param.Value = file.ContentType;
+                        command.Parameters.Add(param);
+
+                        param = command.CreateParameter();
+                        param.ParameterName = "@file_name";
+                        param.DbType = System.Data.DbType.String;
+                        param.Value = file.FileName;
+                        command.Parameters.Add(param);
+
+                        param = command.CreateParameter();
+                        param.ParameterName = "@document";
+                        param.DbType = System.Data.DbType.Binary;
+                        param.Value = buffer;
+                        command.Parameters.Add(param);
+
+                        command.ExecuteNonQuery();
+                        /*
                         string sql = @"INSERT INTO campaign_document (id, campaign_id, content_length, content_type, file_name, document) " +
                             "OUTPUT INSERTED.document.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() " +
                             "VALUES (default" +
@@ -852,6 +895,7 @@ namespace Models
                         {
                             file.InputStream.CopyTo(sfs);
                         }
+                         * */
                     }
                     //}
 

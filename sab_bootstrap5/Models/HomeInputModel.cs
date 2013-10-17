@@ -81,6 +81,16 @@ namespace Models
         {
             return Security.CurrentUserName() != null ? Owner.ToUpper().Equals(Security.CurrentUserName().ToUpper()) : false;
         }
+
+        public bool IsSubjectToAdministrator()
+        {
+            return Security.CurrentUserInRole(ApplicationRole.Administrator);
+        }
+
+        public bool IsEditableByCurrentUser()
+        {
+            return IsOwnedByCurrentUser() || IsSubjectToAdministrator();
+        }
     }
 
     

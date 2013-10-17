@@ -21,7 +21,7 @@ namespace BootstrapSupport
 
             bundles.Add(new StyleBundle("~/content/css").Include(
                 "~/Content/bootstrap.css",
-                "~/Content/bootstrap-responsive.css",
+                //"~/Content/bootstrap-responsive.css",
                 "~/Content/bootstrap-mvc-validation.css",
                 "~/Content/moment-datepicker/datepicker.css",
                 "~/Content/body.css"
