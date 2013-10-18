@@ -26,7 +26,6 @@ C:\SDE\projects\github\carat-sab-dotnet\sab_bootstrap5\bin\System.Web.Razor.xml
 C:\SDE\projects\github\carat-sab-dotnet\sab_bootstrap5\bin\System.Web.WebPages.xml
 C:\SDE\projects\github\carat-sab-dotnet\sab_bootstrap5\bin\System.Web.WebPages.Deployment.xml
 C:\SDE\projects\github\carat-sab-dotnet\sab_bootstrap5\bin\System.Web.WebPages.Razor.xml
-C:\SDE\projects\github\carat-sab-dotnet\sab_bootstrap5\obj\Debug\carat-sab-dotnet.csprojResolveAssemblyReference.cache
 C:\SDE\projects\github\carat-sab-dotnet\sab_bootstrap5\obj\Debug\sab_bootstrap5.dll
 C:\SDE\projects\github\carat-sab-dotnet\sab_bootstrap5\obj\Debug\sab_bootstrap5.pdb
 C:\SDE\projects\github\carat-sab-dotnet\sab_bootstrap5\bin\WebMatrix.Data.dll

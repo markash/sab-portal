@@ -209,6 +209,8 @@
     <Content Include="Content\images\myuploads.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\images\pale-green.png" />
+    <Content Include="Content\images\pale-red.png" />
     <Content Include="Content\images\pdf_48x48.png" />
     <Content Include="Content\images\pptx_48x48.png" />
     <Content Include="Content\images\scene.png">
