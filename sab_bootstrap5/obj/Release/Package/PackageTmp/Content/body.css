@@ -14,6 +14,18 @@ body {
     color: whitesmoke;
 }
 
+.pale-green-bg {
+    background: url("images/pale-green.png") repeat;
+    padding: 3px;
+    color: #0f0f0f;
+}
+
+.pale-red-bg {
+    background: url("images/pale-red.png") repeat;
+    padding: 3px;
+    color: #0f0f0f;
+}
+
 .yellow-bg {
     background: url("images/yellow.png") repeat;
     padding: 3px;

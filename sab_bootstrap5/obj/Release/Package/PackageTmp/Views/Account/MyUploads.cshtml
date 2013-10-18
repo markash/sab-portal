@@ -17,7 +17,16 @@
              {
                  <tr>
                      <td colspan="3">
-                         <strong><a href="~/Home/EditCampaign?campaign_id=@campaign.Id">@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</a></strong>
+                         <strong>
+                            @if(campaign.IsEditableByCurrentUser())
+                            {
+                                <a href='~/Home/EditCampaign?campaign_id=@campaign.Id'>@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</a>
+                            }
+                            else
+                            {
+                                <span>@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</span>
+                            }
+                         </strong>
                          <span class="pull-right"><strong>@Html.Raw(campaign.Uploaded.GetValueOrDefault().ToString("dd/MM/yyyy"))</strong></span>
                      </td>
                  </tr>
