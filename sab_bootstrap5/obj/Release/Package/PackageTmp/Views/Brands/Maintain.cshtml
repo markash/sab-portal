@@ -13,47 +13,53 @@
 @Html.Partial("_PageHeader")
 <h4>Maintain brands</h4>
 <div class="row">
-    <div class="span4">
+    <div class="col-lg-4">
         @Html.Partial("MaintainOptions")
     </div>
-    <div class="span4">
+    <div class="col-lg-5">
         @{int index = 0;}
         @using (Html.BeginForm("Save", "Brands", FormMethod.Post, new {@role = "form", @class="form-inline"}))
         {
             @Html.ValidationSummary(false)
-            <fieldset class="form-horizontal">
-                @if (Model.Brands.Any()) {
+            
+                if (Model.Brands.Any()) {
                 <h5 class="green-bg">Existing brands <small class="text-whitesmoke"></small></h5>
                     foreach (var brand in Model.Brands)
                     {
-                        <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-6">
                             @Html.HiddenFor(x => x.Brands.ElementAt(index).Id)
-                            @Html.TextBoxFor(x => x.Brands.ElementAt(index).Name)
+                            @Html.TextBoxFor(x => x.Brands.ElementAt(index).Name, new { @class="form-control"})
+                            </div>
+                            <div class="col-lg-6">
                             @if(brand.Active)
                             {
-                            <a class="pull-right" onclick="showDeactivate(@brand.Id);">Deactivate</a>  
+                            <a class="btn btn-success" onclick="showDeactivate(@brand.Id);">Deactivate</a>  
                             }
                             else
                             {
-                            <a class="pull-right" onclick="showActivate(@brand.Id);">Activate</a>  
+                            <a class="btn btn-warning" onclick="showActivate(@brand.Id);">Activate</a>  
                             }
+                            </div>
                         </div>
                         index++;
                     }
                 }
                 
-                <div class="form-group">
+                <div class="row">
                     <h5 class="green-bg">New brand <small class="text-whitesmoke"></small></h5>
                 </div>
-                <div class="form-group">
-                    @Html.TextBoxFor(x => x.NewBrand, new { id = "brand_name_" + index })       
-                    <input type="submit" class="btn btn-primary pull-right" value="Save" />
+                <div class="row">
+                    <div class="col-lg-6">
+                        @Html.TextBoxFor(x => x.NewBrand, new { id = "brand_name_" + index ,@class="form-control"})    
+                    </div>
+                    <div class="col-lg-6">
+                        <input type="submit" class="btn btn-primary" value="Save" />
+                    </div>
                 </div>
-            </fieldset>
+
             
         }
-    </div>
-    <div class="span4">
     </div>
 </div>
 

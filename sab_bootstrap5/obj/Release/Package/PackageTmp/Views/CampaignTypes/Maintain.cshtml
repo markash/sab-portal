@@ -13,10 +13,10 @@
 @Html.Partial("_PageHeader")
 <h4>Maintain campaign themes</h4>
 <div class="row">
-    <div class="span4">
+    <div class="col-lg-4">
         @Html.Partial("MaintainOptions")
     </div>
-    <div class="span4">
+    <div class="col-lg-4">
         @{int index = 0;}
         @using (Html.BeginForm("Save", "CampaignTypes", FormMethod.Post, new { @role = "form", @class = "form-inline" }))
         {
@@ -52,7 +52,7 @@
             </fieldset>
         }
     </div>
-    <div class="span4">
+    <div class="col-lg-4">
     </div>
 </div>
 

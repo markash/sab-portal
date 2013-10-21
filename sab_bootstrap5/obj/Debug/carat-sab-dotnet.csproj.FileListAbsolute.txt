@@ -79,3 +79,4 @@ C:\SDE\projects\carat-sab-dotnet\sab_bootstrap5\bin\WebMatrix.WebData.xml
 C:\SDE\projects\carat-sab-dotnet\sab_bootstrap5\obj\Debug\carat-sab-dotnet.csprojResolveAssemblyReference.cache
 C:\SDE\projects\carat-sab-dotnet\sab_bootstrap5\obj\Debug\sab_bootstrap5.dll
 C:\SDE\projects\carat-sab-dotnet\sab_bootstrap5\obj\Debug\sab_bootstrap5.pdb
+C:\SDE\projects\github\carat-sab-dotnet\sab_bootstrap5\obj\Debug\carat-sab-dotnet.csprojResolveAssemblyReference.cache
