@@ -10,15 +10,15 @@
 <h4>Change selection and save.</h4>
 <div class="row">
     <div class="col-lg-4">
-        <h5 class="green-bg">@Model.Title <small class="text-whitesmoke"></small></h5>
+        <h4 class="green-bg">@Model.Title <small class="text-whitesmoke"></small></h4>
         @{int i = 0;}
         @using (Html.BeginForm("SaveCampaign", "Home", FormMethod.Post))
         {
             @Html.ValidationSummary(false)
             @Html.HiddenFor(x => x.Id, Model.Id)
-            <fieldset class="form-horizontal">
+
                 <div><u>Select a Territory</u></div>
-                @foreach (var territory in Model.Territories)
+                foreach (var territory in Model.Territories)
                 {
                     <div class="controls">
                     @Html.RadioButtonFor(x => x.TerritoryId, territory.Value, new { id = "upload_territory_" + i })       
@@ -27,7 +27,7 @@
                 }
 
                 <div><u>Select Theme of Campaign</u></div>
-                @foreach (var campaign in Model.CampaignTypes)
+                foreach (var campaign in Model.CampaignTypes)
                 {
                     <div class="controls">
                     @Html.RadioButtonFor(x => x.CampaignTypeId, campaign.Value, new { id = "upload_campaign_" + i})       
@@ -36,7 +36,7 @@
                 }
 
                 <div><u>Select a Brand</u></div>
-                @using(Html.ControlGroupFor("Brand")){
+                using(Html.ControlGroupFor("Brand")){
                     @Html.Label("", new { @class = "control-label" })
                         <div class="controls">
                             @Html.DropDownListFor(
@@ -50,7 +50,7 @@
                 }
 
                 <div><u>Select a Country</u></div>
-                @using(Html.ControlGroupFor("Country")){
+                using(Html.ControlGroupFor("Country")){
                     @Html.Label("", new { @class = "control-label" })
                         <div class="controls">
                             @Html.DropDownListFor(
@@ -64,20 +64,20 @@
                 }
 
                 <div><u>Add Title for your upload</u></div>
-                @using (Html.ControlGroupFor("Title")) {
+                using (Html.ControlGroupFor("Title")) {
                     @Html.Label("", new { @class = "control-label"})
                         <div class="controls">
                             @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
                         </div>
                 }
-            </fieldset>
+            <div>&nbsp;</div>
             <div>
-                <input type="submit" class="btn btn-primary pull-right" value="Save" />
+                <input type="submit" class="btn btn-primary" value="Save" />
             </div>
         }
         </div>
         <div class="col-lg-8">
-            <h5 class="green-bg">Documents <small class="text-whitesmoke"></small></h5>
+            <h4 class="green-bg">Documents <small class="text-whitesmoke"></small></h4>
             <table id="thisweek_table" class="table">
             <tbody>
             @{int documentCount = 0;}
@@ -98,7 +98,7 @@
             
             <div id="doc_alert" class="alert alert-warning">If all documents are removed the upload will also be removed.</div>
             
-            <h5 class="green-bg">Upload additional documents <small class="text-whitesmoke"></small></h5>
+            <h4 class="green-bg">Upload additional documents <small class="text-whitesmoke"></small></h4>
             @using (Html.BeginForm("UploadDocument", "Home", FormMethod.Post, new { @id = "upload_doc", enctype = "multipart/form-data" }))
             {
                 @Html.ValidationSummary(false)

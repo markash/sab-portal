@@ -23,10 +23,10 @@
             @Html.ValidationSummary(false)
             
                 if (Model.Brands.Any()) {
-                <h5 class="green-bg">Existing brands <small class="text-whitesmoke"></small></h5>
+                <h4 class="green-bg">Existing brands <small class="text-whitesmoke"></small></h4>
                     foreach (var brand in Model.Brands)
                     {
-                        <div class="row">
+                        <div class="row pad-bottom-5">
                             <div class="col-lg-6">
                             @Html.HiddenFor(x => x.Brands.ElementAt(index).Id)
                             @Html.TextBoxFor(x => x.Brands.ElementAt(index).Name, new { @class="form-control"})
@@ -34,11 +34,11 @@
                             <div class="col-lg-6">
                             @if(brand.Active)
                             {
-                            <a class="btn btn-success" onclick="showDeactivate(@brand.Id);">Deactivate</a>  
+                            <a class="pull-right" onclick="showDeactivate(@brand.Id);">Deactivate</a>  
                             }
                             else
                             {
-                            <a class="btn btn-warning" onclick="showActivate(@brand.Id);">Activate</a>  
+                            <a class="pull-right" onclick="showActivate(@brand.Id);">Activate</a>  
                             }
                             </div>
                         </div>
@@ -47,14 +47,14 @@
                 }
                 
                 <div class="row">
-                    <h5 class="green-bg">New brand <small class="text-whitesmoke"></small></h5>
+                    <h4 class="green-bg">New brand <small class="text-whitesmoke"></small></h4>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        @Html.TextBoxFor(x => x.NewBrand, new { id = "brand_name_" + index ,@class="form-control"})    
+                        @Html.TextBoxFor(x => x.NewBrand, new { id = "brand_name_" + index, @class="form-control"})    
                     </div>
                     <div class="col-lg-6">
-                        <input type="submit" class="btn btn-primary" value="Save" />
+                        <input type="submit" class="btn btn-primary pull-right" value="Save" />
                     </div>
                 </div>
 

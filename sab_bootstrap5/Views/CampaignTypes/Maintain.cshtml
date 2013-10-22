@@ -16,20 +16,23 @@
     <div class="col-lg-4">
         @Html.Partial("MaintainOptions")
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-5">
         @{int index = 0;}
         @using (Html.BeginForm("Save", "CampaignTypes", FormMethod.Post, new { @role = "form", @class = "form-inline" }))
         {
             @Html.ValidationSummary(false)
-            <fieldset class="form-horizontal">
-                @if (Model.CampaignTypes.Any()) {
-                <h5 class="green-bg">Existing campaign themes <small class="text-whitesmoke"></small></h5>
+
+                if (Model.CampaignTypes.Any()) {
+                <h4 class="green-bg">Existing campaign themes <small class="text-whitesmoke"></small></h4>
 
                     foreach (var territory in Model.CampaignTypes)
                     {
-                        <div class="form-group">
+                        <div class="row pad-bottom-5">
+                            <div class="col-lg-6">
                             @Html.HiddenFor(x => x.CampaignTypes.ElementAt(index).Id)
-                            @Html.TextBoxFor(x => x.CampaignTypes.ElementAt(index).Name)  
+                            @Html.TextBoxFor(x => x.CampaignTypes.ElementAt(index).Name, new { @class = "form-control"})
+                            </div>
+                            <div class="col-lg-6">  
                             @if(territory.Active)
                             {
                             <a class="pull-right" onclick="showDeactivate(@territory.Id);">Deactivate</a>  
@@ -38,21 +41,23 @@
                             {
                             <a class="pull-right" onclick="showActivate(@territory.Id);">Activate</a>  
                             } 
+                            </div>
                         </div>
                         index++;
                     }
                 }
-                <div class="form-group">
-                <h5 class="green-bg">New campaign theme <small class="text-whitesmoke"></small></h5>
+                <div class="row">
+                    <h4 class="green-bg">New campaign theme <small class="text-whitesmoke"></small></h4>
                 </div>
-                <div class="form-group">
-                    @Html.TextBoxFor(x => x.NewCampaignType, new { id = "territory_name_" + index })    
-                    <input type="submit" class="btn btn-primary pull-right" value="Save" />   
+                <div class="row">
+                    <div class="col-lg-6">
+                        @Html.TextBoxFor(x => x.NewCampaignType, new { id = "territory_name_" + index })    
+                    </div>
+                    <div class="col-lg-6">
+                        <input type="submit" class="btn btn-primary pull-right" value="Save" />   
+                    </div>
                 </div>
-            </fieldset>
         }
-    </div>
-    <div class="col-lg-4">
     </div>
 </div>
 

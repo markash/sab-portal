@@ -39,3 +39,7 @@ body {
 .text-black {
     color: black;
 }
+
+.pad-bottom-5 {
+    padding-bottom: 5px;
+}
