@@ -175,7 +175,7 @@ namespace Models
                 IsChecked = false
             }).ToArray();
 
-            CampaignTypes = campaignTypes.OrderBy(c => c.campaign_type_description).Select(c => new CheckItem
+            CampaignTypes = campaignTypes.OrderBy(c => c.list_order).Select(c => new CheckItem
             {
                 Id = c.campaign_type_id,
                 Name = c.campaign_type_description,
@@ -225,7 +225,7 @@ namespace Models
                 Selected = false
             });
 
-            CampaignTypes = campaignTypes.OrderBy(c => c.campaign_type_description).Select(c => new SelectListItem
+            CampaignTypes = campaignTypes.OrderBy(c => c.list_order).Select(c => new SelectListItem
             {
                 Text = c.campaign_type_description,
                 Value = c.campaign_type_id.ToString(),

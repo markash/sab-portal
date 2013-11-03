@@ -10,7 +10,7 @@
 <h4>Change selection and save.</h4>
 <div class="row">
     <div class="col-lg-4">
-        <h4 class="green-bg">@Model.Title <small class="text-whitesmoke"></small></h4>
+        <h4 class="gold-bg">Change details: @Model.Title <small class="text-whitesmoke"></small></h4>
         @{int i = 0;}
         @using (Html.BeginForm("SaveCampaign", "Home", FormMethod.Post))
         {
@@ -77,7 +77,7 @@
         }
         </div>
         <div class="col-lg-8">
-            <h4 class="green-bg">Documents <small class="text-whitesmoke"></small></h4>
+            <h4 class="gold-bg">Documents <small class="text-whitesmoke"></small></h4>
             <table id="thisweek_table" class="table">
             <tbody>
             @{int documentCount = 0;}
@@ -98,7 +98,7 @@
             
             <div id="doc_alert" class="alert alert-warning">If all documents are removed the upload will also be removed.</div>
             
-            <h4 class="green-bg">Upload additional documents <small class="text-whitesmoke"></small></h4>
+            <h4 class="gold-bg">Upload additional documents <small class="text-whitesmoke"></small></h4>
             @using (Html.BeginForm("UploadDocument", "Home", FormMethod.Post, new { @id = "upload_doc", enctype = "multipart/form-data" }))
             {
                 @Html.ValidationSummary(false)

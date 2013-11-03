@@ -30,7 +30,7 @@ namespace Marketing
                 .AddChildRoute<UsageReportController>("Usage Report", c => c.Report(null, null));
 
             routes.MapNavigationRoute<AccountController>("Profile", c => c.Index())
-                .AddChildRoute<AccountController>("Profile", c => c.Profile())
+                //.AddChildRoute<AccountController>("Profile", c => c.Profile())
                 .AddChildRoute<AccountController>("My Uploads", c => c.MyUploads())
                 .AddChildRoute<AccountController>("Logout", c => c.Logout())
                 ;

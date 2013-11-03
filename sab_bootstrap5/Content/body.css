@@ -8,6 +8,12 @@ body {
     height: 5px;
 }
 
+.gold-bg {
+    background: url("images/gold.png") repeat;
+    padding: 3px;
+    color: whitesmoke;
+}
+
 .green-bg {
     background: url("images/green.png") repeat;
     padding: 3px;

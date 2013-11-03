@@ -804,21 +804,6 @@ CREATE TABLE [dbo].[category] (
 
 
 GO
-PRINT N'Creating [dbo].[campaign_type]...';
-
-
-GO
-CREATE TABLE [dbo].[campaign_type] (
-    [campaign_type_id]          INT          IDENTITY (1, 1) NOT NULL,
-    [campaign_type_description] VARCHAR (50) NOT NULL,
-    [active]                    BIT          NULL,
-    [create_ts]                 DATETIME     NULL,
-    [update_ts]                 DATETIME     NULL,
-    PRIMARY KEY CLUSTERED ([campaign_type_id] ASC)
-);
-
-
-GO
 PRINT N'Creating [dbo].[campaign]...';
 
 
@@ -866,6 +851,22 @@ CREATE TABLE [dbo].[campaign_document] (
     [file_name]      VARCHAR (512)    NOT NULL,
     [campaign_id]    INT              NOT NULL,
     UNIQUE NONCLUSTERED ([id] ASC)
+);
+
+
+GO
+PRINT N'Creating [dbo].[campaign_type]...';
+
+
+GO
+CREATE TABLE [dbo].[campaign_type] (
+    [campaign_type_id]          INT          IDENTITY (1, 1) NOT NULL,
+    [campaign_type_description] VARCHAR (50) NOT NULL,
+    [list_order]                INT          NOT NULL,
+    [active]                    BIT          NULL,
+    [create_ts]                 DATETIME     NULL,
+    [update_ts]                 DATETIME     NULL,
+    PRIMARY KEY CLUSTERED ([campaign_type_id] ASC)
 );
 
 
@@ -1032,24 +1033,6 @@ ALTER TABLE [dbo].[category]
 
 
 GO
-PRINT N'Creating Default Constraint on [dbo].[campaign_type]....';
-
-
-GO
-ALTER TABLE [dbo].[campaign_type]
-    ADD DEFAULT (1) FOR [active];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[campaign_type]....';
-
-
-GO
-ALTER TABLE [dbo].[campaign_type]
-    ADD DEFAULT GETDATE() FOR [create_ts];
-
-
-GO
 PRINT N'Creating Default Constraint on [dbo].[campaign]....';
 
 
@@ -1092,6 +1075,24 @@ PRINT N'Creating Default Constraint on [dbo].[campaign_document]....';
 GO
 ALTER TABLE [dbo].[campaign_document]
     ADD DEFAULT NEWID() FOR [id];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[campaign_type]....';
+
+
+GO
+ALTER TABLE [dbo].[campaign_type]
+    ADD DEFAULT (1) FOR [active];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[campaign_type]....';
+
+
+GO
+ALTER TABLE [dbo].[campaign_type]
+    ADD DEFAULT GETDATE() FOR [create_ts];
 
 
 GO
@@ -6288,15 +6289,16 @@ insert into dbo.territory (territory_id, territory_description) values (9, 'Idyl
 set identity_insert dbo.territory off;
 
 set identity_insert dbo.campaign_type on;
-insert into dbo.campaign_type (campaign_type_id, campaign_type_description) values (1, 'Emotional');
-insert into dbo.campaign_type (campaign_type_id, campaign_type_description) values (2, 'Rational');
-insert into dbo.campaign_type (campaign_type_id, campaign_type_description) values (3, 'Innovation');
-insert into dbo.campaign_type (campaign_type_id, campaign_type_description) values (4, 'Promotion');
-insert into dbo.campaign_type (campaign_type_id, campaign_type_description) values (5, 'Music sponsorship/event');
-insert into dbo.campaign_type (campaign_type_id, campaign_type_description) values (6, 'Sport sponsorship/event');
-insert into dbo.campaign_type (campaign_type_id, campaign_type_description) values (7, 'Other sponsorship/even');
-insert into dbo.campaign_type (campaign_type_id, campaign_type_description) values (8, 'TTL');
-insert into dbo.campaign_type (campaign_type_id, campaign_type_description) values (9, 'One visual');
+insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (1, 'Emotional', 1);
+insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (2, 'Rational', 2);
+insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (3, 'Innovation', 3);
+insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (4, 'Promotion', 4);
+insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (5, 'Activation', 5);
+insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (6, 'Music sponsorship/event', 6);
+insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (7, 'Sport sponsorship/event', 7);
+insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (8, 'Other sponsorship/even', 8);
+--insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (9, 'TTL', 9);
+--insert into dbo.campaign_type (campaign_type_id, campaign_type_description, list_order) values (10, 'One visual', 10);
 set identity_insert dbo.campaign_type off
 
 set identity_insert dbo.brand on;

@@ -13,7 +13,7 @@
 <h4>Who is going into the portal?</h4>
 <div class="row">
     <div class="col-lg-5">
-        <h4 class="green-bg">Report filter <small class="text-whitesmoke"></small></h4>
+        <h4 class="gold-bg">Report filter <small class="text-whitesmoke"></small></h4>
         @using (Html.BeginForm("Report", "UsageReport", FormMethod.Post, new {@role = "form", @class="form-inline"}))
         {
             @Html.ValidationSummary(false)
@@ -30,7 +30,7 @@
         }
     </div>
     <div class="col-lg-4">
-        <h4 class="green-bg">Report results <small class="text-whitesmoke"></small></h4>
+        <h4 class="gold-bg">Report results <small class="text-whitesmoke"></small></h4>
         <table id="thisweek_table" class="table">
             <thead>
                 <tr>

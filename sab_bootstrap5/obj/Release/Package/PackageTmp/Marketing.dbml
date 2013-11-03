@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="sab-db" Class="MarketingDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=L01MARKA\SQLSERVER2008R2;Initial Catalog=sab-db;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="sab_dbConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=L01MARKA\SQLSERVER2012;Initial Catalog=sab-db;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="sab_dbConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.campaign" Member="campaigns">
     <Type Name="campaign">
       <Column Name="campaign_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -14,10 +14,10 @@
       <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="campaign_campaign_document" Member="campaign_documents" ThisKey="campaign_id" OtherKey="campaign_id" Type="campaign_document" />
       <Association Name="brand_campaign" Member="brand" ThisKey="brand_id" OtherKey="brand_id" Type="brand" IsForeignKey="true" />
-      <Association Name="campaign_type_campaign" Member="campaign_type" ThisKey="campaign_type_id" OtherKey="campaign_type_id" Type="campaign_type" IsForeignKey="true" />
       <Association Name="category_campaign" Member="category" ThisKey="category_id" OtherKey="category_id" Type="category" IsForeignKey="true" />
       <Association Name="country_campaign" Member="country" ThisKey="country_id" OtherKey="country_id" Type="country" IsForeignKey="true" />
       <Association Name="territory_campaign" Member="territory" ThisKey="territory_id" OtherKey="territory_id" Type="territory" IsForeignKey="true" />
+      <Association Name="campaign_type_campaign" Member="campaign_type" ThisKey="campaign_type_id" OtherKey="campaign_type_id" Type="campaign_type" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.brand" Member="brands">
@@ -39,16 +39,6 @@
       <Column Name="file_name" Type="System.String" DbType="VarChar(512) NOT NULL" CanBeNull="false" />
       <Column Name="campaign_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="campaign_campaign_document" Member="campaign" ThisKey="campaign_id" OtherKey="campaign_id" Type="campaign" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.campaign_type" Member="campaign_types">
-    <Type Name="campaign_type">
-      <Column Name="campaign_type_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="campaign_type_description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="campaign_type_campaign" Member="campaigns" ThisKey="campaign_type_id" OtherKey="campaign_type_id" Type="campaign" />
     </Type>
   </Table>
   <Table Name="dbo.category" Member="categories">
@@ -100,6 +90,17 @@
       <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="usage_type_usage" Member="usages" ThisKey="usage_type_id" OtherKey="usage_type_id" Type="usage" />
+    </Type>
+  </Table>
+  <Table Name="dbo.campaign_type" Member="campaign_types">
+    <Type Name="campaign_type">
+      <Column Name="campaign_type_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="campaign_type_description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="list_order" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="campaign_type_campaign" Member="campaigns" ThisKey="campaign_type_id" OtherKey="campaign_type_id" Type="campaign" />
     </Type>
   </Table>
   <Function Name="dbo.usage_report" Method="usage_report">

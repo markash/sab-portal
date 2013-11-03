@@ -201,6 +201,7 @@
     <Content Include="Content\images\doc_48x48.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\gold.png" />
     <Content Include="Content\images\green.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\maintenance.png">

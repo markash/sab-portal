@@ -203,7 +203,7 @@ namespace Models
 
         public List<campaign_type> RetrieveAll()
         {
-            var query = from campaign_type in ctx.campaign_types
+            var query = from campaign_type in ctx.campaign_types 
                         select campaign_type;
             return query.ToList();
         }
@@ -1038,7 +1038,7 @@ namespace Models
                         Value = category.category_id.ToString(),
                         Selected = category.category_id == c.category_id
                     }).ToList(),
-                    CampaignTypes = campaignTypes.OrderBy(campaignType => campaignType.campaign_type_description).Select(campaignType => new SelectListItem
+                    CampaignTypes = campaignTypes.OrderBy(campaignType => campaignType.list_order).Select(campaignType => new SelectListItem
                     {
                         Text = campaignType.campaign_type_description,
                         Value = campaignType.campaign_type_id.ToString(),
