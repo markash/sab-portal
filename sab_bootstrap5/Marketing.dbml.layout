@@ -2,12 +2,6 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11.375, 12" name="Marketing">
   <DataContextMoniker Name="/MarketingDataContext" />
   <nestedChildShapes>
-    <classShape Id="57ae7210-bef9-4064-9091-b8cdb6496ba9" absoluteBounds="5, 6.125, 2, 2.7324039713541666">
-      <DataClassMoniker Name="/MarketingDataContext/campaign" />
-      <nestedChildShapes>
-        <elementListCompartment Id="7515c7bf-2eb9-425d-a92f-249ec6ddfa45" absoluteBounds="5.015, 6.585, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="c920b758-747f-4a50-a9e7-8bfe9d6b512e" absoluteBounds="2.75, 2.375, 2, 1.7708968098958327">
       <DataClassMoniker Name="/MarketingDataContext/brand" />
       <nestedChildShapes>
@@ -50,41 +44,6 @@
         <elementListCompartment Id="891b8ca7-ba48-451f-9d4e-f6375d2cfb66" absoluteBounds="5.765, 2.71, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(4.53125 : 4.14589680989583); (4.53125 : 6.85659912109375); (5 : 6.85659912109375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/MarketingDataContext/brand/brand_campaign" />
-      <nodes>
-        <classShapeMoniker Id="c920b758-747f-4a50-a9e7-8bfe9d6b512e" />
-        <classShapeMoniker Id="57ae7210-bef9-4064-9091-b8cdb6496ba9" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(7 : 6.87060099283854); (8.25 : 6.87060099283854)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/MarketingDataContext/campaign/campaign_campaign_document" />
-      <nodes>
-        <classShapeMoniker Id="57ae7210-bef9-4064-9091-b8cdb6496ba9" />
-        <classShapeMoniker Id="cb386891-7746-4170-8827-533652490123" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(4.25 : 8.19354939778646); (5 : 8.19354939778646)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/MarketingDataContext/category/category_campaign" />
-      <nodes>
-        <classShapeMoniker Id="4bfc6f6b-7212-4b12-8c78-4a74a880e651" />
-        <classShapeMoniker Id="57ae7210-bef9-4064-9091-b8cdb6496ba9" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(5.625 : 10); (5.625 : 8.85740397135417)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/MarketingDataContext/country/country_campaign" />
-      <nodes>
-        <classShapeMoniker Id="047ca421-4980-4a81-9491-07e7367a41ea" />
-        <classShapeMoniker Id="57ae7210-bef9-4064-9091-b8cdb6496ba9" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(7.65625 : 9.875); (7.65625 : 7.49120198567708); (7 : 7.49120198567708)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/MarketingDataContext/territory/territory_campaign" />
-      <nodes>
-        <classShapeMoniker Id="03d1c321-6e8e-45b1-bf4f-5f08a198136c" />
-        <classShapeMoniker Id="57ae7210-bef9-4064-9091-b8cdb6496ba9" />
-      </nodes>
-    </associationConnector>
     <associationConnector edgePoints="[(7.75 : 3.13544840494792); (9.125 : 3.13544840494792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/MarketingDataContext/usage_type/usage_type_usage" />
       <nodes>
@@ -98,11 +57,52 @@
         <elementListCompartment Id="7bcbad2a-fe61-49b4-8118-9dd4616e9419" absoluteBounds="1.8899999999999997, 5.21, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(3.875 : 6.41909912109375); (4.44791666666667 : 6.41909912109375 : JumpStart); (4.61458333333333 : 6.41909912109375 : JumpEnd); (5 : 6.41909912109375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <classShape Id="4d42ea64-b139-48b9-8077-60d230cce537" absoluteBounds="4.875, 4.75, 2, 2.9247054036458331">
+      <DataClassMoniker Name="/MarketingDataContext/campaign" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ca3753ab-bcd0-4096-8ec3-df5a6bbf4473" absoluteBounds="4.89, 5.21, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(6.875 : 7.02485270182292); (7.57291666666667 : 7.02485270182292 : JumpStart); (7.73958333333333 : 7.02485270182292 : JumpEnd); (8.25 : 7.02485270182292)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/MarketingDataContext/campaign/campaign_campaign_document" />
+      <nodes>
+        <classShapeMoniker Id="4d42ea64-b139-48b9-8077-60d230cce537" />
+        <classShapeMoniker Id="cb386891-7746-4170-8827-533652490123" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.75 : 4.14589680989583); (4.875 : 4.75)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/MarketingDataContext/brand/brand_campaign" />
+      <nodes>
+        <classShapeMoniker Id="c920b758-747f-4a50-a9e7-8bfe9d6b512e" />
+        <classShapeMoniker Id="4d42ea64-b139-48b9-8077-60d230cce537" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(3.875 : 5.76285162109375); (4.875 : 5.76285162109375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/MarketingDataContext/campaign_type/campaign_type_campaign" />
       <nodes>
         <classShapeMoniker Id="26820e3f-40bf-4269-be44-e1bfed3a55ef" />
-        <classShapeMoniker Id="57ae7210-bef9-4064-9091-b8cdb6496ba9" />
+        <classShapeMoniker Id="4d42ea64-b139-48b9-8077-60d230cce537" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.25 : 7.33735270182292); (4.875 : 7.33735270182292)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/MarketingDataContext/category/category_campaign" />
+      <nodes>
+        <classShapeMoniker Id="4bfc6f6b-7212-4b12-8c78-4a74a880e651" />
+        <classShapeMoniker Id="4d42ea64-b139-48b9-8077-60d230cce537" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5625 : 10); (5.5625 : 7.67470540364583)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/MarketingDataContext/country/country_campaign" />
+      <nodes>
+        <classShapeMoniker Id="047ca421-4980-4a81-9491-07e7367a41ea" />
+        <classShapeMoniker Id="4d42ea64-b139-48b9-8077-60d230cce537" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(7.65625 : 9.875); (7.65625 : 5.53125); (6.875 : 5.53125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/MarketingDataContext/territory/territory_campaign" />
+      <nodes>
+        <classShapeMoniker Id="03d1c321-6e8e-45b1-bf4f-5f08a198136c" />
+        <classShapeMoniker Id="4d42ea64-b139-48b9-8077-60d230cce537" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>

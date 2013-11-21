@@ -1,0 +1,204 @@
+﻿** Warnings
+     Procedure: [dbo].[aspnet_Setup_RestorePermissions] has an unresolved reference to object [#aspnet_Permissions].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[type].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[type].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[type].
+     Procedure: [dbo].[aspnet_Users_DeleteUser] has an unresolved reference to object [dbo].[sysobjects].[type].
+     Procedure: [dbo].[aspnet_Setup_RemoveAllRoleMembers] has an unresolved reference to object [dbo].[sp_helpuser].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[name].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[type].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[type].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[type].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[type].
+     Procedure: [dbo].[aspnet_AnyDataInTables] has an unresolved reference to object [dbo].[sysobjects].[type].
+
+** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Create
+       [dbo].[aspnet_Membership_GetNumberOfUsersOnline] (Procedure)
+       [dbo].[aspnet_Membership_GetPassword] (Procedure)
+       [dbo].[aspnet_Membership_GetPasswordWithFormat] (Procedure)
+       [dbo].[aspnet_Membership_GetUserByEmail] (Procedure)
+       [dbo].[aspnet_Membership_GetUserByName] (Procedure)
+       [dbo].[aspnet_Membership_GetUserByUserId] (Procedure)
+       [dbo].[aspnet_Membership_ResetPassword] (Procedure)
+       [dbo].[aspnet_Membership_SetPassword] (Procedure)
+       [dbo].[aspnet_Membership_UnlockUser] (Procedure)
+       [dbo].[aspnet_Membership_UpdateUser] (Procedure)
+       [dbo].[aspnet_Membership_UpdateUserInfo] (Procedure)
+       [dbo].[aspnet_Paths_CreatePath] (Procedure)
+       [dbo].[aspnet_Personalization_GetApplicationId] (Procedure)
+       [dbo].[aspnet_PersonalizationAdministration_DeleteAllState] (Procedure)
+       [dbo].[aspnet_PersonalizationAdministration_FindState] (Procedure)
+       [dbo].[aspnet_PersonalizationAdministration_GetCountOfState] (Procedure)
+       [dbo].[aspnet_PersonalizationAdministration_ResetSharedState] (Procedure)
+       [dbo].[aspnet_PersonalizationAdministration_ResetUserState] (Procedure)
+       [dbo].[aspnet_PersonalizationAllUsers_GetPageSettings] (Procedure)
+       [dbo].[aspnet_PersonalizationAllUsers_ResetPageSettings] (Procedure)
+       [dbo].[aspnet_PersonalizationAllUsers_SetPageSettings] (Procedure)
+       [dbo].[aspnet_PersonalizationPerUser_GetPageSettings] (Procedure)
+       [dbo].[aspnet_PersonalizationPerUser_ResetPageSettings] (Procedure)
+       [dbo].[aspnet_Profile_DeleteInactiveProfiles] (Procedure)
+       [dbo].[aspnet_Profile_GetNumberOfInactiveProfiles] (Procedure)
+       [dbo].[aspnet_Profile_GetProfiles] (Procedure)
+       [dbo].[aspnet_Profile_GetProperties] (Procedure)
+       [dbo].[aspnet_RegisterSchemaVersion] (Procedure)
+       [dbo].[aspnet_Roles_CreateRole] (Procedure)
+       [dbo].[aspnet_Roles_DeleteRole] (Procedure)
+       [dbo].[aspnet_Roles_GetAllRoles] (Procedure)
+       [dbo].[aspnet_Roles_RoleExists] (Procedure)
+       [dbo].[aspnet_Setup_RemoveAllRoleMembers] (Procedure)
+       [dbo].[aspnet_Setup_RestorePermissions] (Procedure)
+       [dbo].[aspnet_UnRegisterSchemaVersion] (Procedure)
+       [dbo].[aspnet_Users_CreateUser] (Procedure)
+       [dbo].[aspnet_Users_DeleteUser] (Procedure)
+       [dbo].[aspnet_UsersInRoles_AddUsersToRoles] (Procedure)
+       [dbo].[aspnet_UsersInRoles_FindUsersInRole] (Procedure)
+       [dbo].[aspnet_UsersInRoles_GetRolesForUser] (Procedure)
+       [dbo].[aspnet_UsersInRoles_GetUsersInRoles] (Procedure)
+       [dbo].[aspnet_UsersInRoles_IsUserInRole] (Procedure)
+       [dbo].[aspnet_UsersInRoles_RemoveUsersFromRoles] (Procedure)
+       [dbo].[aspnet_WebEvent_LogEvent] (Procedure)
+       [dbo].[statistics_brands_report] (Procedure)
+       [dbo].[statistics_campaign_types_report] (Procedure)
+       [dbo].[statistics_categories_report] (Procedure)
+       [dbo].[statistics_countries_report] (Procedure)
+       [dbo].[statistics_territories_report] (Procedure)
+       [dbo].[upload_report] (Procedure)
+       [dbo].[usage_report] (Procedure)
+       [dbo].[aspnet_Membership_CreateUser] (Procedure)
+       [dbo].[aspnet_PersonalizationPerUser_SetPageSettings] (Procedure)
+       [dbo].[aspnet_Profile_DeleteProfiles] (Procedure)
+       [dbo].[aspnet_Profile_SetProperties] (Procedure)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+       Permission (Permission)
+
+** Supporting actions

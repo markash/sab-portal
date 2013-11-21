@@ -23,14 +23,16 @@ namespace Models
         protected static int USAGE_MAINTAIN_BRANDS = 7;
         protected static int USAGE_MAINTAIN_COUNTRIES = 8;
         protected static int USAGE_READ_DOCUMENT = 9;
-        protected static string SQL_INSERT_USAGE = "INSERT INTO usage (username, usage_type_id) VALUES (@username, @usage_type_id)";
+        protected static string SQL_INSERT_USAGE = "INSERT INTO usage (username, email, usage_type_id) VALUES (@username, @email, @usage_type_id)";
 
         protected MarketingDataContext ctx = new MarketingDataContext();
 
         protected static SqlCommand CreateUsageCommand(string username, int usageTypeId, SqlConnection connection, SqlTransaction txn)
         {
+            string email = Security.UserEmail(username);
             SqlCommand command = new SqlCommand(SQL_INSERT_USAGE, connection, txn);
             command.Parameters.Add(new SqlParameter("@username", username));
+            command.Parameters.Add(new SqlParameter("@email", email));
             command.Parameters.Add(new SqlParameter("@usage_type_id", usageTypeId));
             return command;
         }
@@ -599,7 +601,8 @@ namespace Models
                 {
 
                     string sql = @"UPDATE campaign SET " +
-                                    "territory_id=@territory_id" +
+                                    "category_id=@category_id" +
+                                    ",territory_id=@territory_id" +
                                     ",campaign_type_id=@campaign_type_id" +
                                     ",brand_id=@brand_id" +
                                     ",country_id=@country_id" +
@@ -609,6 +612,12 @@ namespace Models
                     SqlCommand command = new SqlCommand(sql, conn, txn);
 
                     SqlParameter param = command.CreateParameter();
+                    param.ParameterName = "@category_id";
+                    param.DbType = System.Data.DbType.Int32;
+                    param.Value = Int32.Parse(campaign.CategoryId);
+                    command.Parameters.Add(param);
+
+                    param = command.CreateParameter();
                     param.ParameterName = "@territory_id";
                     param.DbType = System.Data.DbType.Int32;
                     param.Value = Int32.Parse(campaign.TerritoryId);
@@ -660,7 +669,7 @@ namespace Models
             {
                 conn.Open();
                 using (SqlTransaction txn = conn.BeginTransaction())
-                {
+                {   
                     CreateUsageCommand(username, USAGE_UPLOAD, conn, txn).ExecuteNonQuery();
 
                     string sql = @"INSERT INTO campaign (" +
@@ -670,21 +679,29 @@ namespace Models
                                     "brand_id," +
                                     "country_id," +
                                     "username," +
+                                    "email," +
                                     "title" +
                                  ") VALUES (" +
-                                    "default," +
+                                    "@category_id," +
                                     "@territory_id," +
                                     "@campaign_type_id," +
                                     "@brand_id," +
                                     "@country_id," +
                                     "@username," +
+                                    "@email," +
                                     "@title" +
                                 ") SET @id=SCOPE_IDENTITY()";
 
 
                     SqlCommand command = new SqlCommand(sql, conn, txn);
-                    
+
                     SqlParameter param = command.CreateParameter();
+                    param.ParameterName = "@category_id";
+                    param.DbType = System.Data.DbType.Int32;
+                    param.Value = Int32.Parse(document.CategoryId);
+                    command.Parameters.Add(param);
+
+                    param = command.CreateParameter();
                     param.ParameterName = "@territory_id";
                     param.DbType = System.Data.DbType.Int32;
                     param.Value = Int32.Parse(document.TerritoryId);
@@ -712,6 +729,13 @@ namespace Models
                     param.ParameterName = "@username";
                     param.DbType = System.Data.DbType.String;
                     param.Value = username;
+                    command.Parameters.Add(param);
+
+                    string email = Security.UserEmail(username);
+                    param = command.CreateParameter();
+                    param.ParameterName = "@email";
+                    param.DbType = System.Data.DbType.String;
+                    param.Value = email != null ? email : "";
                     command.Parameters.Add(param);
 
                     param = command.CreateParameter();
@@ -1019,6 +1043,7 @@ namespace Models
                 return new CampaignModel
                 {
                     Id = c.campaign_id,
+                    CategoryId = c.category_id.ToString(),
                     Category = c.category.category_description,
                     TerritoryId = c.territory_id.ToString(),
                     Territory = c.territory.territory_description,
@@ -1030,6 +1055,7 @@ namespace Models
                     Country = c.country.country_description,
                     Title = c.title,
                     Owner = c.username,
+                    Email = c.email,
                     Uploaded = c.create_ts,
                     Documents = d,
                     Categories = categories.OrderBy(category => category.category_description).Select(category => new SelectListItem

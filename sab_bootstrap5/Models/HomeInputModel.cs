@@ -76,6 +76,7 @@ namespace Models
         public IEnumerable<DocumentModel> Documents { get; set; }
 
         public string Owner { get; set; }
+        public string Email { get; set; }
 
         public bool IsOwnedByCurrentUser()
         {

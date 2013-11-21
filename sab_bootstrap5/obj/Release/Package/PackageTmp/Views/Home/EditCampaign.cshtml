@@ -17,6 +17,15 @@
             @Html.ValidationSummary(false)
             @Html.HiddenFor(x => x.Id, Model.Id)
 
+                <div><u>Select a Category</u></div>
+                foreach (var category in Model.Categories)
+                {
+                    <div class="controls">
+                    @Html.RadioButtonFor(x => x.CategoryId, category.Value, new { id = "upload_category_" + i })       
+                    @category.Text
+                    </div>
+                }
+                
                 <div><u>Select a Territory</u></div>
                 foreach (var territory in Model.Territories)
                 {

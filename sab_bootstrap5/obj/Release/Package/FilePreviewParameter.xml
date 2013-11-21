@@ -4,7 +4,7 @@
     <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\SDE\\projects\\github\\carat-sab-dotnet\\sab_bootstrap5\\obj\\Release\\Package\\PackageTmp$" />
     <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\SDE\\projects\\github\\carat-sab-dotnet\\sab_bootstrap5\\obj\\Release\\Package\\PackageTmp$" />
   </parameter>
-  <parameter name="sab_dbConnectionString-Web.config Connection String" description="" value="Data Source=hyhepvfbcl.database.windows.net,1433;Initial Catalog=sab-db;User ID=sab@hyhepvfbcl;Password=thebear18*;Trusted_Connection=False;Encrypt=True;Connection Timeout=30" tags="">
+  <parameter name="sab_dbConnectionString-Web.config Connection String" description="" value="Data Source=sw4plyierw.database.windows.net,1433;Initial Catalog=sabportal-db;User ID=sab@sw4plyierw;Password=thebear18*;Trusted_Connection=False;Encrypt=True;Connection Timeout=30" tags="">
     <parameterEntry kind="XmlFile" scope="C:\\SDE\\projects\\github\\carat-sab-dotnet\\sab_bootstrap5\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='sab_dbConnectionString']/@connectionString" />
   </parameter>
   <parameter name="ad_connection-Web.config Connection String" description="ad_connection Connection String used in web.config by the application to access the database." value="LDAP://yellowfire.co.za/DC=yellowfire,DC=co,DC=za" tags="SqlConnectionString">

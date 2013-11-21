@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{74b4f5b1-25bb-454b-8612-dcc4769bebb5}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql100DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureDatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -320,6 +320,7 @@
     <Build Include="dbo\Tables\ForeignKeys\campaign_document_campaign_fk.sql" />
     <Build Include="dbo\Tables\ForeignKeys\campaign_territory_fk.sql" />
     <Build Include="dbo\Tables\ForeignKeys\usage_usage_type_fk.sql" />
+    <None Include="sab-db-sw4plyierw.publish.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="sab-db.refactorlog" />

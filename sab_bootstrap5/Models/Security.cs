@@ -99,5 +99,15 @@ namespace Models
                 CreateUser(new LoginModel { UserName = "admin", Password = "password1*", RememberMe = false }, ApplicationRole.Administrator);
             }
         }
+
+        public static string UserEmail(string username)
+        {
+            return Membership.GetUser(username).Email;
+        }
+
+        public static string CurrentUserEmail()
+        {
+            return Membership.GetUser(WebSecurity.CurrentUserName).Email;
+        }
     }
 }

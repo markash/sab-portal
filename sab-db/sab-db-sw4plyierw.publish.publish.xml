@@ -2,9 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
-    <TargetDatabaseName>sabcollAUWuy62QT</TargetDatabaseName>
+    <TargetDatabaseName>sabportal-db</TargetDatabaseName>
     <DeployScriptFileName>sab-db.sql</DeployScriptFileName>
-    <TargetConnectionString>Data Source=iif9ib8j0q.database.windows.net;Database=sabcollAUWuy62QT;User ID=sab@iif9ib8j0q;Persist Security Info=True;Pooling=False</TargetConnectionString>
+    <TargetConnectionString>Data Source=sw4plyierw.database.windows.net;Persist Security Info=True;User ID=sab@sw4plyierw;Pooling=False</TargetConnectionString>
     <ProfileVersionNumber>1</ProfileVersionNumber>
   </PropertyGroup>
 </Project>

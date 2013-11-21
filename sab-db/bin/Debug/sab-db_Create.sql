@@ -40,153 +40,11 @@ USE [master];
 
 
 GO
-
-IF (DB_ID(N'$(DatabaseName)') IS NOT NULL) 
-BEGIN
-    ALTER DATABASE [$(DatabaseName)]
-    SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE [$(DatabaseName)];
-END
-
-GO
 PRINT N'Creating $(DatabaseName)...'
 GO
 CREATE DATABASE [$(DatabaseName)] COLLATE SQL_Latin1_General_CP1_CI_AS
 GO
-IF EXISTS (SELECT 1
-           FROM   [master].[dbo].[sysdatabases]
-           WHERE  [name] = N'$(DatabaseName)')
-    BEGIN
-        ALTER DATABASE [$(DatabaseName)]
-            SET ANSI_NULLS ON,
-                ANSI_PADDING ON,
-                ANSI_WARNINGS ON,
-                ARITHABORT ON,
-                CONCAT_NULL_YIELDS_NULL ON,
-                NUMERIC_ROUNDABORT OFF,
-                QUOTED_IDENTIFIER ON,
-                ANSI_NULL_DEFAULT ON,
-                CURSOR_DEFAULT LOCAL,
-                RECOVERY FULL,
-                CURSOR_CLOSE_ON_COMMIT OFF,
-                AUTO_CREATE_STATISTICS ON,
-                AUTO_SHRINK OFF,
-                AUTO_UPDATE_STATISTICS ON,
-                RECURSIVE_TRIGGERS OFF 
-            WITH ROLLBACK IMMEDIATE;
-        ALTER DATABASE [$(DatabaseName)]
-            SET AUTO_CLOSE OFF 
-            WITH ROLLBACK IMMEDIATE;
-    END
-
-
-GO
-IF EXISTS (SELECT 1
-           FROM   [master].[dbo].[sysdatabases]
-           WHERE  [name] = N'$(DatabaseName)')
-    BEGIN
-        ALTER DATABASE [$(DatabaseName)]
-            SET ALLOW_SNAPSHOT_ISOLATION OFF;
-    END
-
-
-GO
-IF EXISTS (SELECT 1
-           FROM   [master].[dbo].[sysdatabases]
-           WHERE  [name] = N'$(DatabaseName)')
-    BEGIN
-        ALTER DATABASE [$(DatabaseName)]
-            SET READ_COMMITTED_SNAPSHOT OFF;
-    END
-
-
-GO
-IF EXISTS (SELECT 1
-           FROM   [master].[dbo].[sysdatabases]
-           WHERE  [name] = N'$(DatabaseName)')
-    BEGIN
-        ALTER DATABASE [$(DatabaseName)]
-            SET AUTO_UPDATE_STATISTICS_ASYNC OFF,
-                PAGE_VERIFY NONE,
-                DATE_CORRELATION_OPTIMIZATION OFF,
-                DISABLE_BROKER,
-                PARAMETERIZATION SIMPLE,
-                SUPPLEMENTAL_LOGGING OFF 
-            WITH ROLLBACK IMMEDIATE;
-    END
-
-
-GO
-IF IS_SRVROLEMEMBER(N'sysadmin') = 1
-    BEGIN
-        IF EXISTS (SELECT 1
-                   FROM   [master].[dbo].[sysdatabases]
-                   WHERE  [name] = N'$(DatabaseName)')
-            BEGIN
-                EXECUTE sp_executesql N'ALTER DATABASE [$(DatabaseName)]
-    SET TRUSTWORTHY OFF,
-        DB_CHAINING OFF 
-    WITH ROLLBACK IMMEDIATE';
-            END
-    END
-ELSE
-    BEGIN
-        PRINT N'The database settings cannot be modified. You must be a SysAdmin to apply these settings.';
-    END
-
-
-GO
-IF IS_SRVROLEMEMBER(N'sysadmin') = 1
-    BEGIN
-        IF EXISTS (SELECT 1
-                   FROM   [master].[dbo].[sysdatabases]
-                   WHERE  [name] = N'$(DatabaseName)')
-            BEGIN
-                EXECUTE sp_executesql N'ALTER DATABASE [$(DatabaseName)]
-    SET HONOR_BROKER_PRIORITY OFF 
-    WITH ROLLBACK IMMEDIATE';
-            END
-    END
-ELSE
-    BEGIN
-        PRINT N'The database settings cannot be modified. You must be a SysAdmin to apply these settings.';
-    END
-
-
-GO
 USE [$(DatabaseName)];
-
-
-GO
-IF fulltextserviceproperty(N'IsFulltextInstalled') = 1
-    EXECUTE sp_fulltext_database 'enable';
-
-
-GO
-PRINT N'Creating [aspnet_Profile_ReportingAccess]...';
-
-
-GO
-CREATE ROLE [aspnet_Profile_ReportingAccess]
-    AUTHORIZATION [dbo];
-
-
-GO
-PRINT N'Creating [aspnet_Roles_BasicAccess]...';
-
-
-GO
-CREATE ROLE [aspnet_Roles_BasicAccess]
-    AUTHORIZATION [dbo];
-
-
-GO
-PRINT N'Creating [aspnet_Roles_FullAccess]...';
-
-
-GO
-CREATE ROLE [aspnet_Roles_FullAccess]
-    AUTHORIZATION [dbo];
 
 
 GO
@@ -280,19 +138,30 @@ CREATE ROLE [aspnet_Profile_FullAccess]
 
 
 GO
-PRINT N'Creating <unnamed>...';
+PRINT N'Creating [aspnet_Profile_ReportingAccess]...';
 
 
 GO
-EXECUTE sp_addrolemember @rolename = N'aspnet_Profile_ReportingAccess', @membername = N'aspnet_Profile_FullAccess';
+CREATE ROLE [aspnet_Profile_ReportingAccess]
+    AUTHORIZATION [dbo];
 
 
 GO
-PRINT N'Creating <unnamed>...';
+PRINT N'Creating [aspnet_Roles_BasicAccess]...';
 
 
 GO
-EXECUTE sp_addrolemember @rolename = N'aspnet_Roles_BasicAccess', @membername = N'aspnet_Roles_FullAccess';
+CREATE ROLE [aspnet_Roles_BasicAccess]
+    AUTHORIZATION [dbo];
+
+
+GO
+PRINT N'Creating [aspnet_Roles_FullAccess]...';
+
+
+GO
+CREATE ROLE [aspnet_Roles_FullAccess]
+    AUTHORIZATION [dbo];
 
 
 GO
@@ -344,39 +213,19 @@ EXECUTE sp_addrolemember @rolename = N'aspnet_Profile_BasicAccess', @membername 
 
 
 GO
-PRINT N'Creating [aspnet_Roles_BasicAccess]...';
+PRINT N'Creating <unnamed>...';
 
 
 GO
-CREATE SCHEMA [aspnet_Roles_BasicAccess]
-    AUTHORIZATION [dbo];
+EXECUTE sp_addrolemember @rolename = N'aspnet_Profile_ReportingAccess', @membername = N'aspnet_Profile_FullAccess';
 
 
 GO
-PRINT N'Creating [aspnet_Roles_FullAccess]...';
+PRINT N'Creating <unnamed>...';
 
 
 GO
-CREATE SCHEMA [aspnet_Roles_FullAccess]
-    AUTHORIZATION [dbo];
-
-
-GO
-PRINT N'Creating [aspnet_Roles_ReportingAccess]...';
-
-
-GO
-CREATE SCHEMA [aspnet_Roles_ReportingAccess]
-    AUTHORIZATION [dbo];
-
-
-GO
-PRINT N'Creating [aspnet_WebEvent_FullAccess]...';
-
-
-GO
-CREATE SCHEMA [aspnet_WebEvent_FullAccess]
-    AUTHORIZATION [dbo];
+EXECUTE sp_addrolemember @rolename = N'aspnet_Roles_BasicAccess', @membername = N'aspnet_Roles_FullAccess';
 
 
 GO
@@ -457,6 +306,42 @@ PRINT N'Creating [aspnet_Profile_ReportingAccess]...';
 
 GO
 CREATE SCHEMA [aspnet_Profile_ReportingAccess]
+    AUTHORIZATION [dbo];
+
+
+GO
+PRINT N'Creating [aspnet_Roles_BasicAccess]...';
+
+
+GO
+CREATE SCHEMA [aspnet_Roles_BasicAccess]
+    AUTHORIZATION [dbo];
+
+
+GO
+PRINT N'Creating [aspnet_Roles_FullAccess]...';
+
+
+GO
+CREATE SCHEMA [aspnet_Roles_FullAccess]
+    AUTHORIZATION [dbo];
+
+
+GO
+PRINT N'Creating [aspnet_Roles_ReportingAccess]...';
+
+
+GO
+CREATE SCHEMA [aspnet_Roles_ReportingAccess]
+    AUTHORIZATION [dbo];
+
+
+GO
+PRINT N'Creating [aspnet_WebEvent_FullAccess]...';
+
+
+GO
+CREATE SCHEMA [aspnet_WebEvent_FullAccess]
     AUTHORIZATION [dbo];
 
 
@@ -728,6 +613,42 @@ CREATE TABLE [dbo].[aspnet_WebEvent_Events] (
 
 
 GO
+PRINT N'Creating [dbo].[campaign]...';
+
+
+GO
+CREATE TABLE [dbo].[campaign] (
+    [campaign_id]      INT           IDENTITY (1, 1) NOT NULL,
+    [category_id]      INT           NOT NULL,
+    [territory_id]     INT           NOT NULL,
+    [campaign_type_id] INT           NOT NULL,
+    [country_id]       INT           NOT NULL,
+    [brand_id]         INT           NOT NULL,
+    [title]            VARCHAR (255) NOT NULL,
+    [username]         VARCHAR (255) NOT NULL,
+    [email]            VARCHAR (255) NOT NULL,
+    [create_ts]        DATETIME      NULL,
+    [update_ts]        DATETIME      NULL,
+    PRIMARY KEY CLUSTERED ([campaign_id] ASC)
+);
+
+
+GO
+PRINT N'Creating [dbo].[brand]...';
+
+
+GO
+CREATE TABLE [dbo].[brand] (
+    [brand_id]          INT          IDENTITY (1, 1) NOT NULL,
+    [brand_description] VARCHAR (50) NOT NULL,
+    [active]            BIT          NULL,
+    [create_ts]         DATETIME     NULL,
+    [update_ts]         DATETIME     NULL,
+    PRIMARY KEY CLUSTERED ([brand_id] ASC)
+);
+
+
+GO
 PRINT N'Creating [dbo].[usage_type]...';
 
 
@@ -750,6 +671,7 @@ GO
 CREATE TABLE [dbo].[usage] (
     [usage_id]      INT           IDENTITY (1, 1) NOT NULL,
     [username]      VARCHAR (255) NOT NULL,
+    [email]         VARCHAR (255) NOT NULL,
     [usage_type_id] INT           NOT NULL,
     [active]        BIT           NULL,
     [create_ts]     DATETIME      NULL,
@@ -804,57 +726,6 @@ CREATE TABLE [dbo].[category] (
 
 
 GO
-PRINT N'Creating [dbo].[campaign]...';
-
-
-GO
-CREATE TABLE [dbo].[campaign] (
-    [campaign_id]      INT           IDENTITY (1, 1) NOT NULL,
-    [category_id]      INT           NOT NULL,
-    [territory_id]     INT           NOT NULL,
-    [campaign_type_id] INT           NOT NULL,
-    [country_id]       INT           NOT NULL,
-    [brand_id]         INT           NOT NULL,
-    [title]            VARCHAR (255) NOT NULL,
-    [username]         VARCHAR (255) NOT NULL,
-    [create_ts]        DATETIME      NULL,
-    [update_ts]        DATETIME      NULL,
-    PRIMARY KEY CLUSTERED ([campaign_id] ASC)
-);
-
-
-GO
-PRINT N'Creating [dbo].[brand]...';
-
-
-GO
-CREATE TABLE [dbo].[brand] (
-    [brand_id]          INT          IDENTITY (1, 1) NOT NULL,
-    [brand_description] VARCHAR (50) NOT NULL,
-    [active]            BIT          NULL,
-    [create_ts]         DATETIME     NULL,
-    [update_ts]         DATETIME     NULL,
-    PRIMARY KEY CLUSTERED ([brand_id] ASC)
-);
-
-
-GO
-PRINT N'Creating [dbo].[campaign_document]...';
-
-
-GO
-CREATE TABLE [dbo].[campaign_document] (
-    [id]             UNIQUEIDENTIFIER ROWGUIDCOL NOT NULL,
-    [document]       VARBINARY (MAX)  NULL,
-    [content_length] INT              NULL,
-    [content_type]   VARCHAR (255)    NOT NULL,
-    [file_name]      VARCHAR (512)    NOT NULL,
-    [campaign_id]    INT              NOT NULL,
-    UNIQUE NONCLUSTERED ([id] ASC)
-);
-
-
-GO
 PRINT N'Creating [dbo].[campaign_type]...';
 
 
@@ -867,6 +738,23 @@ CREATE TABLE [dbo].[campaign_type] (
     [create_ts]                 DATETIME     NULL,
     [update_ts]                 DATETIME     NULL,
     PRIMARY KEY CLUSTERED ([campaign_type_id] ASC)
+);
+
+
+GO
+PRINT N'Creating [dbo].[campaign_document]...';
+
+
+GO
+CREATE TABLE [dbo].[campaign_document] (
+    [id]             UNIQUEIDENTIFIER NOT NULL,
+    [document]       VARBINARY (MAX)  NULL,
+    [content_length] INT              NULL,
+    [content_type]   VARCHAR (255)    NOT NULL,
+    [file_name]      VARCHAR (512)    NOT NULL,
+    [campaign_id]    INT              NOT NULL,
+    CONSTRAINT [PK_campaign_document] PRIMARY KEY CLUSTERED ([id] ASC),
+    UNIQUE NONCLUSTERED ([id] ASC)
 );
 
 
@@ -943,96 +831,6 @@ ALTER TABLE [dbo].[aspnet_Users]
 
 
 GO
-PRINT N'Creating Default Constraint on [dbo].[usage_type]....';
-
-
-GO
-ALTER TABLE [dbo].[usage_type]
-    ADD DEFAULT (1) FOR [active];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[usage_type]....';
-
-
-GO
-ALTER TABLE [dbo].[usage_type]
-    ADD DEFAULT GETDATE() FOR [create_ts];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[usage]....';
-
-
-GO
-ALTER TABLE [dbo].[usage]
-    ADD DEFAULT (1) FOR [active];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[usage]....';
-
-
-GO
-ALTER TABLE [dbo].[usage]
-    ADD DEFAULT GETDATE() FOR [create_ts];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[territory]....';
-
-
-GO
-ALTER TABLE [dbo].[territory]
-    ADD DEFAULT (1) FOR [active];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[territory]....';
-
-
-GO
-ALTER TABLE [dbo].[territory]
-    ADD DEFAULT GETDATE() FOR [create_ts];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[country]....';
-
-
-GO
-ALTER TABLE [dbo].[country]
-    ADD DEFAULT (1) FOR [active];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[country]....';
-
-
-GO
-ALTER TABLE [dbo].[country]
-    ADD DEFAULT GETDATE() FOR [create_ts];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[category]....';
-
-
-GO
-ALTER TABLE [dbo].[category]
-    ADD DEFAULT (1) FOR [active];
-
-
-GO
-PRINT N'Creating Default Constraint on [dbo].[category]....';
-
-
-GO
-ALTER TABLE [dbo].[category]
-    ADD DEFAULT GETDATE() FOR [create_ts];
-
-
-GO
 PRINT N'Creating Default Constraint on [dbo].[campaign]....';
 
 
@@ -1069,12 +867,93 @@ ALTER TABLE [dbo].[brand]
 
 
 GO
-PRINT N'Creating Default Constraint on [dbo].[campaign_document]....';
+PRINT N'Creating Default Constraint on [dbo].[usage_type]....';
 
 
 GO
-ALTER TABLE [dbo].[campaign_document]
-    ADD DEFAULT NEWID() FOR [id];
+ALTER TABLE [dbo].[usage_type]
+    ADD DEFAULT (1) FOR [active];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[usage_type]....';
+
+
+GO
+ALTER TABLE [dbo].[usage_type]
+    ADD DEFAULT GETDATE() FOR [create_ts];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[usage]....';
+
+
+GO
+ALTER TABLE [dbo].[usage]
+    ADD DEFAULT (1) FOR [active];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[usage]....';
+
+
+GO
+ALTER TABLE [dbo].[usage]
+    ADD DEFAULT GETDATE() FOR [create_ts];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[territory]....';
+
+
+GO
+ALTER TABLE [dbo].[territory]
+    ADD DEFAULT (1) FOR [active];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[territory]....';
+
+
+GO
+ALTER TABLE [dbo].[territory]
+    ADD DEFAULT GETDATE() FOR [create_ts];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[country]....';
+
+
+GO
+ALTER TABLE [dbo].[country]
+    ADD DEFAULT (1) FOR [active];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[country]....';
+
+
+GO
+ALTER TABLE [dbo].[country]
+    ADD DEFAULT GETDATE() FOR [create_ts];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[category]....';
+
+
+GO
+ALTER TABLE [dbo].[category]
+    ADD DEFAULT (1) FOR [active];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[category]....';
+
+
+GO
+ALTER TABLE [dbo].[category]
+    ADD DEFAULT GETDATE() FOR [create_ts];
 
 
 GO
@@ -1093,6 +972,15 @@ PRINT N'Creating Default Constraint on [dbo].[campaign_type]....';
 GO
 ALTER TABLE [dbo].[campaign_type]
     ADD DEFAULT GETDATE() FOR [create_ts];
+
+
+GO
+PRINT N'Creating Default Constraint on [dbo].[campaign_document]....';
+
+
+GO
+ALTER TABLE [dbo].[campaign_document]
+    ADD DEFAULT NEWID() FOR [id];
 
 
 GO
@@ -1195,15 +1083,6 @@ ALTER TABLE [dbo].[aspnet_UsersInRoles]
 
 
 GO
-PRINT N'Creating usage_usage_type_fk...';
-
-
-GO
-ALTER TABLE [dbo].[usage]
-    ADD CONSTRAINT [usage_usage_type_fk] FOREIGN KEY ([usage_type_id]) REFERENCES [dbo].[usage_type] ([usage_type_id]);
-
-
-GO
 PRINT N'Creating campaign_territory_fk...';
 
 
@@ -1249,107 +1128,21 @@ ALTER TABLE [dbo].[campaign]
 
 
 GO
+PRINT N'Creating usage_usage_type_fk...';
+
+
+GO
+ALTER TABLE [dbo].[usage]
+    ADD CONSTRAINT [usage_usage_type_fk] FOREIGN KEY ([usage_type_id]) REFERENCES [dbo].[usage_type] ([usage_type_id]);
+
+
+GO
 PRINT N'Creating campaign_document_campaign_fk...';
 
 
 GO
 ALTER TABLE [dbo].[campaign_document]
     ADD CONSTRAINT [campaign_document_campaign_fk] FOREIGN KEY ([campaign_id]) REFERENCES [dbo].[campaign] ([campaign_id]);
-
-
-GO
-PRINT N'Creating [dbo].[vw_aspnet_Users]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-
-  CREATE VIEW [dbo].[vw_aspnet_Users]
-  AS SELECT [dbo].[aspnet_Users].[ApplicationId], [dbo].[aspnet_Users].[UserId], [dbo].[aspnet_Users].[UserName], [dbo].[aspnet_Users].[LoweredUserName], [dbo].[aspnet_Users].[MobileAlias], [dbo].[aspnet_Users].[IsAnonymous], [dbo].[aspnet_Users].[LastActivityDate]
-  FROM [dbo].[aspnet_Users]
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[vw_aspnet_UsersInRoles]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-
-  CREATE VIEW [dbo].[vw_aspnet_UsersInRoles]
-  AS SELECT [dbo].[aspnet_UsersInRoles].[UserId], [dbo].[aspnet_UsersInRoles].[RoleId]
-  FROM [dbo].[aspnet_UsersInRoles]
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[vw_aspnet_WebPartState_Paths]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-
-  CREATE VIEW [dbo].[vw_aspnet_WebPartState_Paths]
-  AS SELECT [dbo].[aspnet_Paths].[ApplicationId], [dbo].[aspnet_Paths].[PathId], [dbo].[aspnet_Paths].[Path], [dbo].[aspnet_Paths].[LoweredPath]
-  FROM [dbo].[aspnet_Paths]
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[vw_aspnet_WebPartState_Shared]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-
-  CREATE VIEW [dbo].[vw_aspnet_WebPartState_Shared]
-  AS SELECT [dbo].[aspnet_PersonalizationAllUsers].[PathId], [DataSize]=DATALENGTH([dbo].[aspnet_PersonalizationAllUsers].[PageSettings]), [dbo].[aspnet_PersonalizationAllUsers].[LastUpdatedDate]
-  FROM [dbo].[aspnet_PersonalizationAllUsers]
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[vw_aspnet_WebPartState_User]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-
-  CREATE VIEW [dbo].[vw_aspnet_WebPartState_User]
-  AS SELECT [dbo].[aspnet_PersonalizationPerUser].[PathId], [dbo].[aspnet_PersonalizationPerUser].[UserId], [DataSize]=DATALENGTH([dbo].[aspnet_PersonalizationPerUser].[PageSettings]), [dbo].[aspnet_PersonalizationPerUser].[LastUpdatedDate]
-  FROM [dbo].[aspnet_PersonalizationPerUser]
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
@@ -1455,7 +1248,7 @@ SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_UsersInRoles_IsUserInRole]...';
+PRINT N'Creating [dbo].[vw_aspnet_Users]...';
 
 
 GO
@@ -1466,47 +1259,15 @@ SET QUOTED_IDENTIFIER OFF;
 
 GO
 
-CREATE PROCEDURE [dbo].[aspnet_UsersInRoles_IsUserInRole]
-    @ApplicationName  nvarchar(256),
-    @UserName         nvarchar(256),
-    @RoleName         nvarchar(256)
-AS
-BEGIN
-    DECLARE @ApplicationId uniqueidentifier
-    SELECT  @ApplicationId = NULL
-    SELECT  @ApplicationId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
-    IF (@ApplicationId IS NULL)
-        RETURN(2)
-    DECLARE @UserId uniqueidentifier
-    SELECT  @UserId = NULL
-    DECLARE @RoleId uniqueidentifier
-    SELECT  @RoleId = NULL
-
-    SELECT  @UserId = UserId
-    FROM    dbo.aspnet_Users
-    WHERE   LoweredUserName = LOWER(@UserName) AND ApplicationId = @ApplicationId
-
-    IF (@UserId IS NULL)
-        RETURN(2)
-
-    SELECT  @RoleId = RoleId
-    FROM    dbo.aspnet_Roles
-    WHERE   LoweredRoleName = LOWER(@RoleName) AND ApplicationId = @ApplicationId
-
-    IF (@RoleId IS NULL)
-        RETURN(3)
-
-    IF (EXISTS( SELECT * FROM dbo.aspnet_UsersInRoles WHERE  UserId = @UserId AND RoleId = @RoleId))
-        RETURN(1)
-    ELSE
-        RETURN(0)
-END
+  CREATE VIEW [dbo].[vw_aspnet_Users]
+  AS SELECT [dbo].[aspnet_Users].[ApplicationId], [dbo].[aspnet_Users].[UserId], [dbo].[aspnet_Users].[UserName], [dbo].[aspnet_Users].[LoweredUserName], [dbo].[aspnet_Users].[MobileAlias], [dbo].[aspnet_Users].[IsAnonymous], [dbo].[aspnet_Users].[LastActivityDate]
+  FROM [dbo].[aspnet_Users]
 GO
 SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_UsersInRoles_RemoveUsersFromRoles]...';
+PRINT N'Creating [dbo].[vw_aspnet_UsersInRoles]...';
 
 
 GO
@@ -1517,134 +1278,15 @@ SET QUOTED_IDENTIFIER OFF;
 
 GO
 
-CREATE PROCEDURE [dbo].[aspnet_UsersInRoles_RemoveUsersFromRoles]
-	@ApplicationName  nvarchar(256),
-	@UserNames		  nvarchar(4000),
-	@RoleNames		  nvarchar(4000)
-AS
-BEGIN
-	DECLARE @AppId uniqueidentifier
-	SELECT  @AppId = NULL
-	SELECT  @AppId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
-	IF (@AppId IS NULL)
-		RETURN(2)
-
-
-	DECLARE @TranStarted   bit
-	SET @TranStarted = 0
-
-	IF( @@TRANCOUNT = 0 )
-	BEGIN
-		BEGIN TRANSACTION
-		SET @TranStarted = 1
-	END
-
-	DECLARE @tbNames  table(Name nvarchar(256) NOT NULL PRIMARY KEY)
-	DECLARE @tbRoles  table(RoleId uniqueidentifier NOT NULL PRIMARY KEY)
-	DECLARE @tbUsers  table(UserId uniqueidentifier NOT NULL PRIMARY KEY)
-	DECLARE @Num	  int
-	DECLARE @Pos	  int
-	DECLARE @NextPos  int
-	DECLARE @Name	  nvarchar(256)
-	DECLARE @CountAll int
-	DECLARE @CountU	  int
-	DECLARE @CountR	  int
-
-
-	SET @Num = 0
-	SET @Pos = 1
-	WHILE(@Pos <= LEN(@RoleNames))
-	BEGIN
-		SELECT @NextPos = CHARINDEX(N',', @RoleNames,  @Pos)
-		IF (@NextPos = 0 OR @NextPos IS NULL)
-			SELECT @NextPos = LEN(@RoleNames) + 1
-		SELECT @Name = RTRIM(LTRIM(SUBSTRING(@RoleNames, @Pos, @NextPos - @Pos)))
-		SELECT @Pos = @NextPos+1
-
-		INSERT INTO @tbNames VALUES (@Name)
-		SET @Num = @Num + 1
-	END
-
-	INSERT INTO @tbRoles
-	  SELECT RoleId
-	  FROM   dbo.aspnet_Roles ar, @tbNames t
-	  WHERE  LOWER(t.Name) = ar.LoweredRoleName AND ar.ApplicationId = @AppId
-	SELECT @CountR = @@ROWCOUNT
-
-	IF (@CountR <> @Num)
-	BEGIN
-		SELECT TOP 1 N'', Name
-		FROM   @tbNames
-		WHERE  LOWER(Name) NOT IN (SELECT ar.LoweredRoleName FROM dbo.aspnet_Roles ar,  @tbRoles r WHERE r.RoleId = ar.RoleId)
-		IF( @TranStarted = 1 )
-			ROLLBACK TRANSACTION
-		RETURN(2)
-	END
-
-
-	DELETE FROM @tbNames WHERE 1=1
-	SET @Num = 0
-	SET @Pos = 1
-
-
-	WHILE(@Pos <= LEN(@UserNames))
-	BEGIN
-		SELECT @NextPos = CHARINDEX(N',', @UserNames,  @Pos)
-		IF (@NextPos = 0 OR @NextPos IS NULL)
-			SELECT @NextPos = LEN(@UserNames) + 1
-		SELECT @Name = RTRIM(LTRIM(SUBSTRING(@UserNames, @Pos, @NextPos - @Pos)))
-		SELECT @Pos = @NextPos+1
-
-		INSERT INTO @tbNames VALUES (@Name)
-		SET @Num = @Num + 1
-	END
-
-	INSERT INTO @tbUsers
-	  SELECT UserId
-	  FROM   dbo.aspnet_Users ar, @tbNames t
-	  WHERE  LOWER(t.Name) = ar.LoweredUserName AND ar.ApplicationId = @AppId
-
-	SELECT @CountU = @@ROWCOUNT
-	IF (@CountU <> @Num)
-	BEGIN
-		SELECT TOP 1 Name, N''
-		FROM   @tbNames
-		WHERE  LOWER(Name) NOT IN (SELECT au.LoweredUserName FROM dbo.aspnet_Users au,  @tbUsers u WHERE u.UserId = au.UserId)
-
-		IF( @TranStarted = 1 )
-			ROLLBACK TRANSACTION
-		RETURN(1)
-	END
-
-	SELECT  @CountAll = COUNT(*)
-	FROM	dbo.aspnet_UsersInRoles ur, @tbUsers u, @tbRoles r
-	WHERE   ur.UserId = u.UserId AND ur.RoleId = r.RoleId
-
-	IF (@CountAll <> @CountU * @CountR)
-	BEGIN
-		SELECT TOP 1 UserName, RoleName
-		FROM		 @tbUsers tu, @tbRoles tr, dbo.aspnet_Users u, dbo.aspnet_Roles r
-		WHERE		 u.UserId = tu.UserId AND r.RoleId = tr.RoleId AND
-					 tu.UserId NOT IN (SELECT ur.UserId FROM dbo.aspnet_UsersInRoles ur WHERE ur.RoleId = tr.RoleId) AND
-					 tr.RoleId NOT IN (SELECT ur.RoleId FROM dbo.aspnet_UsersInRoles ur WHERE ur.UserId = tu.UserId)
-		IF( @TranStarted = 1 )
-			ROLLBACK TRANSACTION
-		RETURN(3)
-	END
-
-	DELETE FROM dbo.aspnet_UsersInRoles
-	WHERE UserId IN (SELECT UserId FROM @tbUsers)
-	  AND RoleId IN (SELECT RoleId FROM @tbRoles)
-	IF( @TranStarted = 1 )
-		COMMIT TRANSACTION
-	RETURN(0)
-END
+  CREATE VIEW [dbo].[vw_aspnet_UsersInRoles]
+  AS SELECT [dbo].[aspnet_UsersInRoles].[UserId], [dbo].[aspnet_UsersInRoles].[RoleId]
+  FROM [dbo].[aspnet_UsersInRoles]
 GO
 SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_WebEvent_LogEvent]...';
+PRINT N'Creating [dbo].[vw_aspnet_WebPartState_Paths]...';
 
 
 GO
@@ -1654,68 +1296,16 @@ SET QUOTED_IDENTIFIER OFF;
 
 
 GO
-CREATE PROCEDURE [dbo].[aspnet_WebEvent_LogEvent]
-        @EventId         char(32),
-        @EventTimeUtc    datetime,
-        @EventTime       datetime,
-        @EventType       nvarchar(256),
-        @EventSequence   decimal(19,0),
-        @EventOccurrence decimal(19,0),
-        @EventCode       int,
-        @EventDetailCode int,
-        @Message         nvarchar(1024),
-        @ApplicationPath nvarchar(256),
-        @ApplicationVirtualPath nvarchar(256),
-        @MachineName    nvarchar(256),
-        @RequestUrl      nvarchar(1024),
-        @ExceptionType   nvarchar(256),
-        @Details         ntext
-AS
-BEGIN
-    INSERT
-        dbo.aspnet_WebEvent_Events
-        (
-            EventId,
-            EventTimeUtc,
-            EventTime,
-            EventType,
-            EventSequence,
-            EventOccurrence,
-            EventCode,
-            EventDetailCode,
-            Message,
-            ApplicationPath,
-            ApplicationVirtualPath,
-            MachineName,
-            RequestUrl,
-            ExceptionType,
-            Details
-        )
-    VALUES
-    (
-        @EventId,
-        @EventTimeUtc,
-        @EventTime,
-        @EventType,
-        @EventSequence,
-        @EventOccurrence,
-        @EventCode,
-        @EventDetailCode,
-        @Message,
-        @ApplicationPath,
-        @ApplicationVirtualPath,
-        @MachineName,
-        @RequestUrl,
-        @ExceptionType,
-        @Details
-    )
-END
+
+  CREATE VIEW [dbo].[vw_aspnet_WebPartState_Paths]
+  AS SELECT [dbo].[aspnet_Paths].[ApplicationId], [dbo].[aspnet_Paths].[PathId], [dbo].[aspnet_Paths].[Path], [dbo].[aspnet_Paths].[LoweredPath]
+  FROM [dbo].[aspnet_Paths]
 GO
 SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_Roles_GetAllRoles]...';
+PRINT N'Creating [dbo].[vw_aspnet_WebPartState_Shared]...';
 
 
 GO
@@ -1726,25 +1316,15 @@ SET QUOTED_IDENTIFIER OFF;
 
 GO
 
-CREATE PROCEDURE [dbo].[aspnet_Roles_GetAllRoles] (
-    @ApplicationName           nvarchar(256))
-AS
-BEGIN
-    DECLARE @ApplicationId uniqueidentifier
-    SELECT  @ApplicationId = NULL
-    SELECT  @ApplicationId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
-    IF (@ApplicationId IS NULL)
-        RETURN
-    SELECT RoleName
-    FROM   dbo.aspnet_Roles WHERE ApplicationId = @ApplicationId
-    ORDER BY RoleName
-END
+  CREATE VIEW [dbo].[vw_aspnet_WebPartState_Shared]
+  AS SELECT [dbo].[aspnet_PersonalizationAllUsers].[PathId], [DataSize]=DATALENGTH([dbo].[aspnet_PersonalizationAllUsers].[PageSettings]), [dbo].[aspnet_PersonalizationAllUsers].[LastUpdatedDate]
+  FROM [dbo].[aspnet_PersonalizationAllUsers]
 GO
 SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_Roles_RoleExists]...';
+PRINT N'Creating [dbo].[vw_aspnet_WebPartState_User]...';
 
 
 GO
@@ -1755,70 +1335,9 @@ SET QUOTED_IDENTIFIER OFF;
 
 GO
 
-CREATE PROCEDURE [dbo].[aspnet_Roles_RoleExists]
-    @ApplicationName  nvarchar(256),
-    @RoleName         nvarchar(256)
-AS
-BEGIN
-    DECLARE @ApplicationId uniqueidentifier
-    SELECT  @ApplicationId = NULL
-    SELECT  @ApplicationId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
-    IF (@ApplicationId IS NULL)
-        RETURN(0)
-    IF (EXISTS (SELECT RoleName FROM dbo.aspnet_Roles WHERE LOWER(@RoleName) = LoweredRoleName AND ApplicationId = @ApplicationId ))
-        RETURN(1)
-    ELSE
-        RETURN(0)
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_Setup_RemoveAllRoleMembers]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-
-CREATE PROCEDURE [dbo].[aspnet_Setup_RemoveAllRoleMembers]
-    @name   sysname
-AS
-BEGIN
-    CREATE TABLE #aspnet_RoleMembers
-    (
-        Group_name      sysname,
-        Group_id        smallint,
-        Users_in_group  sysname,
-        User_id         smallint
-    )
-
-    INSERT INTO #aspnet_RoleMembers
-    EXEC sp_helpuser @name
-
-    DECLARE @user_id smallint
-    DECLARE @cmd nvarchar(500)
-    DECLARE c1 cursor FORWARD_ONLY FOR
-        SELECT User_id FROM #aspnet_RoleMembers
-
-    OPEN c1
-
-    FETCH c1 INTO @user_id
-    WHILE (@@fetch_status = 0)
-    BEGIN
-        SET @cmd = 'EXEC sp_droprolemember ' + '''' + @name + ''', ''' + USER_NAME(@user_id) + ''''
-        EXEC (@cmd)
-        FETCH c1 INTO @user_id
-    END
-
-    CLOSE c1
-    DEALLOCATE c1
-END
+  CREATE VIEW [dbo].[vw_aspnet_WebPartState_User]
+  AS SELECT [dbo].[aspnet_PersonalizationPerUser].[PathId], [dbo].[aspnet_PersonalizationPerUser].[UserId], [DataSize]=DATALENGTH([dbo].[aspnet_PersonalizationPerUser].[PageSettings]), [dbo].[aspnet_PersonalizationPerUser].[LastUpdatedDate]
+  FROM [dbo].[aspnet_PersonalizationPerUser]
 GO
 SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
@@ -2340,6 +1859,266 @@ SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
+PRINT N'Creating [dbo].[aspnet_UsersInRoles_IsUserInRole]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+
+CREATE PROCEDURE [dbo].[aspnet_UsersInRoles_IsUserInRole]
+    @ApplicationName  nvarchar(256),
+    @UserName         nvarchar(256),
+    @RoleName         nvarchar(256)
+AS
+BEGIN
+    DECLARE @ApplicationId uniqueidentifier
+    SELECT  @ApplicationId = NULL
+    SELECT  @ApplicationId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
+    IF (@ApplicationId IS NULL)
+        RETURN(2)
+    DECLARE @UserId uniqueidentifier
+    SELECT  @UserId = NULL
+    DECLARE @RoleId uniqueidentifier
+    SELECT  @RoleId = NULL
+
+    SELECT  @UserId = UserId
+    FROM    dbo.aspnet_Users
+    WHERE   LoweredUserName = LOWER(@UserName) AND ApplicationId = @ApplicationId
+
+    IF (@UserId IS NULL)
+        RETURN(2)
+
+    SELECT  @RoleId = RoleId
+    FROM    dbo.aspnet_Roles
+    WHERE   LoweredRoleName = LOWER(@RoleName) AND ApplicationId = @ApplicationId
+
+    IF (@RoleId IS NULL)
+        RETURN(3)
+
+    IF (EXISTS( SELECT * FROM dbo.aspnet_UsersInRoles WHERE  UserId = @UserId AND RoleId = @RoleId))
+        RETURN(1)
+    ELSE
+        RETURN(0)
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_UsersInRoles_RemoveUsersFromRoles]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+
+CREATE PROCEDURE [dbo].[aspnet_UsersInRoles_RemoveUsersFromRoles]
+	@ApplicationName  nvarchar(256),
+	@UserNames		  nvarchar(4000),
+	@RoleNames		  nvarchar(4000)
+AS
+BEGIN
+	DECLARE @AppId uniqueidentifier
+	SELECT  @AppId = NULL
+	SELECT  @AppId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
+	IF (@AppId IS NULL)
+		RETURN(2)
+
+
+	DECLARE @TranStarted   bit
+	SET @TranStarted = 0
+
+	IF( @@TRANCOUNT = 0 )
+	BEGIN
+		BEGIN TRANSACTION
+		SET @TranStarted = 1
+	END
+
+	DECLARE @tbNames  table(Name nvarchar(256) NOT NULL PRIMARY KEY)
+	DECLARE @tbRoles  table(RoleId uniqueidentifier NOT NULL PRIMARY KEY)
+	DECLARE @tbUsers  table(UserId uniqueidentifier NOT NULL PRIMARY KEY)
+	DECLARE @Num	  int
+	DECLARE @Pos	  int
+	DECLARE @NextPos  int
+	DECLARE @Name	  nvarchar(256)
+	DECLARE @CountAll int
+	DECLARE @CountU	  int
+	DECLARE @CountR	  int
+
+
+	SET @Num = 0
+	SET @Pos = 1
+	WHILE(@Pos <= LEN(@RoleNames))
+	BEGIN
+		SELECT @NextPos = CHARINDEX(N',', @RoleNames,  @Pos)
+		IF (@NextPos = 0 OR @NextPos IS NULL)
+			SELECT @NextPos = LEN(@RoleNames) + 1
+		SELECT @Name = RTRIM(LTRIM(SUBSTRING(@RoleNames, @Pos, @NextPos - @Pos)))
+		SELECT @Pos = @NextPos+1
+
+		INSERT INTO @tbNames VALUES (@Name)
+		SET @Num = @Num + 1
+	END
+
+	INSERT INTO @tbRoles
+	  SELECT RoleId
+	  FROM   dbo.aspnet_Roles ar, @tbNames t
+	  WHERE  LOWER(t.Name) = ar.LoweredRoleName AND ar.ApplicationId = @AppId
+	SELECT @CountR = @@ROWCOUNT
+
+	IF (@CountR <> @Num)
+	BEGIN
+		SELECT TOP 1 N'', Name
+		FROM   @tbNames
+		WHERE  LOWER(Name) NOT IN (SELECT ar.LoweredRoleName FROM dbo.aspnet_Roles ar,  @tbRoles r WHERE r.RoleId = ar.RoleId)
+		IF( @TranStarted = 1 )
+			ROLLBACK TRANSACTION
+		RETURN(2)
+	END
+
+
+	DELETE FROM @tbNames WHERE 1=1
+	SET @Num = 0
+	SET @Pos = 1
+
+
+	WHILE(@Pos <= LEN(@UserNames))
+	BEGIN
+		SELECT @NextPos = CHARINDEX(N',', @UserNames,  @Pos)
+		IF (@NextPos = 0 OR @NextPos IS NULL)
+			SELECT @NextPos = LEN(@UserNames) + 1
+		SELECT @Name = RTRIM(LTRIM(SUBSTRING(@UserNames, @Pos, @NextPos - @Pos)))
+		SELECT @Pos = @NextPos+1
+
+		INSERT INTO @tbNames VALUES (@Name)
+		SET @Num = @Num + 1
+	END
+
+	INSERT INTO @tbUsers
+	  SELECT UserId
+	  FROM   dbo.aspnet_Users ar, @tbNames t
+	  WHERE  LOWER(t.Name) = ar.LoweredUserName AND ar.ApplicationId = @AppId
+
+	SELECT @CountU = @@ROWCOUNT
+	IF (@CountU <> @Num)
+	BEGIN
+		SELECT TOP 1 Name, N''
+		FROM   @tbNames
+		WHERE  LOWER(Name) NOT IN (SELECT au.LoweredUserName FROM dbo.aspnet_Users au,  @tbUsers u WHERE u.UserId = au.UserId)
+
+		IF( @TranStarted = 1 )
+			ROLLBACK TRANSACTION
+		RETURN(1)
+	END
+
+	SELECT  @CountAll = COUNT(*)
+	FROM	dbo.aspnet_UsersInRoles ur, @tbUsers u, @tbRoles r
+	WHERE   ur.UserId = u.UserId AND ur.RoleId = r.RoleId
+
+	IF (@CountAll <> @CountU * @CountR)
+	BEGIN
+		SELECT TOP 1 UserName, RoleName
+		FROM		 @tbUsers tu, @tbRoles tr, dbo.aspnet_Users u, dbo.aspnet_Roles r
+		WHERE		 u.UserId = tu.UserId AND r.RoleId = tr.RoleId AND
+					 tu.UserId NOT IN (SELECT ur.UserId FROM dbo.aspnet_UsersInRoles ur WHERE ur.RoleId = tr.RoleId) AND
+					 tr.RoleId NOT IN (SELECT ur.RoleId FROM dbo.aspnet_UsersInRoles ur WHERE ur.UserId = tu.UserId)
+		IF( @TranStarted = 1 )
+			ROLLBACK TRANSACTION
+		RETURN(3)
+	END
+
+	DELETE FROM dbo.aspnet_UsersInRoles
+	WHERE UserId IN (SELECT UserId FROM @tbUsers)
+	  AND RoleId IN (SELECT RoleId FROM @tbRoles)
+	IF( @TranStarted = 1 )
+		COMMIT TRANSACTION
+	RETURN(0)
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_WebEvent_LogEvent]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_WebEvent_LogEvent]
+        @EventId         char(32),
+        @EventTimeUtc    datetime,
+        @EventTime       datetime,
+        @EventType       nvarchar(256),
+        @EventSequence   decimal(19,0),
+        @EventOccurrence decimal(19,0),
+        @EventCode       int,
+        @EventDetailCode int,
+        @Message         nvarchar(1024),
+        @ApplicationPath nvarchar(256),
+        @ApplicationVirtualPath nvarchar(256),
+        @MachineName    nvarchar(256),
+        @RequestUrl      nvarchar(1024),
+        @ExceptionType   nvarchar(256),
+        @Details         ntext
+AS
+BEGIN
+    INSERT
+        dbo.aspnet_WebEvent_Events
+        (
+            EventId,
+            EventTimeUtc,
+            EventTime,
+            EventType,
+            EventSequence,
+            EventOccurrence,
+            EventCode,
+            EventDetailCode,
+            Message,
+            ApplicationPath,
+            ApplicationVirtualPath,
+            MachineName,
+            RequestUrl,
+            ExceptionType,
+            Details
+        )
+    VALUES
+    (
+        @EventId,
+        @EventTimeUtc,
+        @EventTime,
+        @EventType,
+        @EventSequence,
+        @EventOccurrence,
+        @EventCode,
+        @EventDetailCode,
+        @Message,
+        @ApplicationPath,
+        @ApplicationVirtualPath,
+        @MachineName,
+        @RequestUrl,
+        @ExceptionType,
+        @Details
+    )
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
 PRINT N'Creating [dbo].[aspnet_Profile_DeleteInactiveProfiles]...';
 
 
@@ -2763,7 +2542,7 @@ SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_Paths_CreatePath]...';
+PRINT N'Creating [dbo].[aspnet_Roles_GetAllRoles]...';
 
 
 GO
@@ -2773,206 +2552,609 @@ SET QUOTED_IDENTIFIER OFF;
 
 
 GO
-CREATE PROCEDURE [dbo].[aspnet_Paths_CreatePath]
-    @ApplicationId UNIQUEIDENTIFIER,
-    @Path           NVARCHAR(256),
-    @PathId         UNIQUEIDENTIFIER OUTPUT
+
+CREATE PROCEDURE [dbo].[aspnet_Roles_GetAllRoles] (
+    @ApplicationName           nvarchar(256))
 AS
 BEGIN
-    BEGIN TRANSACTION
-    IF (NOT EXISTS(SELECT * FROM dbo.aspnet_Paths WHERE LoweredPath = LOWER(@Path) AND ApplicationId = @ApplicationId))
-    BEGIN
-        INSERT dbo.aspnet_Paths (ApplicationId, Path, LoweredPath) VALUES (@ApplicationId, @Path, LOWER(@Path))
-    END
-    COMMIT TRANSACTION
-    SELECT @PathId = PathId FROM dbo.aspnet_Paths WHERE LOWER(@Path) = LoweredPath AND ApplicationId = @ApplicationId
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_Personalization_GetApplicationId]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_Personalization_GetApplicationId] (
-    @ApplicationName NVARCHAR(256),
-    @ApplicationId UNIQUEIDENTIFIER OUT)
-AS
-BEGIN
-    SELECT @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_DeleteAllState]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_DeleteAllState] (
-    @AllUsersScope bit,
-    @ApplicationName NVARCHAR(256),
-    @Count int OUT)
-AS
-BEGIN
-    DECLARE @ApplicationId UNIQUEIDENTIFIER
-    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
-    IF (@ApplicationId IS NULL)
-        SELECT @Count = 0
-    ELSE
-    BEGIN
-        IF (@AllUsersScope = 1)
-            DELETE FROM aspnet_PersonalizationAllUsers
-            WHERE PathId IN
-               (SELECT Paths.PathId
-                FROM dbo.aspnet_Paths Paths
-                WHERE Paths.ApplicationId = @ApplicationId)
-        ELSE
-            DELETE FROM aspnet_PersonalizationPerUser
-            WHERE PathId IN
-               (SELECT Paths.PathId
-                FROM dbo.aspnet_Paths Paths
-                WHERE Paths.ApplicationId = @ApplicationId)
-
-        SELECT @Count = @@ROWCOUNT
-    END
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_FindState]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_FindState] (
-    @AllUsersScope bit,
-    @ApplicationName NVARCHAR(256),
-    @PageIndex              INT,
-    @PageSize               INT,
-    @Path NVARCHAR(256) = NULL,
-    @UserName NVARCHAR(256) = NULL,
-    @InactiveSinceDate DATETIME = NULL)
-AS
-BEGIN
-    DECLARE @ApplicationId UNIQUEIDENTIFIER
-    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    DECLARE @ApplicationId uniqueidentifier
+    SELECT  @ApplicationId = NULL
+    SELECT  @ApplicationId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
     IF (@ApplicationId IS NULL)
         RETURN
+    SELECT RoleName
+    FROM   dbo.aspnet_Roles WHERE ApplicationId = @ApplicationId
+    ORDER BY RoleName
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_Roles_RoleExists]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+
+CREATE PROCEDURE [dbo].[aspnet_Roles_RoleExists]
+    @ApplicationName  nvarchar(256),
+    @RoleName         nvarchar(256)
+AS
+BEGIN
+    DECLARE @ApplicationId uniqueidentifier
+    SELECT  @ApplicationId = NULL
+    SELECT  @ApplicationId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
+    IF (@ApplicationId IS NULL)
+        RETURN(0)
+    IF (EXISTS (SELECT RoleName FROM dbo.aspnet_Roles WHERE LOWER(@RoleName) = LoweredRoleName AND ApplicationId = @ApplicationId ))
+        RETURN(1)
+    ELSE
+        RETURN(0)
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_Setup_RemoveAllRoleMembers]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+
+CREATE PROCEDURE [dbo].[aspnet_Setup_RemoveAllRoleMembers]
+    @name   sysname
+AS
+BEGIN
+    CREATE TABLE #aspnet_RoleMembers
+    (
+        Group_name      sysname,
+        Group_id        smallint,
+        Users_in_group  sysname,
+        User_id         smallint
+    )
+
+    INSERT INTO #aspnet_RoleMembers
+    EXEC sp_helpuser @name
+
+    DECLARE @user_id smallint
+    DECLARE @cmd nvarchar(500)
+    DECLARE c1 cursor FORWARD_ONLY FOR
+        SELECT User_id FROM #aspnet_RoleMembers
+
+    OPEN c1
+
+    FETCH c1 INTO @user_id
+    WHILE (@@fetch_status = 0)
+    BEGIN
+        SET @cmd = 'EXEC sp_droprolemember ' + '''' + @name + ''', ''' + USER_NAME(@user_id) + ''''
+        EXEC (@cmd)
+        FETCH c1 INTO @user_id
+    END
+
+    CLOSE c1
+    DEALLOCATE c1
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_AnyDataInTables]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_AnyDataInTables]
+    @TablesToCheck int
+AS
+BEGIN
+    -- Check Membership table if (@TablesToCheck & 1) is set
+    IF ((@TablesToCheck & 1) <> 0 AND
+        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'vw_aspnet_MembershipUsers') AND (type = 'V'))))
+    BEGIN
+        IF (EXISTS(SELECT TOP 1 UserId FROM dbo.aspnet_Membership))
+        BEGIN
+            SELECT N'aspnet_Membership'
+            RETURN
+        END
+    END
+
+    -- Check aspnet_Roles table if (@TablesToCheck & 2) is set
+    IF ((@TablesToCheck & 2) <> 0  AND
+        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'vw_aspnet_Roles') AND (type = 'V'))) )
+    BEGIN
+        IF (EXISTS(SELECT TOP 1 RoleId FROM dbo.aspnet_Roles))
+        BEGIN
+            SELECT N'aspnet_Roles'
+            RETURN
+        END
+    END
+
+    -- Check aspnet_Profile table if (@TablesToCheck & 4) is set
+    IF ((@TablesToCheck & 4) <> 0  AND
+        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'vw_aspnet_Profiles') AND (type = 'V'))) )
+    BEGIN
+        IF (EXISTS(SELECT TOP 1 UserId FROM dbo.aspnet_Profile))
+        BEGIN
+            SELECT N'aspnet_Profile'
+            RETURN
+        END
+    END
+
+    -- Check aspnet_PersonalizationPerUser table if (@TablesToCheck & 8) is set
+    IF ((@TablesToCheck & 8) <> 0  AND
+        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'vw_aspnet_WebPartState_User') AND (type = 'V'))) )
+    BEGIN
+        IF (EXISTS(SELECT TOP 1 UserId FROM dbo.aspnet_PersonalizationPerUser))
+        BEGIN
+            SELECT N'aspnet_PersonalizationPerUser'
+            RETURN
+        END
+    END
+
+    -- Check aspnet_PersonalizationPerUser table if (@TablesToCheck & 16) is set
+    IF ((@TablesToCheck & 16) <> 0  AND
+        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'aspnet_WebEvent_LogEvent') AND (type = 'P'))) )
+    BEGIN
+        IF (EXISTS(SELECT TOP 1 * FROM dbo.aspnet_WebEvent_Events))
+        BEGIN
+            SELECT N'aspnet_WebEvent_Events'
+            RETURN
+        END
+    END
+
+    -- Check aspnet_Users table if (@TablesToCheck & 1,2,4 & 8) are all set
+    IF ((@TablesToCheck & 1) <> 0 AND
+        (@TablesToCheck & 2) <> 0 AND
+        (@TablesToCheck & 4) <> 0 AND
+        (@TablesToCheck & 8) <> 0 AND
+        (@TablesToCheck & 32) <> 0 AND
+        (@TablesToCheck & 128) <> 0 AND
+        (@TablesToCheck & 256) <> 0 AND
+        (@TablesToCheck & 512) <> 0 AND
+        (@TablesToCheck & 1024) <> 0)
+    BEGIN
+        IF (EXISTS(SELECT TOP 1 UserId FROM dbo.aspnet_Users))
+        BEGIN
+            SELECT N'aspnet_Users'
+            RETURN
+        END
+        IF (EXISTS(SELECT TOP 1 ApplicationId FROM dbo.aspnet_Applications))
+        BEGIN
+            SELECT N'aspnet_Applications'
+            RETURN
+        END
+    END
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_Applications_CreateApplication]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+
+CREATE PROCEDURE [dbo].[aspnet_Applications_CreateApplication]
+    @ApplicationName      nvarchar(256),
+    @ApplicationId        uniqueidentifier OUTPUT
+AS
+BEGIN
+    SELECT  @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
+
+    IF(@ApplicationId IS NULL)
+    BEGIN
+        DECLARE @TranStarted   bit
+        SET @TranStarted = 0
+
+        IF( @@TRANCOUNT = 0 )
+        BEGIN
+	        BEGIN TRANSACTION
+	        SET @TranStarted = 1
+        END
+        ELSE
+    	    SET @TranStarted = 0
+
+        SELECT  @ApplicationId = ApplicationId
+        FROM dbo.aspnet_Applications WITH (UPDLOCK, HOLDLOCK)
+        WHERE LOWER(@ApplicationName) = LoweredApplicationName
+
+        IF(@ApplicationId IS NULL)
+        BEGIN
+            SELECT  @ApplicationId = NEWID()
+            INSERT  dbo.aspnet_Applications (ApplicationId, ApplicationName, LoweredApplicationName)
+            VALUES  (@ApplicationId, @ApplicationName, LOWER(@ApplicationName))
+        END
+
+
+        IF( @TranStarted = 1 )
+        BEGIN
+            IF(@@ERROR = 0)
+            BEGIN
+	        SET @TranStarted = 0
+	        COMMIT TRANSACTION
+            END
+            ELSE
+            BEGIN
+                SET @TranStarted = 0
+                ROLLBACK TRANSACTION
+            END
+        END
+    END
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_CheckSchemaVersion]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+
+CREATE PROCEDURE [dbo].[aspnet_CheckSchemaVersion]
+    @Feature                   nvarchar(128),
+    @CompatibleSchemaVersion   nvarchar(128)
+AS
+BEGIN
+    IF (EXISTS( SELECT  *
+                FROM    dbo.aspnet_SchemaVersions
+                WHERE   Feature = LOWER( @Feature ) AND
+                        CompatibleSchemaVersion = @CompatibleSchemaVersion ))
+        RETURN 0
+
+    RETURN 1
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_Membership_ChangePasswordQuestionAndAnswer]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_Membership_ChangePasswordQuestionAndAnswer]
+    @ApplicationName       nvarchar(256),
+    @UserName              nvarchar(256),
+    @NewPasswordQuestion   nvarchar(256),
+    @NewPasswordAnswer     nvarchar(128)
+AS
+BEGIN
+    DECLARE @UserId uniqueidentifier
+    SELECT  @UserId = NULL
+    SELECT  @UserId = u.UserId
+    FROM    dbo.aspnet_Membership m, dbo.aspnet_Users u, dbo.aspnet_Applications a
+    WHERE   LoweredUserName = LOWER(@UserName) AND
+            u.ApplicationId = a.ApplicationId  AND
+            LOWER(@ApplicationName) = a.LoweredApplicationName AND
+            u.UserId = m.UserId
+    IF (@UserId IS NULL)
+    BEGIN
+        RETURN(1)
+    END
+
+    UPDATE dbo.aspnet_Membership
+    SET    PasswordQuestion = @NewPasswordQuestion, PasswordAnswer = @NewPasswordAnswer
+    WHERE  UserId=@UserId
+    RETURN(0)
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_Membership_CreateUser]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_Membership_CreateUser]
+    @ApplicationName                        nvarchar(256),
+    @UserName                               nvarchar(256),
+    @Password                               nvarchar(128),
+    @PasswordSalt                           nvarchar(128),
+    @Email                                  nvarchar(256),
+    @PasswordQuestion                       nvarchar(256),
+    @PasswordAnswer                         nvarchar(128),
+    @IsApproved                             bit,
+    @CurrentTimeUtc                         datetime,
+    @CreateDate                             datetime = NULL,
+    @UniqueEmail                            int      = 0,
+    @PasswordFormat                         int      = 0,
+    @UserId                                 uniqueidentifier OUTPUT
+AS
+BEGIN
+    DECLARE @ApplicationId uniqueidentifier
+    SELECT  @ApplicationId = NULL
+
+    DECLARE @NewUserId uniqueidentifier
+    SELECT @NewUserId = NULL
+
+    DECLARE @IsLockedOut bit
+    SET @IsLockedOut = 0
+
+    DECLARE @LastLockoutDate  datetime
+    SET @LastLockoutDate = CONVERT( datetime, '17540101', 112 )
+
+    DECLARE @FailedPasswordAttemptCount int
+    SET @FailedPasswordAttemptCount = 0
+
+    DECLARE @FailedPasswordAttemptWindowStart  datetime
+    SET @FailedPasswordAttemptWindowStart = CONVERT( datetime, '17540101', 112 )
+
+    DECLARE @FailedPasswordAnswerAttemptCount int
+    SET @FailedPasswordAnswerAttemptCount = 0
+
+    DECLARE @FailedPasswordAnswerAttemptWindowStart  datetime
+    SET @FailedPasswordAnswerAttemptWindowStart = CONVERT( datetime, '17540101', 112 )
+
+    DECLARE @NewUserCreated bit
+    DECLARE @ReturnValue   int
+    SET @ReturnValue = 0
+
+    DECLARE @ErrorCode     int
+    SET @ErrorCode = 0
+
+    DECLARE @TranStarted   bit
+    SET @TranStarted = 0
+
+    IF( @@TRANCOUNT = 0 )
+    BEGIN
+	    BEGIN TRANSACTION
+	    SET @TranStarted = 1
+    END
+    ELSE
+    	SET @TranStarted = 0
+
+    EXEC dbo.aspnet_Applications_CreateApplication @ApplicationName, @ApplicationId OUTPUT
+
+    IF( @@ERROR <> 0 )
+    BEGIN
+        SET @ErrorCode = -1
+        GOTO Cleanup
+    END
+
+    SET @CreateDate = @CurrentTimeUtc
+
+    SELECT  @NewUserId = UserId FROM dbo.aspnet_Users WHERE LOWER(@UserName) = LoweredUserName AND @ApplicationId = ApplicationId
+    IF ( @NewUserId IS NULL )
+    BEGIN
+        SET @NewUserId = @UserId
+        EXEC @ReturnValue = dbo.aspnet_Users_CreateUser @ApplicationId, @UserName, 0, @CreateDate, @NewUserId OUTPUT
+        SET @NewUserCreated = 1
+    END
+    ELSE
+    BEGIN
+        SET @NewUserCreated = 0
+        IF( @NewUserId <> @UserId AND @UserId IS NOT NULL )
+        BEGIN
+            SET @ErrorCode = 6
+            GOTO Cleanup
+        END
+    END
+
+    IF( @@ERROR <> 0 )
+    BEGIN
+        SET @ErrorCode = -1
+        GOTO Cleanup
+    END
+
+    IF( @ReturnValue = -1 )
+    BEGIN
+        SET @ErrorCode = 10
+        GOTO Cleanup
+    END
+
+    IF ( EXISTS ( SELECT UserId
+                  FROM   dbo.aspnet_Membership
+                  WHERE  @NewUserId = UserId ) )
+    BEGIN
+        SET @ErrorCode = 6
+        GOTO Cleanup
+    END
+
+    SET @UserId = @NewUserId
+
+    IF (@UniqueEmail = 1)
+    BEGIN
+        IF (EXISTS (SELECT *
+                    FROM  dbo.aspnet_Membership m WITH ( UPDLOCK, HOLDLOCK )
+                    WHERE ApplicationId = @ApplicationId AND LoweredEmail = LOWER(@Email)))
+        BEGIN
+            SET @ErrorCode = 7
+            GOTO Cleanup
+        END
+    END
+
+    IF (@NewUserCreated = 0)
+    BEGIN
+        UPDATE dbo.aspnet_Users
+        SET    LastActivityDate = @CreateDate
+        WHERE  @UserId = UserId
+        IF( @@ERROR <> 0 )
+        BEGIN
+            SET @ErrorCode = -1
+            GOTO Cleanup
+        END
+    END
+
+    INSERT INTO dbo.aspnet_Membership
+                ( ApplicationId,
+                  UserId,
+                  Password,
+                  PasswordSalt,
+                  Email,
+                  LoweredEmail,
+                  PasswordQuestion,
+                  PasswordAnswer,
+                  PasswordFormat,
+                  IsApproved,
+                  IsLockedOut,
+                  CreateDate,
+                  LastLoginDate,
+                  LastPasswordChangedDate,
+                  LastLockoutDate,
+                  FailedPasswordAttemptCount,
+                  FailedPasswordAttemptWindowStart,
+                  FailedPasswordAnswerAttemptCount,
+                  FailedPasswordAnswerAttemptWindowStart )
+         VALUES ( @ApplicationId,
+                  @UserId,
+                  @Password,
+                  @PasswordSalt,
+                  @Email,
+                  LOWER(@Email),
+                  @PasswordQuestion,
+                  @PasswordAnswer,
+                  @PasswordFormat,
+                  @IsApproved,
+                  @IsLockedOut,
+                  @CreateDate,
+                  @CreateDate,
+                  @CreateDate,
+                  @LastLockoutDate,
+                  @FailedPasswordAttemptCount,
+                  @FailedPasswordAttemptWindowStart,
+                  @FailedPasswordAnswerAttemptCount,
+                  @FailedPasswordAnswerAttemptWindowStart )
+
+    IF( @@ERROR <> 0 )
+    BEGIN
+        SET @ErrorCode = -1
+        GOTO Cleanup
+    END
+
+    IF( @TranStarted = 1 )
+    BEGIN
+	    SET @TranStarted = 0
+	    COMMIT TRANSACTION
+    END
+
+    RETURN 0
+
+Cleanup:
+
+    IF( @TranStarted = 1 )
+    BEGIN
+        SET @TranStarted = 0
+    	ROLLBACK TRANSACTION
+    END
+
+    RETURN @ErrorCode
+
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_Membership_FindUsersByEmail]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_Membership_FindUsersByEmail]
+    @ApplicationName       nvarchar(256),
+    @EmailToMatch          nvarchar(256),
+    @PageIndex             int,
+    @PageSize              int
+AS
+BEGIN
+    DECLARE @ApplicationId uniqueidentifier
+    SELECT  @ApplicationId = NULL
+    SELECT  @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
+    IF (@ApplicationId IS NULL)
+        RETURN 0
 
     -- Set the page bounds
-    DECLARE @PageLowerBound INT
-    DECLARE @PageUpperBound INT
-    DECLARE @TotalRecords   INT
+    DECLARE @PageLowerBound int
+    DECLARE @PageUpperBound int
+    DECLARE @TotalRecords   int
     SET @PageLowerBound = @PageSize * @PageIndex
     SET @PageUpperBound = @PageSize - 1 + @PageLowerBound
 
-    -- Create a temp table to store the selected results
-    CREATE TABLE #PageIndex (
+    -- Create a temp table TO store the select results
+    CREATE TABLE #PageIndexForUsers
+    (
         IndexId int IDENTITY (0, 1) NOT NULL,
-        ItemId UNIQUEIDENTIFIER
+        UserId uniqueidentifier
     )
 
-    IF (@AllUsersScope = 1)
-    BEGIN
-        -- Insert into our temp table
-        INSERT INTO #PageIndex (ItemId)
-        SELECT Paths.PathId
-        FROM dbo.aspnet_Paths Paths,
-             ((SELECT Paths.PathId
-               FROM dbo.aspnet_PersonalizationAllUsers AllUsers, dbo.aspnet_Paths Paths
-               WHERE Paths.ApplicationId = @ApplicationId
-                      AND AllUsers.PathId = Paths.PathId
-                      AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
-              ) AS SharedDataPerPath
-              FULL OUTER JOIN
-              (SELECT DISTINCT Paths.PathId
-               FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Paths Paths
-               WHERE Paths.ApplicationId = @ApplicationId
-                      AND PerUser.PathId = Paths.PathId
-                      AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
-              ) AS UserDataPerPath
-              ON SharedDataPerPath.PathId = UserDataPerPath.PathId
-             )
-        WHERE Paths.PathId = SharedDataPerPath.PathId OR Paths.PathId = UserDataPerPath.PathId
-        ORDER BY Paths.Path ASC
-
-        SELECT @TotalRecords = @@ROWCOUNT
-
-        SELECT Paths.Path,
-               SharedDataPerPath.LastUpdatedDate,
-               SharedDataPerPath.SharedDataLength,
-               UserDataPerPath.UserDataLength,
-               UserDataPerPath.UserCount
-        FROM dbo.aspnet_Paths Paths,
-             ((SELECT PageIndex.ItemId AS PathId,
-                      AllUsers.LastUpdatedDate AS LastUpdatedDate,
-                      DATALENGTH(AllUsers.PageSettings) AS SharedDataLength
-               FROM dbo.aspnet_PersonalizationAllUsers AllUsers, #PageIndex PageIndex
-               WHERE AllUsers.PathId = PageIndex.ItemId
-                     AND PageIndex.IndexId >= @PageLowerBound AND PageIndex.IndexId <= @PageUpperBound
-              ) AS SharedDataPerPath
-              FULL OUTER JOIN
-              (SELECT PageIndex.ItemId AS PathId,
-                      SUM(DATALENGTH(PerUser.PageSettings)) AS UserDataLength,
-                      COUNT(*) AS UserCount
-               FROM aspnet_PersonalizationPerUser PerUser, #PageIndex PageIndex
-               WHERE PerUser.PathId = PageIndex.ItemId
-                     AND PageIndex.IndexId >= @PageLowerBound AND PageIndex.IndexId <= @PageUpperBound
-               GROUP BY PageIndex.ItemId
-              ) AS UserDataPerPath
-              ON SharedDataPerPath.PathId = UserDataPerPath.PathId
-             )
-        WHERE Paths.PathId = SharedDataPerPath.PathId OR Paths.PathId = UserDataPerPath.PathId
-        ORDER BY Paths.Path ASC
-    END
+    -- Insert into our temp table
+    IF( @EmailToMatch IS NULL )
+        INSERT INTO #PageIndexForUsers (UserId)
+            SELECT u.UserId
+            FROM   dbo.aspnet_Users u, dbo.aspnet_Membership m
+            WHERE  u.ApplicationId = @ApplicationId AND m.UserId = u.UserId AND m.Email IS NULL
+            ORDER BY m.LoweredEmail
     ELSE
-    BEGIN
-        -- Insert into our temp table
-        INSERT INTO #PageIndex (ItemId)
-        SELECT PerUser.Id
-        FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Users Users, dbo.aspnet_Paths Paths
-        WHERE Paths.ApplicationId = @ApplicationId
-              AND PerUser.UserId = Users.UserId
-              AND PerUser.PathId = Paths.PathId
-              AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
-              AND (@UserName IS NULL OR Users.LoweredUserName LIKE LOWER(@UserName))
-              AND (@InactiveSinceDate IS NULL OR Users.LastActivityDate <= @InactiveSinceDate)
-        ORDER BY Paths.Path ASC, Users.UserName ASC
+        INSERT INTO #PageIndexForUsers (UserId)
+            SELECT u.UserId
+            FROM   dbo.aspnet_Users u, dbo.aspnet_Membership m
+            WHERE  u.ApplicationId = @ApplicationId AND m.UserId = u.UserId AND m.LoweredEmail LIKE LOWER(@EmailToMatch)
+            ORDER BY m.LoweredEmail
 
-        SELECT @TotalRecords = @@ROWCOUNT
+    SELECT  u.UserName, m.Email, m.PasswordQuestion, m.Comment, m.IsApproved,
+            m.CreateDate,
+            m.LastLoginDate,
+            u.LastActivityDate,
+            m.LastPasswordChangedDate,
+            u.UserId, m.IsLockedOut,
+            m.LastLockoutDate
+    FROM   dbo.aspnet_Membership m, dbo.aspnet_Users u, #PageIndexForUsers p
+    WHERE  u.UserId = p.UserId AND u.UserId = m.UserId AND
+           p.IndexId >= @PageLowerBound AND p.IndexId <= @PageUpperBound
+    ORDER BY m.LoweredEmail
 
-        SELECT Paths.Path, PerUser.LastUpdatedDate, DATALENGTH(PerUser.PageSettings), Users.UserName, Users.LastActivityDate
-        FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Users Users, dbo.aspnet_Paths Paths, #PageIndex PageIndex
-        WHERE PerUser.Id = PageIndex.ItemId
-              AND PerUser.UserId = Users.UserId
-              AND PerUser.PathId = Paths.PathId
-              AND PageIndex.IndexId >= @PageLowerBound AND PageIndex.IndexId <= @PageUpperBound
-        ORDER BY Paths.Path ASC, Users.UserName ASC
-    END
-
+    SELECT  @TotalRecords = COUNT(*)
+    FROM    #PageIndexForUsers
     RETURN @TotalRecords
 END
 GO
@@ -2980,7 +3162,7 @@ SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_GetCountOfState]...';
+PRINT N'Creating [dbo].[aspnet_Membership_FindUsersByName]...';
 
 
 GO
@@ -2990,43 +3172,63 @@ SET QUOTED_IDENTIFIER OFF;
 
 
 GO
-CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_GetCountOfState] (
-    @Count int OUT,
-    @AllUsersScope bit,
-    @ApplicationName NVARCHAR(256),
-    @Path NVARCHAR(256) = NULL,
-    @UserName NVARCHAR(256) = NULL,
-    @InactiveSinceDate DATETIME = NULL)
+CREATE PROCEDURE [dbo].[aspnet_Membership_FindUsersByName]
+    @ApplicationName       nvarchar(256),
+    @UserNameToMatch       nvarchar(256),
+    @PageIndex             int,
+    @PageSize              int
 AS
 BEGIN
-
-    DECLARE @ApplicationId UNIQUEIDENTIFIER
-    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    DECLARE @ApplicationId uniqueidentifier
+    SELECT  @ApplicationId = NULL
+    SELECT  @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
     IF (@ApplicationId IS NULL)
-        SELECT @Count = 0
-    ELSE
-        IF (@AllUsersScope = 1)
-            SELECT @Count = COUNT(*)
-            FROM dbo.aspnet_PersonalizationAllUsers AllUsers, dbo.aspnet_Paths Paths
-            WHERE Paths.ApplicationId = @ApplicationId
-                  AND AllUsers.PathId = Paths.PathId
-                  AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
-        ELSE
-            SELECT @Count = COUNT(*)
-            FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Users Users, dbo.aspnet_Paths Paths
-            WHERE Paths.ApplicationId = @ApplicationId
-                  AND PerUser.UserId = Users.UserId
-                  AND PerUser.PathId = Paths.PathId
-                  AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
-                  AND (@UserName IS NULL OR Users.LoweredUserName LIKE LOWER(@UserName))
-                  AND (@InactiveSinceDate IS NULL OR Users.LastActivityDate <= @InactiveSinceDate)
+        RETURN 0
+
+    -- Set the page bounds
+    DECLARE @PageLowerBound int
+    DECLARE @PageUpperBound int
+    DECLARE @TotalRecords   int
+    SET @PageLowerBound = @PageSize * @PageIndex
+    SET @PageUpperBound = @PageSize - 1 + @PageLowerBound
+
+    -- Create a temp table TO store the select results
+    CREATE TABLE #PageIndexForUsers
+    (
+        IndexId int IDENTITY (0, 1) NOT NULL,
+        UserId uniqueidentifier
+    )
+
+    -- Insert into our temp table
+    INSERT INTO #PageIndexForUsers (UserId)
+        SELECT u.UserId
+        FROM   dbo.aspnet_Users u, dbo.aspnet_Membership m
+        WHERE  u.ApplicationId = @ApplicationId AND m.UserId = u.UserId AND u.LoweredUserName LIKE LOWER(@UserNameToMatch)
+        ORDER BY u.UserName
+
+
+    SELECT  u.UserName, m.Email, m.PasswordQuestion, m.Comment, m.IsApproved,
+            m.CreateDate,
+            m.LastLoginDate,
+            u.LastActivityDate,
+            m.LastPasswordChangedDate,
+            u.UserId, m.IsLockedOut,
+            m.LastLockoutDate
+    FROM   dbo.aspnet_Membership m, dbo.aspnet_Users u, #PageIndexForUsers p
+    WHERE  u.UserId = p.UserId AND u.UserId = m.UserId AND
+           p.IndexId >= @PageLowerBound AND p.IndexId <= @PageUpperBound
+    ORDER BY u.UserName
+
+    SELECT  @TotalRecords = COUNT(*)
+    FROM    #PageIndexForUsers
+    RETURN @TotalRecords
 END
 GO
 SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_ResetSharedState]...';
+PRINT N'Creating [dbo].[aspnet_Membership_GetAllUsers]...';
 
 
 GO
@@ -3036,242 +3238,54 @@ SET QUOTED_IDENTIFIER OFF;
 
 
 GO
-CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_ResetSharedState] (
-    @Count int OUT,
-    @ApplicationName NVARCHAR(256),
-    @Path NVARCHAR(256))
+CREATE PROCEDURE [dbo].[aspnet_Membership_GetAllUsers]
+    @ApplicationName       nvarchar(256),
+    @PageIndex             int,
+    @PageSize              int
 AS
 BEGIN
-    DECLARE @ApplicationId UNIQUEIDENTIFIER
-    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    DECLARE @ApplicationId uniqueidentifier
+    SELECT  @ApplicationId = NULL
+    SELECT  @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
     IF (@ApplicationId IS NULL)
-        SELECT @Count = 0
-    ELSE
-    BEGIN
-        DELETE FROM dbo.aspnet_PersonalizationAllUsers
-        WHERE PathId IN
-            (SELECT AllUsers.PathId
-             FROM dbo.aspnet_PersonalizationAllUsers AllUsers, dbo.aspnet_Paths Paths
-             WHERE Paths.ApplicationId = @ApplicationId
-                   AND AllUsers.PathId = Paths.PathId
-                   AND Paths.LoweredPath = LOWER(@Path))
-
-        SELECT @Count = @@ROWCOUNT
-    END
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+        RETURN 0
 
 
-GO
-PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_ResetUserState]...';
+    -- Set the page bounds
+    DECLARE @PageLowerBound int
+    DECLARE @PageUpperBound int
+    DECLARE @TotalRecords   int
+    SET @PageLowerBound = @PageSize * @PageIndex
+    SET @PageUpperBound = @PageSize - 1 + @PageLowerBound
 
+    -- Create a temp table TO store the select results
+    CREATE TABLE #PageIndexForUsers
+    (
+        IndexId int IDENTITY (0, 1) NOT NULL,
+        UserId uniqueidentifier
+    )
 
-GO
-SET ANSI_NULLS ON;
+    -- Insert into our temp table
+    INSERT INTO #PageIndexForUsers (UserId)
+    SELECT u.UserId
+    FROM   dbo.aspnet_Membership m, dbo.aspnet_Users u
+    WHERE  u.ApplicationId = @ApplicationId AND u.UserId = m.UserId
+    ORDER BY u.UserName
 
-SET QUOTED_IDENTIFIER OFF;
+    SELECT @TotalRecords = @@ROWCOUNT
 
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_ResetUserState] (
-    @Count                  int                 OUT,
-    @ApplicationName        NVARCHAR(256),
-    @InactiveSinceDate      DATETIME            = NULL,
-    @UserName               NVARCHAR(256)       = NULL,
-    @Path                   NVARCHAR(256)       = NULL)
-AS
-BEGIN
-    DECLARE @ApplicationId UNIQUEIDENTIFIER
-    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
-    IF (@ApplicationId IS NULL)
-        SELECT @Count = 0
-    ELSE
-    BEGIN
-        DELETE FROM dbo.aspnet_PersonalizationPerUser
-        WHERE Id IN (SELECT PerUser.Id
-                     FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Users Users, dbo.aspnet_Paths Paths
-                     WHERE Paths.ApplicationId = @ApplicationId
-                           AND PerUser.UserId = Users.UserId
-                           AND PerUser.PathId = Paths.PathId
-                           AND (@InactiveSinceDate IS NULL OR Users.LastActivityDate <= @InactiveSinceDate)
-                           AND (@UserName IS NULL OR Users.LoweredUserName = LOWER(@UserName))
-                           AND (@Path IS NULL OR Paths.LoweredPath = LOWER(@Path)))
-
-        SELECT @Count = @@ROWCOUNT
-    END
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_PersonalizationAllUsers_GetPageSettings]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_PersonalizationAllUsers_GetPageSettings] (
-    @ApplicationName  NVARCHAR(256),
-    @Path              NVARCHAR(256))
-AS
-BEGIN
-    DECLARE @ApplicationId UNIQUEIDENTIFIER
-    DECLARE @PathId UNIQUEIDENTIFIER
-
-    SELECT @ApplicationId = NULL
-    SELECT @PathId = NULL
-
-    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
-    IF (@ApplicationId IS NULL)
-    BEGIN
-        RETURN
-    END
-
-    SELECT @PathId = u.PathId FROM dbo.aspnet_Paths u WHERE u.ApplicationId = @ApplicationId AND u.LoweredPath = LOWER(@Path)
-    IF (@PathId IS NULL)
-    BEGIN
-        RETURN
-    END
-
-    SELECT p.PageSettings FROM dbo.aspnet_PersonalizationAllUsers p WHERE p.PathId = @PathId
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_PersonalizationAllUsers_ResetPageSettings]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_PersonalizationAllUsers_ResetPageSettings] (
-    @ApplicationName  NVARCHAR(256),
-    @Path              NVARCHAR(256))
-AS
-BEGIN
-    DECLARE @ApplicationId UNIQUEIDENTIFIER
-    DECLARE @PathId UNIQUEIDENTIFIER
-
-    SELECT @ApplicationId = NULL
-    SELECT @PathId = NULL
-
-    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
-    IF (@ApplicationId IS NULL)
-    BEGIN
-        RETURN
-    END
-
-    SELECT @PathId = u.PathId FROM dbo.aspnet_Paths u WHERE u.ApplicationId = @ApplicationId AND u.LoweredPath = LOWER(@Path)
-    IF (@PathId IS NULL)
-    BEGIN
-        RETURN
-    END
-
-    DELETE FROM dbo.aspnet_PersonalizationAllUsers WHERE PathId = @PathId
-    RETURN 0
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_PersonalizationPerUser_GetPageSettings]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_PersonalizationPerUser_GetPageSettings] (
-    @ApplicationName  NVARCHAR(256),
-    @UserName         NVARCHAR(256),
-    @Path             NVARCHAR(256),
-    @CurrentTimeUtc   DATETIME)
-AS
-BEGIN
-    DECLARE @ApplicationId UNIQUEIDENTIFIER
-    DECLARE @PathId UNIQUEIDENTIFIER
-    DECLARE @UserId UNIQUEIDENTIFIER
-
-    SELECT @ApplicationId = NULL
-    SELECT @PathId = NULL
-    SELECT @UserId = NULL
-
-    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
-    IF (@ApplicationId IS NULL)
-    BEGIN
-        RETURN
-    END
-
-    SELECT @PathId = u.PathId FROM dbo.aspnet_Paths u WHERE u.ApplicationId = @ApplicationId AND u.LoweredPath = LOWER(@Path)
-    IF (@PathId IS NULL)
-    BEGIN
-        RETURN
-    END
-
-    SELECT @UserId = u.UserId FROM dbo.aspnet_Users u WHERE u.ApplicationId = @ApplicationId AND u.LoweredUserName = LOWER(@UserName)
-    IF (@UserId IS NULL)
-    BEGIN
-        RETURN
-    END
-
-    UPDATE   dbo.aspnet_Users WITH (ROWLOCK)
-    SET      LastActivityDate = @CurrentTimeUtc
-    WHERE    UserId = @UserId
-    IF (@@ROWCOUNT = 0) -- Username not found
-        RETURN
-
-    SELECT p.PageSettings FROM dbo.aspnet_PersonalizationPerUser p WHERE p.PathId = @PathId AND p.UserId = @UserId
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_Membership_GetNumberOfUsersOnline]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_Membership_GetNumberOfUsersOnline]
-    @ApplicationName            nvarchar(256),
-    @MinutesSinceLastInActive   int,
-    @CurrentTimeUtc             datetime
-AS
-BEGIN
-    DECLARE @DateActive datetime
-    SELECT  @DateActive = DATEADD(minute,  -(@MinutesSinceLastInActive), @CurrentTimeUtc)
-
-    DECLARE @NumOnline int
-    SELECT  @NumOnline = COUNT(*)
-    FROM    dbo.aspnet_Users u(NOLOCK),
-            dbo.aspnet_Applications a(NOLOCK),
-            dbo.aspnet_Membership m(NOLOCK)
-    WHERE   u.ApplicationId = a.ApplicationId                  AND
-            LastActivityDate > @DateActive                     AND
-            a.LoweredApplicationName = LOWER(@ApplicationName) AND
-            u.UserId = m.UserId
-    RETURN(@NumOnline)
+    SELECT u.UserName, m.Email, m.PasswordQuestion, m.Comment, m.IsApproved,
+            m.CreateDate,
+            m.LastLoginDate,
+            u.LastActivityDate,
+            m.LastPasswordChangedDate,
+            u.UserId, m.IsLockedOut,
+            m.LastLockoutDate
+    FROM   dbo.aspnet_Membership m, dbo.aspnet_Users u, #PageIndexForUsers p
+    WHERE  u.UserId = p.UserId AND u.UserId = m.UserId AND
+           p.IndexId >= @PageLowerBound AND p.IndexId <= @PageUpperBound
+    ORDER BY u.UserName
+    RETURN @TotalRecords
 END
 GO
 SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
@@ -4147,7 +4161,7 @@ SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_AnyDataInTables]...';
+PRINT N'Creating [dbo].[aspnet_Paths_CreatePath]...';
 
 
 GO
@@ -4157,94 +4171,26 @@ SET QUOTED_IDENTIFIER OFF;
 
 
 GO
-CREATE PROCEDURE [dbo].[aspnet_AnyDataInTables]
-    @TablesToCheck int
+CREATE PROCEDURE [dbo].[aspnet_Paths_CreatePath]
+    @ApplicationId UNIQUEIDENTIFIER,
+    @Path           NVARCHAR(256),
+    @PathId         UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
-    -- Check Membership table if (@TablesToCheck & 1) is set
-    IF ((@TablesToCheck & 1) <> 0 AND
-        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'vw_aspnet_MembershipUsers') AND (type = 'V'))))
+    BEGIN TRANSACTION
+    IF (NOT EXISTS(SELECT * FROM dbo.aspnet_Paths WHERE LoweredPath = LOWER(@Path) AND ApplicationId = @ApplicationId))
     BEGIN
-        IF (EXISTS(SELECT TOP 1 UserId FROM dbo.aspnet_Membership))
-        BEGIN
-            SELECT N'aspnet_Membership'
-            RETURN
-        END
+        INSERT dbo.aspnet_Paths (ApplicationId, Path, LoweredPath) VALUES (@ApplicationId, @Path, LOWER(@Path))
     END
-
-    -- Check aspnet_Roles table if (@TablesToCheck & 2) is set
-    IF ((@TablesToCheck & 2) <> 0  AND
-        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'vw_aspnet_Roles') AND (type = 'V'))) )
-    BEGIN
-        IF (EXISTS(SELECT TOP 1 RoleId FROM dbo.aspnet_Roles))
-        BEGIN
-            SELECT N'aspnet_Roles'
-            RETURN
-        END
-    END
-
-    -- Check aspnet_Profile table if (@TablesToCheck & 4) is set
-    IF ((@TablesToCheck & 4) <> 0  AND
-        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'vw_aspnet_Profiles') AND (type = 'V'))) )
-    BEGIN
-        IF (EXISTS(SELECT TOP 1 UserId FROM dbo.aspnet_Profile))
-        BEGIN
-            SELECT N'aspnet_Profile'
-            RETURN
-        END
-    END
-
-    -- Check aspnet_PersonalizationPerUser table if (@TablesToCheck & 8) is set
-    IF ((@TablesToCheck & 8) <> 0  AND
-        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'vw_aspnet_WebPartState_User') AND (type = 'V'))) )
-    BEGIN
-        IF (EXISTS(SELECT TOP 1 UserId FROM dbo.aspnet_PersonalizationPerUser))
-        BEGIN
-            SELECT N'aspnet_PersonalizationPerUser'
-            RETURN
-        END
-    END
-
-    -- Check aspnet_PersonalizationPerUser table if (@TablesToCheck & 16) is set
-    IF ((@TablesToCheck & 16) <> 0  AND
-        (EXISTS (SELECT name FROM sysobjects WHERE (name = N'aspnet_WebEvent_LogEvent') AND (type = 'P'))) )
-    BEGIN
-        IF (EXISTS(SELECT TOP 1 * FROM dbo.aspnet_WebEvent_Events))
-        BEGIN
-            SELECT N'aspnet_WebEvent_Events'
-            RETURN
-        END
-    END
-
-    -- Check aspnet_Users table if (@TablesToCheck & 1,2,4 & 8) are all set
-    IF ((@TablesToCheck & 1) <> 0 AND
-        (@TablesToCheck & 2) <> 0 AND
-        (@TablesToCheck & 4) <> 0 AND
-        (@TablesToCheck & 8) <> 0 AND
-        (@TablesToCheck & 32) <> 0 AND
-        (@TablesToCheck & 128) <> 0 AND
-        (@TablesToCheck & 256) <> 0 AND
-        (@TablesToCheck & 512) <> 0 AND
-        (@TablesToCheck & 1024) <> 0)
-    BEGIN
-        IF (EXISTS(SELECT TOP 1 UserId FROM dbo.aspnet_Users))
-        BEGIN
-            SELECT N'aspnet_Users'
-            RETURN
-        END
-        IF (EXISTS(SELECT TOP 1 ApplicationId FROM dbo.aspnet_Applications))
-        BEGIN
-            SELECT N'aspnet_Applications'
-            RETURN
-        END
-    END
+    COMMIT TRANSACTION
+    SELECT @PathId = PathId FROM dbo.aspnet_Paths WHERE LOWER(@Path) = LoweredPath AND ApplicationId = @ApplicationId
 END
 GO
 SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_Applications_CreateApplication]...';
+PRINT N'Creating [dbo].[aspnet_Personalization_GetApplicationId]...';
 
 
 GO
@@ -4254,534 +4200,55 @@ SET QUOTED_IDENTIFIER OFF;
 
 
 GO
-
-CREATE PROCEDURE [dbo].[aspnet_Applications_CreateApplication]
-    @ApplicationName      nvarchar(256),
-    @ApplicationId        uniqueidentifier OUTPUT
+CREATE PROCEDURE [dbo].[aspnet_Personalization_GetApplicationId] (
+    @ApplicationName NVARCHAR(256),
+    @ApplicationId UNIQUEIDENTIFIER OUT)
 AS
 BEGIN
-    SELECT  @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
+    SELECT @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
-    IF(@ApplicationId IS NULL)
+
+GO
+PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_DeleteAllState]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_DeleteAllState] (
+    @AllUsersScope bit,
+    @ApplicationName NVARCHAR(256),
+    @Count int OUT)
+AS
+BEGIN
+    DECLARE @ApplicationId UNIQUEIDENTIFIER
+    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    IF (@ApplicationId IS NULL)
+        SELECT @Count = 0
+    ELSE
     BEGIN
-        DECLARE @TranStarted   bit
-        SET @TranStarted = 0
-
-        IF( @@TRANCOUNT = 0 )
-        BEGIN
-	        BEGIN TRANSACTION
-	        SET @TranStarted = 1
-        END
+        IF (@AllUsersScope = 1)
+            DELETE FROM aspnet_PersonalizationAllUsers
+            WHERE PathId IN
+               (SELECT Paths.PathId
+                FROM dbo.aspnet_Paths Paths
+                WHERE Paths.ApplicationId = @ApplicationId)
         ELSE
-    	    SET @TranStarted = 0
+            DELETE FROM aspnet_PersonalizationPerUser
+            WHERE PathId IN
+               (SELECT Paths.PathId
+                FROM dbo.aspnet_Paths Paths
+                WHERE Paths.ApplicationId = @ApplicationId)
 
-        SELECT  @ApplicationId = ApplicationId
-        FROM dbo.aspnet_Applications WITH (UPDLOCK, HOLDLOCK)
-        WHERE LOWER(@ApplicationName) = LoweredApplicationName
-
-        IF(@ApplicationId IS NULL)
-        BEGIN
-            SELECT  @ApplicationId = NEWID()
-            INSERT  dbo.aspnet_Applications (ApplicationId, ApplicationName, LoweredApplicationName)
-            VALUES  (@ApplicationId, @ApplicationName, LOWER(@ApplicationName))
-        END
-
-
-        IF( @TranStarted = 1 )
-        BEGIN
-            IF(@@ERROR = 0)
-            BEGIN
-	        SET @TranStarted = 0
-	        COMMIT TRANSACTION
-            END
-            ELSE
-            BEGIN
-                SET @TranStarted = 0
-                ROLLBACK TRANSACTION
-            END
-        END
+        SELECT @Count = @@ROWCOUNT
     END
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_CheckSchemaVersion]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-
-CREATE PROCEDURE [dbo].[aspnet_CheckSchemaVersion]
-    @Feature                   nvarchar(128),
-    @CompatibleSchemaVersion   nvarchar(128)
-AS
-BEGIN
-    IF (EXISTS( SELECT  *
-                FROM    dbo.aspnet_SchemaVersions
-                WHERE   Feature = LOWER( @Feature ) AND
-                        CompatibleSchemaVersion = @CompatibleSchemaVersion ))
-        RETURN 0
-
-    RETURN 1
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_Membership_ChangePasswordQuestionAndAnswer]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_Membership_ChangePasswordQuestionAndAnswer]
-    @ApplicationName       nvarchar(256),
-    @UserName              nvarchar(256),
-    @NewPasswordQuestion   nvarchar(256),
-    @NewPasswordAnswer     nvarchar(128)
-AS
-BEGIN
-    DECLARE @UserId uniqueidentifier
-    SELECT  @UserId = NULL
-    SELECT  @UserId = u.UserId
-    FROM    dbo.aspnet_Membership m, dbo.aspnet_Users u, dbo.aspnet_Applications a
-    WHERE   LoweredUserName = LOWER(@UserName) AND
-            u.ApplicationId = a.ApplicationId  AND
-            LOWER(@ApplicationName) = a.LoweredApplicationName AND
-            u.UserId = m.UserId
-    IF (@UserId IS NULL)
-    BEGIN
-        RETURN(1)
-    END
-
-    UPDATE dbo.aspnet_Membership
-    SET    PasswordQuestion = @NewPasswordQuestion, PasswordAnswer = @NewPasswordAnswer
-    WHERE  UserId=@UserId
-    RETURN(0)
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_Membership_CreateUser]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_Membership_CreateUser]
-    @ApplicationName                        nvarchar(256),
-    @UserName                               nvarchar(256),
-    @Password                               nvarchar(128),
-    @PasswordSalt                           nvarchar(128),
-    @Email                                  nvarchar(256),
-    @PasswordQuestion                       nvarchar(256),
-    @PasswordAnswer                         nvarchar(128),
-    @IsApproved                             bit,
-    @CurrentTimeUtc                         datetime,
-    @CreateDate                             datetime = NULL,
-    @UniqueEmail                            int      = 0,
-    @PasswordFormat                         int      = 0,
-    @UserId                                 uniqueidentifier OUTPUT
-AS
-BEGIN
-    DECLARE @ApplicationId uniqueidentifier
-    SELECT  @ApplicationId = NULL
-
-    DECLARE @NewUserId uniqueidentifier
-    SELECT @NewUserId = NULL
-
-    DECLARE @IsLockedOut bit
-    SET @IsLockedOut = 0
-
-    DECLARE @LastLockoutDate  datetime
-    SET @LastLockoutDate = CONVERT( datetime, '17540101', 112 )
-
-    DECLARE @FailedPasswordAttemptCount int
-    SET @FailedPasswordAttemptCount = 0
-
-    DECLARE @FailedPasswordAttemptWindowStart  datetime
-    SET @FailedPasswordAttemptWindowStart = CONVERT( datetime, '17540101', 112 )
-
-    DECLARE @FailedPasswordAnswerAttemptCount int
-    SET @FailedPasswordAnswerAttemptCount = 0
-
-    DECLARE @FailedPasswordAnswerAttemptWindowStart  datetime
-    SET @FailedPasswordAnswerAttemptWindowStart = CONVERT( datetime, '17540101', 112 )
-
-    DECLARE @NewUserCreated bit
-    DECLARE @ReturnValue   int
-    SET @ReturnValue = 0
-
-    DECLARE @ErrorCode     int
-    SET @ErrorCode = 0
-
-    DECLARE @TranStarted   bit
-    SET @TranStarted = 0
-
-    IF( @@TRANCOUNT = 0 )
-    BEGIN
-	    BEGIN TRANSACTION
-	    SET @TranStarted = 1
-    END
-    ELSE
-    	SET @TranStarted = 0
-
-    EXEC dbo.aspnet_Applications_CreateApplication @ApplicationName, @ApplicationId OUTPUT
-
-    IF( @@ERROR <> 0 )
-    BEGIN
-        SET @ErrorCode = -1
-        GOTO Cleanup
-    END
-
-    SET @CreateDate = @CurrentTimeUtc
-
-    SELECT  @NewUserId = UserId FROM dbo.aspnet_Users WHERE LOWER(@UserName) = LoweredUserName AND @ApplicationId = ApplicationId
-    IF ( @NewUserId IS NULL )
-    BEGIN
-        SET @NewUserId = @UserId
-        EXEC @ReturnValue = dbo.aspnet_Users_CreateUser @ApplicationId, @UserName, 0, @CreateDate, @NewUserId OUTPUT
-        SET @NewUserCreated = 1
-    END
-    ELSE
-    BEGIN
-        SET @NewUserCreated = 0
-        IF( @NewUserId <> @UserId AND @UserId IS NOT NULL )
-        BEGIN
-            SET @ErrorCode = 6
-            GOTO Cleanup
-        END
-    END
-
-    IF( @@ERROR <> 0 )
-    BEGIN
-        SET @ErrorCode = -1
-        GOTO Cleanup
-    END
-
-    IF( @ReturnValue = -1 )
-    BEGIN
-        SET @ErrorCode = 10
-        GOTO Cleanup
-    END
-
-    IF ( EXISTS ( SELECT UserId
-                  FROM   dbo.aspnet_Membership
-                  WHERE  @NewUserId = UserId ) )
-    BEGIN
-        SET @ErrorCode = 6
-        GOTO Cleanup
-    END
-
-    SET @UserId = @NewUserId
-
-    IF (@UniqueEmail = 1)
-    BEGIN
-        IF (EXISTS (SELECT *
-                    FROM  dbo.aspnet_Membership m WITH ( UPDLOCK, HOLDLOCK )
-                    WHERE ApplicationId = @ApplicationId AND LoweredEmail = LOWER(@Email)))
-        BEGIN
-            SET @ErrorCode = 7
-            GOTO Cleanup
-        END
-    END
-
-    IF (@NewUserCreated = 0)
-    BEGIN
-        UPDATE dbo.aspnet_Users
-        SET    LastActivityDate = @CreateDate
-        WHERE  @UserId = UserId
-        IF( @@ERROR <> 0 )
-        BEGIN
-            SET @ErrorCode = -1
-            GOTO Cleanup
-        END
-    END
-
-    INSERT INTO dbo.aspnet_Membership
-                ( ApplicationId,
-                  UserId,
-                  Password,
-                  PasswordSalt,
-                  Email,
-                  LoweredEmail,
-                  PasswordQuestion,
-                  PasswordAnswer,
-                  PasswordFormat,
-                  IsApproved,
-                  IsLockedOut,
-                  CreateDate,
-                  LastLoginDate,
-                  LastPasswordChangedDate,
-                  LastLockoutDate,
-                  FailedPasswordAttemptCount,
-                  FailedPasswordAttemptWindowStart,
-                  FailedPasswordAnswerAttemptCount,
-                  FailedPasswordAnswerAttemptWindowStart )
-         VALUES ( @ApplicationId,
-                  @UserId,
-                  @Password,
-                  @PasswordSalt,
-                  @Email,
-                  LOWER(@Email),
-                  @PasswordQuestion,
-                  @PasswordAnswer,
-                  @PasswordFormat,
-                  @IsApproved,
-                  @IsLockedOut,
-                  @CreateDate,
-                  @CreateDate,
-                  @CreateDate,
-                  @LastLockoutDate,
-                  @FailedPasswordAttemptCount,
-                  @FailedPasswordAttemptWindowStart,
-                  @FailedPasswordAnswerAttemptCount,
-                  @FailedPasswordAnswerAttemptWindowStart )
-
-    IF( @@ERROR <> 0 )
-    BEGIN
-        SET @ErrorCode = -1
-        GOTO Cleanup
-    END
-
-    IF( @TranStarted = 1 )
-    BEGIN
-	    SET @TranStarted = 0
-	    COMMIT TRANSACTION
-    END
-
-    RETURN 0
-
-Cleanup:
-
-    IF( @TranStarted = 1 )
-    BEGIN
-        SET @TranStarted = 0
-    	ROLLBACK TRANSACTION
-    END
-
-    RETURN @ErrorCode
-
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_Membership_FindUsersByEmail]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_Membership_FindUsersByEmail]
-    @ApplicationName       nvarchar(256),
-    @EmailToMatch          nvarchar(256),
-    @PageIndex             int,
-    @PageSize              int
-AS
-BEGIN
-    DECLARE @ApplicationId uniqueidentifier
-    SELECT  @ApplicationId = NULL
-    SELECT  @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
-    IF (@ApplicationId IS NULL)
-        RETURN 0
-
-    -- Set the page bounds
-    DECLARE @PageLowerBound int
-    DECLARE @PageUpperBound int
-    DECLARE @TotalRecords   int
-    SET @PageLowerBound = @PageSize * @PageIndex
-    SET @PageUpperBound = @PageSize - 1 + @PageLowerBound
-
-    -- Create a temp table TO store the select results
-    CREATE TABLE #PageIndexForUsers
-    (
-        IndexId int IDENTITY (0, 1) NOT NULL,
-        UserId uniqueidentifier
-    )
-
-    -- Insert into our temp table
-    IF( @EmailToMatch IS NULL )
-        INSERT INTO #PageIndexForUsers (UserId)
-            SELECT u.UserId
-            FROM   dbo.aspnet_Users u, dbo.aspnet_Membership m
-            WHERE  u.ApplicationId = @ApplicationId AND m.UserId = u.UserId AND m.Email IS NULL
-            ORDER BY m.LoweredEmail
-    ELSE
-        INSERT INTO #PageIndexForUsers (UserId)
-            SELECT u.UserId
-            FROM   dbo.aspnet_Users u, dbo.aspnet_Membership m
-            WHERE  u.ApplicationId = @ApplicationId AND m.UserId = u.UserId AND m.LoweredEmail LIKE LOWER(@EmailToMatch)
-            ORDER BY m.LoweredEmail
-
-    SELECT  u.UserName, m.Email, m.PasswordQuestion, m.Comment, m.IsApproved,
-            m.CreateDate,
-            m.LastLoginDate,
-            u.LastActivityDate,
-            m.LastPasswordChangedDate,
-            u.UserId, m.IsLockedOut,
-            m.LastLockoutDate
-    FROM   dbo.aspnet_Membership m, dbo.aspnet_Users u, #PageIndexForUsers p
-    WHERE  u.UserId = p.UserId AND u.UserId = m.UserId AND
-           p.IndexId >= @PageLowerBound AND p.IndexId <= @PageUpperBound
-    ORDER BY m.LoweredEmail
-
-    SELECT  @TotalRecords = COUNT(*)
-    FROM    #PageIndexForUsers
-    RETURN @TotalRecords
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_Membership_FindUsersByName]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_Membership_FindUsersByName]
-    @ApplicationName       nvarchar(256),
-    @UserNameToMatch       nvarchar(256),
-    @PageIndex             int,
-    @PageSize              int
-AS
-BEGIN
-    DECLARE @ApplicationId uniqueidentifier
-    SELECT  @ApplicationId = NULL
-    SELECT  @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
-    IF (@ApplicationId IS NULL)
-        RETURN 0
-
-    -- Set the page bounds
-    DECLARE @PageLowerBound int
-    DECLARE @PageUpperBound int
-    DECLARE @TotalRecords   int
-    SET @PageLowerBound = @PageSize * @PageIndex
-    SET @PageUpperBound = @PageSize - 1 + @PageLowerBound
-
-    -- Create a temp table TO store the select results
-    CREATE TABLE #PageIndexForUsers
-    (
-        IndexId int IDENTITY (0, 1) NOT NULL,
-        UserId uniqueidentifier
-    )
-
-    -- Insert into our temp table
-    INSERT INTO #PageIndexForUsers (UserId)
-        SELECT u.UserId
-        FROM   dbo.aspnet_Users u, dbo.aspnet_Membership m
-        WHERE  u.ApplicationId = @ApplicationId AND m.UserId = u.UserId AND u.LoweredUserName LIKE LOWER(@UserNameToMatch)
-        ORDER BY u.UserName
-
-
-    SELECT  u.UserName, m.Email, m.PasswordQuestion, m.Comment, m.IsApproved,
-            m.CreateDate,
-            m.LastLoginDate,
-            u.LastActivityDate,
-            m.LastPasswordChangedDate,
-            u.UserId, m.IsLockedOut,
-            m.LastLockoutDate
-    FROM   dbo.aspnet_Membership m, dbo.aspnet_Users u, #PageIndexForUsers p
-    WHERE  u.UserId = p.UserId AND u.UserId = m.UserId AND
-           p.IndexId >= @PageLowerBound AND p.IndexId <= @PageUpperBound
-    ORDER BY u.UserName
-
-    SELECT  @TotalRecords = COUNT(*)
-    FROM    #PageIndexForUsers
-    RETURN @TotalRecords
-END
-GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
-
-
-GO
-PRINT N'Creating [dbo].[aspnet_Membership_GetAllUsers]...';
-
-
-GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
-
-
-GO
-CREATE PROCEDURE [dbo].[aspnet_Membership_GetAllUsers]
-    @ApplicationName       nvarchar(256),
-    @PageIndex             int,
-    @PageSize              int
-AS
-BEGIN
-    DECLARE @ApplicationId uniqueidentifier
-    SELECT  @ApplicationId = NULL
-    SELECT  @ApplicationId = ApplicationId FROM dbo.aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
-    IF (@ApplicationId IS NULL)
-        RETURN 0
-
-
-    -- Set the page bounds
-    DECLARE @PageLowerBound int
-    DECLARE @PageUpperBound int
-    DECLARE @TotalRecords   int
-    SET @PageLowerBound = @PageSize * @PageIndex
-    SET @PageUpperBound = @PageSize - 1 + @PageLowerBound
-
-    -- Create a temp table TO store the select results
-    CREATE TABLE #PageIndexForUsers
-    (
-        IndexId int IDENTITY (0, 1) NOT NULL,
-        UserId uniqueidentifier
-    )
-
-    -- Insert into our temp table
-    INSERT INTO #PageIndexForUsers (UserId)
-    SELECT u.UserId
-    FROM   dbo.aspnet_Membership m, dbo.aspnet_Users u
-    WHERE  u.ApplicationId = @ApplicationId AND u.UserId = m.UserId
-    ORDER BY u.UserName
-
-    SELECT @TotalRecords = @@ROWCOUNT
-
-    SELECT u.UserName, m.Email, m.PasswordQuestion, m.Comment, m.IsApproved,
-            m.CreateDate,
-            m.LastLoginDate,
-            u.LastActivityDate,
-            m.LastPasswordChangedDate,
-            u.UserId, m.IsLockedOut,
-            m.LastLockoutDate
-    FROM   dbo.aspnet_Membership m, dbo.aspnet_Users u, #PageIndexForUsers p
-    WHERE  u.UserId = p.UserId AND u.UserId = m.UserId AND
-           p.IndexId >= @PageLowerBound AND p.IndexId <= @PageUpperBound
-    ORDER BY u.UserName
-    RETURN @TotalRecords
 END
 GO
 SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
@@ -4932,6 +4399,469 @@ AS
 	where c.create_ts >= @start_date
 	  and c.create_ts <= @end_date  
 	group by b.brand_description
+GO
+PRINT N'Creating [dbo].[aspnet_Membership_GetNumberOfUsersOnline]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_Membership_GetNumberOfUsersOnline]
+    @ApplicationName            nvarchar(256),
+    @MinutesSinceLastInActive   int,
+    @CurrentTimeUtc             datetime
+AS
+BEGIN
+    DECLARE @DateActive datetime
+    SELECT  @DateActive = DATEADD(minute,  -(@MinutesSinceLastInActive), @CurrentTimeUtc)
+
+    DECLARE @NumOnline int
+    SELECT  @NumOnline = COUNT(*)
+    FROM    dbo.aspnet_Users u,
+            dbo.aspnet_Applications a,
+            dbo.aspnet_Membership m
+    WHERE   u.ApplicationId = a.ApplicationId                  AND
+            LastActivityDate > @DateActive                     AND
+            a.LoweredApplicationName = LOWER(@ApplicationName) AND
+            u.UserId = m.UserId
+    RETURN(@NumOnline)
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_FindState]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_FindState] (
+    @AllUsersScope bit,
+    @ApplicationName NVARCHAR(256),
+    @PageIndex              INT,
+    @PageSize               INT,
+    @Path NVARCHAR(256) = NULL,
+    @UserName NVARCHAR(256) = NULL,
+    @InactiveSinceDate DATETIME = NULL)
+AS
+BEGIN
+    DECLARE @ApplicationId UNIQUEIDENTIFIER
+    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    IF (@ApplicationId IS NULL)
+        RETURN
+
+    -- Set the page bounds
+    DECLARE @PageLowerBound INT
+    DECLARE @PageUpperBound INT
+    DECLARE @TotalRecords   INT
+    SET @PageLowerBound = @PageSize * @PageIndex
+    SET @PageUpperBound = @PageSize - 1 + @PageLowerBound
+
+    -- Create a temp table to store the selected results
+    CREATE TABLE #PageIndex (
+        IndexId int IDENTITY (0, 1) NOT NULL,
+        ItemId UNIQUEIDENTIFIER
+    )
+
+    IF (@AllUsersScope = 1)
+    BEGIN
+        -- Insert into our temp table
+        INSERT INTO #PageIndex (ItemId)
+        SELECT Paths.PathId
+        FROM dbo.aspnet_Paths Paths,
+             ((SELECT Paths.PathId
+               FROM dbo.aspnet_PersonalizationAllUsers AllUsers, dbo.aspnet_Paths Paths
+               WHERE Paths.ApplicationId = @ApplicationId
+                      AND AllUsers.PathId = Paths.PathId
+                      AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
+              ) AS SharedDataPerPath
+              FULL OUTER JOIN
+              (SELECT DISTINCT Paths.PathId
+               FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Paths Paths
+               WHERE Paths.ApplicationId = @ApplicationId
+                      AND PerUser.PathId = Paths.PathId
+                      AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
+              ) AS UserDataPerPath
+              ON SharedDataPerPath.PathId = UserDataPerPath.PathId
+             )
+        WHERE Paths.PathId = SharedDataPerPath.PathId OR Paths.PathId = UserDataPerPath.PathId
+        ORDER BY Paths.Path ASC
+
+        SELECT @TotalRecords = @@ROWCOUNT
+
+        SELECT Paths.Path,
+               SharedDataPerPath.LastUpdatedDate,
+               SharedDataPerPath.SharedDataLength,
+               UserDataPerPath.UserDataLength,
+               UserDataPerPath.UserCount
+        FROM dbo.aspnet_Paths Paths,
+             ((SELECT PageIndex.ItemId AS PathId,
+                      AllUsers.LastUpdatedDate AS LastUpdatedDate,
+                      DATALENGTH(AllUsers.PageSettings) AS SharedDataLength
+               FROM dbo.aspnet_PersonalizationAllUsers AllUsers, #PageIndex PageIndex
+               WHERE AllUsers.PathId = PageIndex.ItemId
+                     AND PageIndex.IndexId >= @PageLowerBound AND PageIndex.IndexId <= @PageUpperBound
+              ) AS SharedDataPerPath
+              FULL OUTER JOIN
+              (SELECT PageIndex.ItemId AS PathId,
+                      SUM(DATALENGTH(PerUser.PageSettings)) AS UserDataLength,
+                      COUNT(*) AS UserCount
+               FROM aspnet_PersonalizationPerUser PerUser, #PageIndex PageIndex
+               WHERE PerUser.PathId = PageIndex.ItemId
+                     AND PageIndex.IndexId >= @PageLowerBound AND PageIndex.IndexId <= @PageUpperBound
+               GROUP BY PageIndex.ItemId
+              ) AS UserDataPerPath
+              ON SharedDataPerPath.PathId = UserDataPerPath.PathId
+             )
+        WHERE Paths.PathId = SharedDataPerPath.PathId OR Paths.PathId = UserDataPerPath.PathId
+        ORDER BY Paths.Path ASC
+    END
+    ELSE
+    BEGIN
+        -- Insert into our temp table
+        INSERT INTO #PageIndex (ItemId)
+        SELECT PerUser.Id
+        FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Users Users, dbo.aspnet_Paths Paths
+        WHERE Paths.ApplicationId = @ApplicationId
+              AND PerUser.UserId = Users.UserId
+              AND PerUser.PathId = Paths.PathId
+              AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
+              AND (@UserName IS NULL OR Users.LoweredUserName LIKE LOWER(@UserName))
+              AND (@InactiveSinceDate IS NULL OR Users.LastActivityDate <= @InactiveSinceDate)
+        ORDER BY Paths.Path ASC, Users.UserName ASC
+
+        SELECT @TotalRecords = @@ROWCOUNT
+
+        SELECT Paths.Path, PerUser.LastUpdatedDate, DATALENGTH(PerUser.PageSettings), Users.UserName, Users.LastActivityDate
+        FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Users Users, dbo.aspnet_Paths Paths, #PageIndex PageIndex
+        WHERE PerUser.Id = PageIndex.ItemId
+              AND PerUser.UserId = Users.UserId
+              AND PerUser.PathId = Paths.PathId
+              AND PageIndex.IndexId >= @PageLowerBound AND PageIndex.IndexId <= @PageUpperBound
+        ORDER BY Paths.Path ASC, Users.UserName ASC
+    END
+
+    RETURN @TotalRecords
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_GetCountOfState]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_GetCountOfState] (
+    @Count int OUT,
+    @AllUsersScope bit,
+    @ApplicationName NVARCHAR(256),
+    @Path NVARCHAR(256) = NULL,
+    @UserName NVARCHAR(256) = NULL,
+    @InactiveSinceDate DATETIME = NULL)
+AS
+BEGIN
+
+    DECLARE @ApplicationId UNIQUEIDENTIFIER
+    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    IF (@ApplicationId IS NULL)
+        SELECT @Count = 0
+    ELSE
+        IF (@AllUsersScope = 1)
+            SELECT @Count = COUNT(*)
+            FROM dbo.aspnet_PersonalizationAllUsers AllUsers, dbo.aspnet_Paths Paths
+            WHERE Paths.ApplicationId = @ApplicationId
+                  AND AllUsers.PathId = Paths.PathId
+                  AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
+        ELSE
+            SELECT @Count = COUNT(*)
+            FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Users Users, dbo.aspnet_Paths Paths
+            WHERE Paths.ApplicationId = @ApplicationId
+                  AND PerUser.UserId = Users.UserId
+                  AND PerUser.PathId = Paths.PathId
+                  AND (@Path IS NULL OR Paths.LoweredPath LIKE LOWER(@Path))
+                  AND (@UserName IS NULL OR Users.LoweredUserName LIKE LOWER(@UserName))
+                  AND (@InactiveSinceDate IS NULL OR Users.LastActivityDate <= @InactiveSinceDate)
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_ResetSharedState]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_ResetSharedState] (
+    @Count int OUT,
+    @ApplicationName NVARCHAR(256),
+    @Path NVARCHAR(256))
+AS
+BEGIN
+    DECLARE @ApplicationId UNIQUEIDENTIFIER
+    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    IF (@ApplicationId IS NULL)
+        SELECT @Count = 0
+    ELSE
+    BEGIN
+        DELETE FROM dbo.aspnet_PersonalizationAllUsers
+        WHERE PathId IN
+            (SELECT AllUsers.PathId
+             FROM dbo.aspnet_PersonalizationAllUsers AllUsers, dbo.aspnet_Paths Paths
+             WHERE Paths.ApplicationId = @ApplicationId
+                   AND AllUsers.PathId = Paths.PathId
+                   AND Paths.LoweredPath = LOWER(@Path))
+
+        SELECT @Count = @@ROWCOUNT
+    END
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_PersonalizationAdministration_ResetUserState]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_PersonalizationAdministration_ResetUserState] (
+    @Count                  int                 OUT,
+    @ApplicationName        NVARCHAR(256),
+    @InactiveSinceDate      DATETIME            = NULL,
+    @UserName               NVARCHAR(256)       = NULL,
+    @Path                   NVARCHAR(256)       = NULL)
+AS
+BEGIN
+    DECLARE @ApplicationId UNIQUEIDENTIFIER
+    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    IF (@ApplicationId IS NULL)
+        SELECT @Count = 0
+    ELSE
+    BEGIN
+        DELETE FROM dbo.aspnet_PersonalizationPerUser
+        WHERE Id IN (SELECT PerUser.Id
+                     FROM dbo.aspnet_PersonalizationPerUser PerUser, dbo.aspnet_Users Users, dbo.aspnet_Paths Paths
+                     WHERE Paths.ApplicationId = @ApplicationId
+                           AND PerUser.UserId = Users.UserId
+                           AND PerUser.PathId = Paths.PathId
+                           AND (@InactiveSinceDate IS NULL OR Users.LastActivityDate <= @InactiveSinceDate)
+                           AND (@UserName IS NULL OR Users.LoweredUserName = LOWER(@UserName))
+                           AND (@Path IS NULL OR Paths.LoweredPath = LOWER(@Path)))
+
+        SELECT @Count = @@ROWCOUNT
+    END
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_PersonalizationAllUsers_GetPageSettings]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_PersonalizationAllUsers_GetPageSettings] (
+    @ApplicationName  NVARCHAR(256),
+    @Path              NVARCHAR(256))
+AS
+BEGIN
+    DECLARE @ApplicationId UNIQUEIDENTIFIER
+    DECLARE @PathId UNIQUEIDENTIFIER
+
+    SELECT @ApplicationId = NULL
+    SELECT @PathId = NULL
+
+    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    IF (@ApplicationId IS NULL)
+    BEGIN
+        RETURN
+    END
+
+    SELECT @PathId = u.PathId FROM dbo.aspnet_Paths u WHERE u.ApplicationId = @ApplicationId AND u.LoweredPath = LOWER(@Path)
+    IF (@PathId IS NULL)
+    BEGIN
+        RETURN
+    END
+
+    SELECT p.PageSettings FROM dbo.aspnet_PersonalizationAllUsers p WHERE p.PathId = @PathId
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_PersonalizationAllUsers_ResetPageSettings]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_PersonalizationAllUsers_ResetPageSettings] (
+    @ApplicationName  NVARCHAR(256),
+    @Path              NVARCHAR(256))
+AS
+BEGIN
+    DECLARE @ApplicationId UNIQUEIDENTIFIER
+    DECLARE @PathId UNIQUEIDENTIFIER
+
+    SELECT @ApplicationId = NULL
+    SELECT @PathId = NULL
+
+    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    IF (@ApplicationId IS NULL)
+    BEGIN
+        RETURN
+    END
+
+    SELECT @PathId = u.PathId FROM dbo.aspnet_Paths u WHERE u.ApplicationId = @ApplicationId AND u.LoweredPath = LOWER(@Path)
+    IF (@PathId IS NULL)
+    BEGIN
+        RETURN
+    END
+
+    DELETE FROM dbo.aspnet_PersonalizationAllUsers WHERE PathId = @PathId
+    RETURN 0
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_PersonalizationAllUsers_SetPageSettings]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_PersonalizationAllUsers_SetPageSettings] (
+    @ApplicationName  NVARCHAR(256),
+    @Path             NVARCHAR(256),
+    @PageSettings     IMAGE,
+    @CurrentTimeUtc   DATETIME)
+AS
+BEGIN
+    DECLARE @ApplicationId UNIQUEIDENTIFIER
+    DECLARE @PathId UNIQUEIDENTIFIER
+
+    SELECT @ApplicationId = NULL
+    SELECT @PathId = NULL
+
+    EXEC dbo.aspnet_Applications_CreateApplication @ApplicationName, @ApplicationId OUTPUT
+
+    SELECT @PathId = u.PathId FROM dbo.aspnet_Paths u WHERE u.ApplicationId = @ApplicationId AND u.LoweredPath = LOWER(@Path)
+    IF (@PathId IS NULL)
+    BEGIN
+        EXEC dbo.aspnet_Paths_CreatePath @ApplicationId, @Path, @PathId OUTPUT
+    END
+
+    IF (EXISTS(SELECT PathId FROM dbo.aspnet_PersonalizationAllUsers WHERE PathId = @PathId))
+        UPDATE dbo.aspnet_PersonalizationAllUsers SET PageSettings = @PageSettings, LastUpdatedDate = @CurrentTimeUtc WHERE PathId = @PathId
+    ELSE
+        INSERT INTO dbo.aspnet_PersonalizationAllUsers(PathId, PageSettings, LastUpdatedDate) VALUES (@PathId, @PageSettings, @CurrentTimeUtc)
+    RETURN 0
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
+GO
+PRINT N'Creating [dbo].[aspnet_PersonalizationPerUser_GetPageSettings]...';
+
+
+GO
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+
+GO
+CREATE PROCEDURE [dbo].[aspnet_PersonalizationPerUser_GetPageSettings] (
+    @ApplicationName  NVARCHAR(256),
+    @UserName         NVARCHAR(256),
+    @Path             NVARCHAR(256),
+    @CurrentTimeUtc   DATETIME)
+AS
+BEGIN
+    DECLARE @ApplicationId UNIQUEIDENTIFIER
+    DECLARE @PathId UNIQUEIDENTIFIER
+    DECLARE @UserId UNIQUEIDENTIFIER
+
+    SELECT @ApplicationId = NULL
+    SELECT @PathId = NULL
+    SELECT @UserId = NULL
+
+    EXEC dbo.aspnet_Personalization_GetApplicationId @ApplicationName, @ApplicationId OUTPUT
+    IF (@ApplicationId IS NULL)
+    BEGIN
+        RETURN
+    END
+
+    SELECT @PathId = u.PathId FROM dbo.aspnet_Paths u WHERE u.ApplicationId = @ApplicationId AND u.LoweredPath = LOWER(@Path)
+    IF (@PathId IS NULL)
+    BEGIN
+        RETURN
+    END
+
+    SELECT @UserId = u.UserId FROM dbo.aspnet_Users u WHERE u.ApplicationId = @ApplicationId AND u.LoweredUserName = LOWER(@UserName)
+    IF (@UserId IS NULL)
+    BEGIN
+        RETURN
+    END
+
+    UPDATE   dbo.aspnet_Users WITH (ROWLOCK)
+    SET      LastActivityDate = @CurrentTimeUtc
+    WHERE    UserId = @UserId
+    IF (@@ROWCOUNT = 0) -- Username not found
+        RETURN
+
+    SELECT p.PageSettings FROM dbo.aspnet_PersonalizationPerUser p WHERE p.PathId = @PathId AND p.UserId = @UserId
+END
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+
+
 GO
 PRINT N'Creating [dbo].[aspnet_PersonalizationPerUser_ResetPageSettings]...';
 
@@ -5241,45 +5171,73 @@ SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
 
 
 GO
-PRINT N'Creating [dbo].[aspnet_PersonalizationAllUsers_SetPageSettings]...';
+PRINT N'Creating Permission...';
 
 
 GO
-SET ANSI_NULLS ON;
-
-SET QUOTED_IDENTIFIER OFF;
+GRANT SELECT
+    ON OBJECT::[dbo].[vw_aspnet_Applications] TO [aspnet_Membership_ReportingAccess]
+    AS [dbo];
 
 
 GO
-CREATE PROCEDURE [dbo].[aspnet_PersonalizationAllUsers_SetPageSettings] (
-    @ApplicationName  NVARCHAR(256),
-    @Path             NVARCHAR(256),
-    @PageSettings     IMAGE,
-    @CurrentTimeUtc   DATETIME)
-AS
-BEGIN
-    DECLARE @ApplicationId UNIQUEIDENTIFIER
-    DECLARE @PathId UNIQUEIDENTIFIER
+PRINT N'Creating Permission...';
 
-    SELECT @ApplicationId = NULL
-    SELECT @PathId = NULL
 
-    EXEC dbo.aspnet_Applications_CreateApplication @ApplicationName, @ApplicationId OUTPUT
-
-    SELECT @PathId = u.PathId FROM dbo.aspnet_Paths u WHERE u.ApplicationId = @ApplicationId AND u.LoweredPath = LOWER(@Path)
-    IF (@PathId IS NULL)
-    BEGIN
-        EXEC dbo.aspnet_Paths_CreatePath @ApplicationId, @Path, @PathId OUTPUT
-    END
-
-    IF (EXISTS(SELECT PathId FROM dbo.aspnet_PersonalizationAllUsers WHERE PathId = @PathId))
-        UPDATE dbo.aspnet_PersonalizationAllUsers SET PageSettings = @PageSettings, LastUpdatedDate = @CurrentTimeUtc WHERE PathId = @PathId
-    ELSE
-        INSERT INTO dbo.aspnet_PersonalizationAllUsers(PathId, PageSettings, LastUpdatedDate) VALUES (@PathId, @PageSettings, @CurrentTimeUtc)
-    RETURN 0
-END
 GO
-SET ANSI_NULLS, QUOTED_IDENTIFIER ON;
+GRANT SELECT
+    ON OBJECT::[dbo].[vw_aspnet_Applications] TO [aspnet_Personalization_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT SELECT
+    ON OBJECT::[dbo].[vw_aspnet_Applications] TO [aspnet_Profile_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT SELECT
+    ON OBJECT::[dbo].[vw_aspnet_Applications] TO [aspnet_Roles_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT SELECT
+    ON OBJECT::[dbo].[vw_aspnet_MembershipUsers] TO [aspnet_Membership_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT SELECT
+    ON OBJECT::[dbo].[vw_aspnet_Profiles] TO [aspnet_Profile_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT SELECT
+    ON OBJECT::[dbo].[vw_aspnet_Roles] TO [aspnet_Roles_ReportingAccess]
+    AS [dbo];
 
 
 GO
@@ -5359,136 +5317,6 @@ PRINT N'Creating Permission...';
 GO
 GRANT SELECT
     ON OBJECT::[dbo].[vw_aspnet_WebPartState_User] TO [aspnet_Personalization_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[vw_aspnet_Applications] TO [aspnet_Membership_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[vw_aspnet_Applications] TO [aspnet_Personalization_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[vw_aspnet_Applications] TO [aspnet_Profile_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[vw_aspnet_Applications] TO [aspnet_Roles_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[vw_aspnet_MembershipUsers] TO [aspnet_Membership_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[vw_aspnet_Profiles] TO [aspnet_Profile_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[vw_aspnet_Roles] TO [aspnet_Roles_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_UsersInRoles_IsUserInRole] TO [aspnet_Roles_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_UsersInRoles_IsUserInRole] TO [aspnet_Roles_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_UsersInRoles_RemoveUsersFromRoles] TO [aspnet_Roles_FullAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_WebEvent_LogEvent] TO [aspnet_WebEvent_FullAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Roles_GetAllRoles] TO [aspnet_Roles_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Roles_RoleExists] TO [aspnet_Roles_ReportingAccess]
     AS [dbo];
 
 
@@ -5639,6 +5467,126 @@ PRINT N'Creating Permission...';
 GO
 GRANT EXECUTE
     ON OBJECT::[dbo].[aspnet_UsersInRoles_GetUsersInRoles] TO [aspnet_Roles_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_UsersInRoles_IsUserInRole] TO [aspnet_Roles_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_UsersInRoles_IsUserInRole] TO [aspnet_Roles_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_UsersInRoles_RemoveUsersFromRoles] TO [aspnet_Roles_FullAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_WebEvent_LogEvent] TO [aspnet_WebEvent_FullAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_FindState] TO [aspnet_Personalization_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_GetCountOfState] TO [aspnet_Personalization_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_ResetSharedState] TO [aspnet_Personalization_FullAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_ResetUserState] TO [aspnet_Personalization_FullAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_PersonalizationAllUsers_GetPageSettings] TO [aspnet_Personalization_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_PersonalizationAllUsers_ResetPageSettings] TO [aspnet_Personalization_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_PersonalizationAllUsers_SetPageSettings] TO [aspnet_Personalization_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_PersonalizationPerUser_GetPageSettings] TO [aspnet_Personalization_BasicAccess]
     AS [dbo];
 
 
@@ -5838,7 +5786,7 @@ PRINT N'Creating Permission...';
 
 GO
 GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Paths_CreatePath] TO [aspnet_Personalization_BasicAccess]
+    ON OBJECT::[dbo].[aspnet_Roles_GetAllRoles] TO [aspnet_Roles_ReportingAccess]
     AS [dbo];
 
 
@@ -5848,247 +5796,7 @@ PRINT N'Creating Permission...';
 
 GO
 GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Personalization_GetApplicationId] TO [aspnet_Personalization_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_DeleteAllState] TO [aspnet_Personalization_FullAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_FindState] TO [aspnet_Personalization_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_GetCountOfState] TO [aspnet_Personalization_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_ResetSharedState] TO [aspnet_Personalization_FullAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_ResetUserState] TO [aspnet_Personalization_FullAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_PersonalizationAllUsers_GetPageSettings] TO [aspnet_Personalization_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_PersonalizationAllUsers_ResetPageSettings] TO [aspnet_Personalization_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_PersonalizationAllUsers_SetPageSettings] TO [aspnet_Personalization_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_PersonalizationPerUser_GetPageSettings] TO [aspnet_Personalization_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetNumberOfUsersOnline] TO [aspnet_Membership_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetNumberOfUsersOnline] TO [aspnet_Membership_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetPassword] TO [aspnet_Membership_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetPasswordWithFormat] TO [aspnet_Membership_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetUserByEmail] TO [aspnet_Membership_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetUserByEmail] TO [aspnet_Membership_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetUserByName] TO [aspnet_Membership_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetUserByName] TO [aspnet_Membership_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetUserByUserId] TO [aspnet_Membership_BasicAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_GetUserByUserId] TO [aspnet_Membership_ReportingAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_ResetPassword] TO [aspnet_Membership_FullAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_SetPassword] TO [aspnet_Membership_FullAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_UnlockUser] TO [aspnet_Membership_FullAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_UpdateUser] TO [aspnet_Membership_FullAccess]
-    AS [dbo];
-
-
-GO
-PRINT N'Creating Permission...';
-
-
-GO
-GRANT EXECUTE
-    ON OBJECT::[dbo].[aspnet_Membership_UpdateUserInfo] TO [aspnet_Membership_BasicAccess]
+    ON OBJECT::[dbo].[aspnet_Roles_RoleExists] TO [aspnet_Roles_ReportingAccess]
     AS [dbo];
 
 
@@ -6233,12 +5941,191 @@ GRANT EXECUTE
 
 
 GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetPassword] TO [aspnet_Membership_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetPasswordWithFormat] TO [aspnet_Membership_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetUserByEmail] TO [aspnet_Membership_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetUserByEmail] TO [aspnet_Membership_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetUserByName] TO [aspnet_Membership_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetUserByName] TO [aspnet_Membership_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetUserByUserId] TO [aspnet_Membership_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetUserByUserId] TO [aspnet_Membership_ReportingAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_ResetPassword] TO [aspnet_Membership_FullAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_SetPassword] TO [aspnet_Membership_FullAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_UnlockUser] TO [aspnet_Membership_FullAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_UpdateUser] TO [aspnet_Membership_FullAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_UpdateUserInfo] TO [aspnet_Membership_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Paths_CreatePath] TO [aspnet_Personalization_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Personalization_GetApplicationId] TO [aspnet_Personalization_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_PersonalizationAdministration_DeleteAllState] TO [aspnet_Personalization_FullAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetNumberOfUsersOnline] TO [aspnet_Membership_BasicAccess]
+    AS [dbo];
+
+
+GO
+PRINT N'Creating Permission...';
+
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[dbo].[aspnet_Membership_GetNumberOfUsersOnline] TO [aspnet_Membership_ReportingAccess]
+    AS [dbo];
+
+
+GO
 -- Refactoring step to update target server with deployed transaction logs
 
 IF OBJECT_ID(N'dbo.__RefactorLog') IS NULL
 BEGIN
     CREATE TABLE [dbo].[__RefactorLog] (OperationKey UNIQUEIDENTIFIER NOT NULL PRIMARY KEY)
-    EXEC sp_addextendedproperty N'microsoft_database_tools_support', N'refactoring log', N'schema', N'dbo', N'table', N'__RefactorLog'
 END
 GO
 IF NOT EXISTS (SELECT OperationKey FROM [dbo].[__RefactorLog] WHERE OperationKey = '3a5366aa-f422-4bde-b489-5dbe72a84806')
@@ -6381,30 +6268,6 @@ INSERT [dbo].[aspnet_Membership] ([ApplicationId], [UserId], [Password], [Passwo
 
 
 GO
-
-GO
-DECLARE @VarDecimalSupported AS BIT;
-
-SELECT @VarDecimalSupported = 0;
-
-IF ((ServerProperty(N'EngineEdition') = 3)
-    AND (((@@microsoftversion / power(2, 24) = 9)
-          AND (@@microsoftversion & 0xffff >= 3024))
-         OR ((@@microsoftversion / power(2, 24) = 10)
-             AND (@@microsoftversion & 0xffff >= 1600))))
-    SELECT @VarDecimalSupported = 1;
-
-IF (@VarDecimalSupported > 0)
-    BEGIN
-        EXECUTE sp_db_vardecimal_storage_format N'$(DatabaseName)', 'ON';
-    END
-
-
-GO
-ALTER DATABASE [$(DatabaseName)]
-    SET MULTI_USER 
-    WITH ROLLBACK IMMEDIATE;
-
 
 GO
 PRINT N'Update complete.';

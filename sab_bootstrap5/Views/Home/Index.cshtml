@@ -16,32 +16,6 @@
 </div>
 <div class="row">
     <div class="col-lg-4">
-        <div class="yellow-bg">
-        <h4 class="gold-bg">Recently <small class="text-whitesmoke">added content</small></h4>
-        <table id="thisweek_table" class="table">
-            <tbody>
-            @foreach (var campaign in Model.RecentDocuments)
-             {
-                 <tr>
-                     <td colspan="3">
-                         <strong>
-                             <span>@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</span>              
-                         </strong>
-                         <span class="pull-right"><strong>@Html.Raw(campaign.Uploaded.GetValueOrDefault().ToString("dd/MM/yyyy"))</strong></span>
-                     </td>
-                 </tr>
-                 foreach (var file in campaign.Documents)
-                 {
-                     <tr>
-                         <td><img src="@Url.Content(String.Format("~/Content/images/32/{0}.png", file.DocumentType))" /></td>
-                         <td>@Html.Raw(file.FileName)</td>
-                         <td>@Html.ActionLink("Open", "ViewDocument", "Home", new {@campaign_id = campaign.Id, @document_id = "0"}, new {@class = "btn btn-primary pull-right"})</td>
-                     </tr>
-                 }
-             }    
-            </tbody>
-        </table>
-        </div>
         <div class="pale-green-bg">
         <h4 class="gold-bg">Search Results <small class="text-whitesmoke"> of campaigns based upon your search criteria</small></h4>
         <table id="thismonth_table" class="table">
@@ -56,6 +30,8 @@
                              <span>@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</span>
                          </strong>
                          <span class="pull-right"><strong>@Html.Raw(campaign.Uploaded.GetValueOrDefault().ToString("dd/MM/yyyy"))</strong></span>
+                         <br />
+                         @Html.Raw(campaign.Email)
                      </td>
                  </tr>
                  m++;
@@ -72,6 +48,35 @@
             </tbody>
         </table>
         </div>
+        <div class="yellow-bg">
+        <h4 class="gold-bg">Recently <small class="text-whitesmoke">added content</small></h4>
+        <table id="thisweek_table" class="table">
+            <tbody>
+            @foreach (var campaign in Model.RecentDocuments)
+                {
+                    <tr>
+                        <td colspan="3">
+                            <strong>
+                                <span>@Html.Raw(campaign.Brand) - @Html.Raw(campaign.Territory) - @Html.Raw(campaign.Title)</span>              
+                            </strong>
+                            <span class="pull-right"><strong>@Html.Raw(campaign.Uploaded.GetValueOrDefault().ToString("dd/MM/yyyy"))</strong></span>
+                            <br />
+                            @Html.Raw(campaign.Email)
+                        </td>
+                    </tr>
+                    foreach (var file in campaign.Documents)
+                    {
+                        <tr>
+                            <td><img src="@Url.Content(String.Format("~/Content/images/32/{0}.png", file.DocumentType))" /></td>
+                            <td>@Html.Raw(file.FileName)</td>
+                            <td>@Html.ActionLink("Open", "ViewDocument", "Home", new {@campaign_id = campaign.Id, @document_id = "0"}, new {@class = "btn btn-primary pull-right"})</td>
+                        </tr>
+                    }
+                }    
+            </tbody>
+        </table>
+        </div>
+        
     </div>
     <div class="col-lg-4">
         <div class="pale-green-bg">
@@ -87,14 +92,15 @@
                         </div>
                 }
 
-                <!--<div><u>Search by Category</u></div>-->
-                @*foreach (var category in Model.Lookup.Categories)
+                <div><u>Search by Category</u></div>
+                @for (int cindex = 0; cindex < Model.Search.Categories.Count(); cindex++)
                 {
                     <div class="controls">
-                    @Html.RadioButtonFor(x => x.Upload.Category, category.Value, new { id = "upload_category_" + i })       
-                    @category.Text
+                        @Html.HiddenFor(model => model.Search.Categories[cindex].Id)
+                        @Html.CheckBoxFor(model => model.Search.Categories[cindex].IsChecked)     
+                        @Model.Search.Categories[cindex].Name  
                     </div>
-                }*@
+                }
                 
                 <div><u>Search by Territory</u></div>
                 @for (int tindex = 0; tindex < Model.Search.Territories.Count(); tindex++)
@@ -162,14 +168,14 @@
             <fieldset class="form-horizontal">
                 
                 
-                <!--<div><u>Select a Category</u></div>-->
-                @*foreach (var category in Model.Lookup.Categories)
+                <div><u>Select a Category</u></div>
+                @foreach (var category in Model.Lookup.Categories)
                 {
                     <div class="controls">
-                    @Html.RadioButtonFor(x => x.Upload.Category, category.Value, new { id = "upload_category_" + i })       
+                    @Html.RadioButtonFor(x => x.Upload.CategoryId, category.Value, new { id = "upload_category_" + i })       
                     @category.Text
                     </div>
-                }*@
+                }
                 
                 <div><u>Select a Territory</u></div>
                 @foreach (var territory in Model.Lookup.Territories)

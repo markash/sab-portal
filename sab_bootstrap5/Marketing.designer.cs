@@ -30,9 +30,6 @@ namespace Marketing
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void Insertcampaign(campaign instance);
-    partial void Updatecampaign(campaign instance);
-    partial void Deletecampaign(campaign instance);
     partial void Insertbrand(brand instance);
     partial void Updatebrand(brand instance);
     partial void Deletebrand(brand instance);
@@ -54,6 +51,9 @@ namespace Marketing
     partial void Insertcampaign_type(campaign_type instance);
     partial void Updatecampaign_type(campaign_type instance);
     partial void Deletecampaign_type(campaign_type instance);
+    partial void Insertcampaign(campaign instance);
+    partial void Updatecampaign(campaign instance);
+    partial void Deletecampaign(campaign instance);
     #endregion
 		
 		public MarketingDataContext() : 
@@ -84,14 +84,6 @@ namespace Marketing
 				base(connection, mappingSource)
 		{
 			OnCreated();
-		}
-		
-		public System.Data.Linq.Table<campaign> campaigns
-		{
-			get
-			{
-				return this.GetTable<campaign>();
-			}
 		}
 		
 		public System.Data.Linq.Table<brand> brands
@@ -158,6 +150,14 @@ namespace Marketing
 			}
 		}
 		
+		public System.Data.Linq.Table<campaign> campaigns
+		{
+			get
+			{
+				return this.GetTable<campaign>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.usage_report")]
 		public ISingleResult<usage_reportResult> usage_report([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Date")] System.Nullable<System.DateTime> start, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Date")] System.Nullable<System.DateTime> end)
 		{
@@ -205,489 +205,6 @@ namespace Marketing
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), start, end);
 			return ((ISingleResult<upload_reportResult>)(result.ReturnValue));
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.campaign")]
-	public partial class campaign : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _campaign_id;
-		
-		private int _category_id;
-		
-		private int _territory_id;
-		
-		private int _campaign_type_id;
-		
-		private int _country_id;
-		
-		private int _brand_id;
-		
-		private string _title;
-		
-		private string _username;
-		
-		private System.Nullable<System.DateTime> _create_ts;
-		
-		private System.Nullable<System.DateTime> _update_ts;
-		
-		private EntityRef<brand> _brand;
-		
-		private EntityRef<category> _category;
-		
-		private EntityRef<country> _country;
-		
-		private EntityRef<territory> _territory;
-		
-		private EntityRef<campaign_type> _campaign_type;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void Oncampaign_idChanging(int value);
-    partial void Oncampaign_idChanged();
-    partial void Oncategory_idChanging(int value);
-    partial void Oncategory_idChanged();
-    partial void Onterritory_idChanging(int value);
-    partial void Onterritory_idChanged();
-    partial void Oncampaign_type_idChanging(int value);
-    partial void Oncampaign_type_idChanged();
-    partial void Oncountry_idChanging(int value);
-    partial void Oncountry_idChanged();
-    partial void Onbrand_idChanging(int value);
-    partial void Onbrand_idChanged();
-    partial void OntitleChanging(string value);
-    partial void OntitleChanged();
-    partial void OnusernameChanging(string value);
-    partial void OnusernameChanged();
-    partial void Oncreate_tsChanging(System.Nullable<System.DateTime> value);
-    partial void Oncreate_tsChanged();
-    partial void Onupdate_tsChanging(System.Nullable<System.DateTime> value);
-    partial void Onupdate_tsChanged();
-    #endregion
-		
-		public campaign()
-		{
-			this._brand = default(EntityRef<brand>);
-			this._category = default(EntityRef<category>);
-			this._country = default(EntityRef<country>);
-			this._territory = default(EntityRef<territory>);
-			this._campaign_type = default(EntityRef<campaign_type>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_campaign_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int campaign_id
-		{
-			get
-			{
-				return this._campaign_id;
-			}
-			set
-			{
-				if ((this._campaign_id != value))
-				{
-					this.Oncampaign_idChanging(value);
-					this.SendPropertyChanging();
-					this._campaign_id = value;
-					this.SendPropertyChanged("campaign_id");
-					this.Oncampaign_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_category_id", DbType="Int NOT NULL")]
-		public int category_id
-		{
-			get
-			{
-				return this._category_id;
-			}
-			set
-			{
-				if ((this._category_id != value))
-				{
-					if (this._category.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Oncategory_idChanging(value);
-					this.SendPropertyChanging();
-					this._category_id = value;
-					this.SendPropertyChanged("category_id");
-					this.Oncategory_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_territory_id", DbType="Int NOT NULL")]
-		public int territory_id
-		{
-			get
-			{
-				return this._territory_id;
-			}
-			set
-			{
-				if ((this._territory_id != value))
-				{
-					if (this._territory.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onterritory_idChanging(value);
-					this.SendPropertyChanging();
-					this._territory_id = value;
-					this.SendPropertyChanged("territory_id");
-					this.Onterritory_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_campaign_type_id", DbType="Int NOT NULL")]
-		public int campaign_type_id
-		{
-			get
-			{
-				return this._campaign_type_id;
-			}
-			set
-			{
-				if ((this._campaign_type_id != value))
-				{
-					if (this._campaign_type.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Oncampaign_type_idChanging(value);
-					this.SendPropertyChanging();
-					this._campaign_type_id = value;
-					this.SendPropertyChanged("campaign_type_id");
-					this.Oncampaign_type_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_country_id", DbType="Int NOT NULL")]
-		public int country_id
-		{
-			get
-			{
-				return this._country_id;
-			}
-			set
-			{
-				if ((this._country_id != value))
-				{
-					if (this._country.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Oncountry_idChanging(value);
-					this.SendPropertyChanging();
-					this._country_id = value;
-					this.SendPropertyChanged("country_id");
-					this.Oncountry_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_brand_id", DbType="Int NOT NULL")]
-		public int brand_id
-		{
-			get
-			{
-				return this._brand_id;
-			}
-			set
-			{
-				if ((this._brand_id != value))
-				{
-					if (this._brand.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onbrand_idChanging(value);
-					this.SendPropertyChanging();
-					this._brand_id = value;
-					this.SendPropertyChanged("brand_id");
-					this.Onbrand_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_title", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
-		public string title
-		{
-			get
-			{
-				return this._title;
-			}
-			set
-			{
-				if ((this._title != value))
-				{
-					this.OntitleChanging(value);
-					this.SendPropertyChanging();
-					this._title = value;
-					this.SendPropertyChanged("title");
-					this.OntitleChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_username", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
-		public string username
-		{
-			get
-			{
-				return this._username;
-			}
-			set
-			{
-				if ((this._username != value))
-				{
-					this.OnusernameChanging(value);
-					this.SendPropertyChanging();
-					this._username = value;
-					this.SendPropertyChanged("username");
-					this.OnusernameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_create_ts", DbType="DateTime")]
-		public System.Nullable<System.DateTime> create_ts
-		{
-			get
-			{
-				return this._create_ts;
-			}
-			set
-			{
-				if ((this._create_ts != value))
-				{
-					this.Oncreate_tsChanging(value);
-					this.SendPropertyChanging();
-					this._create_ts = value;
-					this.SendPropertyChanged("create_ts");
-					this.Oncreate_tsChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_update_ts", DbType="DateTime")]
-		public System.Nullable<System.DateTime> update_ts
-		{
-			get
-			{
-				return this._update_ts;
-			}
-			set
-			{
-				if ((this._update_ts != value))
-				{
-					this.Onupdate_tsChanging(value);
-					this.SendPropertyChanging();
-					this._update_ts = value;
-					this.SendPropertyChanged("update_ts");
-					this.Onupdate_tsChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="brand_campaign", Storage="_brand", ThisKey="brand_id", OtherKey="brand_id", IsForeignKey=true)]
-		public brand brand
-		{
-			get
-			{
-				return this._brand.Entity;
-			}
-			set
-			{
-				brand previousValue = this._brand.Entity;
-				if (((previousValue != value) 
-							|| (this._brand.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._brand.Entity = null;
-						previousValue.campaigns.Remove(this);
-					}
-					this._brand.Entity = value;
-					if ((value != null))
-					{
-						value.campaigns.Add(this);
-						this._brand_id = value.brand_id;
-					}
-					else
-					{
-						this._brand_id = default(int);
-					}
-					this.SendPropertyChanged("brand");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="category_campaign", Storage="_category", ThisKey="category_id", OtherKey="category_id", IsForeignKey=true)]
-		public category category
-		{
-			get
-			{
-				return this._category.Entity;
-			}
-			set
-			{
-				category previousValue = this._category.Entity;
-				if (((previousValue != value) 
-							|| (this._category.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._category.Entity = null;
-						previousValue.campaigns.Remove(this);
-					}
-					this._category.Entity = value;
-					if ((value != null))
-					{
-						value.campaigns.Add(this);
-						this._category_id = value.category_id;
-					}
-					else
-					{
-						this._category_id = default(int);
-					}
-					this.SendPropertyChanged("category");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="country_campaign", Storage="_country", ThisKey="country_id", OtherKey="country_id", IsForeignKey=true)]
-		public country country
-		{
-			get
-			{
-				return this._country.Entity;
-			}
-			set
-			{
-				country previousValue = this._country.Entity;
-				if (((previousValue != value) 
-							|| (this._country.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._country.Entity = null;
-						previousValue.campaigns.Remove(this);
-					}
-					this._country.Entity = value;
-					if ((value != null))
-					{
-						value.campaigns.Add(this);
-						this._country_id = value.country_id;
-					}
-					else
-					{
-						this._country_id = default(int);
-					}
-					this.SendPropertyChanged("country");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="territory_campaign", Storage="_territory", ThisKey="territory_id", OtherKey="territory_id", IsForeignKey=true)]
-		public territory territory
-		{
-			get
-			{
-				return this._territory.Entity;
-			}
-			set
-			{
-				territory previousValue = this._territory.Entity;
-				if (((previousValue != value) 
-							|| (this._territory.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._territory.Entity = null;
-						previousValue.campaigns.Remove(this);
-					}
-					this._territory.Entity = value;
-					if ((value != null))
-					{
-						value.campaigns.Add(this);
-						this._territory_id = value.territory_id;
-					}
-					else
-					{
-						this._territory_id = default(int);
-					}
-					this.SendPropertyChanged("territory");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="campaign_type_campaign", Storage="_campaign_type", ThisKey="campaign_type_id", OtherKey="campaign_type_id", IsForeignKey=true)]
-		public campaign_type campaign_type
-		{
-			get
-			{
-				return this._campaign_type.Entity;
-			}
-			set
-			{
-				campaign_type previousValue = this._campaign_type.Entity;
-				if (((previousValue != value) 
-							|| (this._campaign_type.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._campaign_type.Entity = null;
-						previousValue.campaigns.Remove(this);
-					}
-					this._campaign_type.Entity = value;
-					if ((value != null))
-					{
-						value.campaigns.Add(this);
-						this._campaign_type_id = value.campaign_type_id;
-					}
-					else
-					{
-						this._campaign_type_id = default(int);
-					}
-					this.SendPropertyChanged("campaign_type");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
 		}
 	}
 	
@@ -2168,6 +1685,513 @@ namespace Marketing
 		{
 			this.SendPropertyChanging();
 			entity.campaign_type = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.campaign")]
+	public partial class campaign : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _campaign_id;
+		
+		private int _category_id;
+		
+		private int _territory_id;
+		
+		private int _campaign_type_id;
+		
+		private int _country_id;
+		
+		private int _brand_id;
+		
+		private string _title;
+		
+		private string _username;
+		
+		private string _email;
+		
+		private System.Nullable<System.DateTime> _create_ts;
+		
+		private System.Nullable<System.DateTime> _update_ts;
+		
+		private EntityRef<brand> _brand;
+		
+		private EntityRef<campaign_type> _campaign_type;
+		
+		private EntityRef<category> _category;
+		
+		private EntityRef<country> _country;
+		
+		private EntityRef<territory> _territory;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void Oncampaign_idChanging(int value);
+    partial void Oncampaign_idChanged();
+    partial void Oncategory_idChanging(int value);
+    partial void Oncategory_idChanged();
+    partial void Onterritory_idChanging(int value);
+    partial void Onterritory_idChanged();
+    partial void Oncampaign_type_idChanging(int value);
+    partial void Oncampaign_type_idChanged();
+    partial void Oncountry_idChanging(int value);
+    partial void Oncountry_idChanged();
+    partial void Onbrand_idChanging(int value);
+    partial void Onbrand_idChanged();
+    partial void OntitleChanging(string value);
+    partial void OntitleChanged();
+    partial void OnusernameChanging(string value);
+    partial void OnusernameChanged();
+    partial void OnemailChanging(string value);
+    partial void OnemailChanged();
+    partial void Oncreate_tsChanging(System.Nullable<System.DateTime> value);
+    partial void Oncreate_tsChanged();
+    partial void Onupdate_tsChanging(System.Nullable<System.DateTime> value);
+    partial void Onupdate_tsChanged();
+    #endregion
+		
+		public campaign()
+		{
+			this._brand = default(EntityRef<brand>);
+			this._campaign_type = default(EntityRef<campaign_type>);
+			this._category = default(EntityRef<category>);
+			this._country = default(EntityRef<country>);
+			this._territory = default(EntityRef<territory>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_campaign_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int campaign_id
+		{
+			get
+			{
+				return this._campaign_id;
+			}
+			set
+			{
+				if ((this._campaign_id != value))
+				{
+					this.Oncampaign_idChanging(value);
+					this.SendPropertyChanging();
+					this._campaign_id = value;
+					this.SendPropertyChanged("campaign_id");
+					this.Oncampaign_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_category_id", DbType="Int NOT NULL")]
+		public int category_id
+		{
+			get
+			{
+				return this._category_id;
+			}
+			set
+			{
+				if ((this._category_id != value))
+				{
+					if (this._category.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Oncategory_idChanging(value);
+					this.SendPropertyChanging();
+					this._category_id = value;
+					this.SendPropertyChanged("category_id");
+					this.Oncategory_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_territory_id", DbType="Int NOT NULL")]
+		public int territory_id
+		{
+			get
+			{
+				return this._territory_id;
+			}
+			set
+			{
+				if ((this._territory_id != value))
+				{
+					if (this._territory.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onterritory_idChanging(value);
+					this.SendPropertyChanging();
+					this._territory_id = value;
+					this.SendPropertyChanged("territory_id");
+					this.Onterritory_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_campaign_type_id", DbType="Int NOT NULL")]
+		public int campaign_type_id
+		{
+			get
+			{
+				return this._campaign_type_id;
+			}
+			set
+			{
+				if ((this._campaign_type_id != value))
+				{
+					if (this._campaign_type.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Oncampaign_type_idChanging(value);
+					this.SendPropertyChanging();
+					this._campaign_type_id = value;
+					this.SendPropertyChanged("campaign_type_id");
+					this.Oncampaign_type_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_country_id", DbType="Int NOT NULL")]
+		public int country_id
+		{
+			get
+			{
+				return this._country_id;
+			}
+			set
+			{
+				if ((this._country_id != value))
+				{
+					if (this._country.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Oncountry_idChanging(value);
+					this.SendPropertyChanging();
+					this._country_id = value;
+					this.SendPropertyChanged("country_id");
+					this.Oncountry_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_brand_id", DbType="Int NOT NULL")]
+		public int brand_id
+		{
+			get
+			{
+				return this._brand_id;
+			}
+			set
+			{
+				if ((this._brand_id != value))
+				{
+					if (this._brand.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onbrand_idChanging(value);
+					this.SendPropertyChanging();
+					this._brand_id = value;
+					this.SendPropertyChanged("brand_id");
+					this.Onbrand_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_title", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string title
+		{
+			get
+			{
+				return this._title;
+			}
+			set
+			{
+				if ((this._title != value))
+				{
+					this.OntitleChanging(value);
+					this.SendPropertyChanging();
+					this._title = value;
+					this.SendPropertyChanged("title");
+					this.OntitleChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_username", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string username
+		{
+			get
+			{
+				return this._username;
+			}
+			set
+			{
+				if ((this._username != value))
+				{
+					this.OnusernameChanging(value);
+					this.SendPropertyChanging();
+					this._username = value;
+					this.SendPropertyChanged("username");
+					this.OnusernameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this.OnemailChanging(value);
+					this.SendPropertyChanging();
+					this._email = value;
+					this.SendPropertyChanged("email");
+					this.OnemailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_create_ts", DbType="DateTime")]
+		public System.Nullable<System.DateTime> create_ts
+		{
+			get
+			{
+				return this._create_ts;
+			}
+			set
+			{
+				if ((this._create_ts != value))
+				{
+					this.Oncreate_tsChanging(value);
+					this.SendPropertyChanging();
+					this._create_ts = value;
+					this.SendPropertyChanged("create_ts");
+					this.Oncreate_tsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_update_ts", DbType="DateTime")]
+		public System.Nullable<System.DateTime> update_ts
+		{
+			get
+			{
+				return this._update_ts;
+			}
+			set
+			{
+				if ((this._update_ts != value))
+				{
+					this.Onupdate_tsChanging(value);
+					this.SendPropertyChanging();
+					this._update_ts = value;
+					this.SendPropertyChanged("update_ts");
+					this.Onupdate_tsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="brand_campaign", Storage="_brand", ThisKey="brand_id", OtherKey="brand_id", IsForeignKey=true)]
+		public brand brand
+		{
+			get
+			{
+				return this._brand.Entity;
+			}
+			set
+			{
+				brand previousValue = this._brand.Entity;
+				if (((previousValue != value) 
+							|| (this._brand.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._brand.Entity = null;
+						previousValue.campaigns.Remove(this);
+					}
+					this._brand.Entity = value;
+					if ((value != null))
+					{
+						value.campaigns.Add(this);
+						this._brand_id = value.brand_id;
+					}
+					else
+					{
+						this._brand_id = default(int);
+					}
+					this.SendPropertyChanged("brand");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="campaign_type_campaign", Storage="_campaign_type", ThisKey="campaign_type_id", OtherKey="campaign_type_id", IsForeignKey=true)]
+		public campaign_type campaign_type
+		{
+			get
+			{
+				return this._campaign_type.Entity;
+			}
+			set
+			{
+				campaign_type previousValue = this._campaign_type.Entity;
+				if (((previousValue != value) 
+							|| (this._campaign_type.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._campaign_type.Entity = null;
+						previousValue.campaigns.Remove(this);
+					}
+					this._campaign_type.Entity = value;
+					if ((value != null))
+					{
+						value.campaigns.Add(this);
+						this._campaign_type_id = value.campaign_type_id;
+					}
+					else
+					{
+						this._campaign_type_id = default(int);
+					}
+					this.SendPropertyChanged("campaign_type");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="category_campaign", Storage="_category", ThisKey="category_id", OtherKey="category_id", IsForeignKey=true)]
+		public category category
+		{
+			get
+			{
+				return this._category.Entity;
+			}
+			set
+			{
+				category previousValue = this._category.Entity;
+				if (((previousValue != value) 
+							|| (this._category.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._category.Entity = null;
+						previousValue.campaigns.Remove(this);
+					}
+					this._category.Entity = value;
+					if ((value != null))
+					{
+						value.campaigns.Add(this);
+						this._category_id = value.category_id;
+					}
+					else
+					{
+						this._category_id = default(int);
+					}
+					this.SendPropertyChanged("category");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="country_campaign", Storage="_country", ThisKey="country_id", OtherKey="country_id", IsForeignKey=true)]
+		public country country
+		{
+			get
+			{
+				return this._country.Entity;
+			}
+			set
+			{
+				country previousValue = this._country.Entity;
+				if (((previousValue != value) 
+							|| (this._country.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._country.Entity = null;
+						previousValue.campaigns.Remove(this);
+					}
+					this._country.Entity = value;
+					if ((value != null))
+					{
+						value.campaigns.Add(this);
+						this._country_id = value.country_id;
+					}
+					else
+					{
+						this._country_id = default(int);
+					}
+					this.SendPropertyChanged("country");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="territory_campaign", Storage="_territory", ThisKey="territory_id", OtherKey="territory_id", IsForeignKey=true)]
+		public territory territory
+		{
+			get
+			{
+				return this._territory.Entity;
+			}
+			set
+			{
+				territory previousValue = this._territory.Entity;
+				if (((previousValue != value) 
+							|| (this._territory.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._territory.Entity = null;
+						previousValue.campaigns.Remove(this);
+					}
+					this._territory.Entity = value;
+					if ((value != null))
+					{
+						value.campaigns.Add(this);
+						this._territory_id = value.territory_id;
+					}
+					else
+					{
+						this._territory_id = default(int);
+					}
+					this.SendPropertyChanged("territory");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 	

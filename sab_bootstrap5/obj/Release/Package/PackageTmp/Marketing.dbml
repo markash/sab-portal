@@ -1,25 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="sab-db" Class="MarketingDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=L01MARKA\SQLSERVER2012;Initial Catalog=sab-db;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="sab_dbConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.campaign" Member="campaigns">
-    <Type Name="campaign">
-      <Column Name="campaign_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="category_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="territory_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="campaign_type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="country_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="brand_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="title" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="username" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="campaign_campaign_document" Member="campaign_documents" ThisKey="campaign_id" OtherKey="campaign_id" Type="campaign_document" />
-      <Association Name="brand_campaign" Member="brand" ThisKey="brand_id" OtherKey="brand_id" Type="brand" IsForeignKey="true" />
-      <Association Name="category_campaign" Member="category" ThisKey="category_id" OtherKey="category_id" Type="category" IsForeignKey="true" />
-      <Association Name="country_campaign" Member="country" ThisKey="country_id" OtherKey="country_id" Type="country" IsForeignKey="true" />
-      <Association Name="territory_campaign" Member="territory" ThisKey="territory_id" OtherKey="territory_id" Type="territory" IsForeignKey="true" />
-      <Association Name="campaign_type_campaign" Member="campaign_type" ThisKey="campaign_type_id" OtherKey="campaign_type_id" Type="campaign_type" IsForeignKey="true" />
-    </Type>
-  </Table>
+  <Connection Mode="WebSettings" ConnectionString="Data Source=L01MARKA\SQLSERVER2012;Initial Catalog=sab-db;User ID=sab" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="sab_dbConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.brand" Member="brands">
     <Type Name="brand">
       <Column Name="brand_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -101,6 +81,27 @@
       <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="campaign_type_campaign" Member="campaigns" ThisKey="campaign_type_id" OtherKey="campaign_type_id" Type="campaign" />
+    </Type>
+  </Table>
+  <Table Name="dbo.campaign" Member="campaigns">
+    <Type Name="campaign">
+      <Column Name="campaign_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="category_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="territory_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="country_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="brand_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="title" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="username" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="create_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_ts" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="campaign_campaign_document" Member="campaign_documents" ThisKey="campaign_id" OtherKey="campaign_id" Type="campaign_document" />
+      <Association Name="brand_campaign" Member="brand" ThisKey="brand_id" OtherKey="brand_id" Type="brand" IsForeignKey="true" />
+      <Association Name="campaign_type_campaign" Member="campaign_type" ThisKey="campaign_type_id" OtherKey="campaign_type_id" Type="campaign_type" IsForeignKey="true" />
+      <Association Name="category_campaign" Member="category" ThisKey="category_id" OtherKey="category_id" Type="category" IsForeignKey="true" />
+      <Association Name="country_campaign" Member="country" ThisKey="country_id" OtherKey="country_id" Type="country" IsForeignKey="true" />
+      <Association Name="territory_campaign" Member="territory" ThisKey="territory_id" OtherKey="territory_id" Type="territory" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.usage_report" Method="usage_report">
