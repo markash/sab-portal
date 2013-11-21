@@ -3,7 +3,7 @@
   <parameter name="ad_connection-Web.config Connection String" description="ad_connection Connection String used in web.config by the application to access the database." defaultValue="LDAP://yellowfire.co.za/DC=yellowfire,DC=co,DC=za" tags="SqlConnectionString">
     <parameterEntry kind="XmlFile" scope="C:\\SDE\\projects\\github\\carat-sab-dotnet\\sab_bootstrap5\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='ad_connection']/@connectionString" />
   </parameter>
-  <parameter name="sab_dbConnectionString-Web.config Connection String" description="sab_dbConnectionString Connection String used in web.config by the application to access the database." defaultValue="Data Source=sw4plyierw.database.windows.net,1433;Initial Catalog=sabportal-db;User ID=sab@sw4plyierw;Password=thebear18*;Trusted_Connection=False;Encrypt=True;Connection Timeout=30" tags="SqlConnectionString">
+  <parameter name="sab_dbConnectionString-Web.config Connection String" description="sab_dbConnectionString Connection String used in web.config by the application to access the database." defaultValue="Data Source=iif9ib8j0q.database.windows.net,1433;Initial Catalog=sabcollAUWuy62QT;User ID=sab@iif9ib8j0q;Password=thebear18*;Trusted_Connection=False;Encrypt=True;Connection Timeout=30" tags="SqlConnectionString">
     <parameterEntry kind="XmlFile" scope="C:\\SDE\\projects\\github\\carat-sab-dotnet\\sab_bootstrap5\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='sab_dbConnectionString']/@connectionString" />
   </parameter>
 </parameters>
