@@ -32,14 +32,20 @@
                             @Html.HiddenFor(x => x.Territories.ElementAt(index).Id)
                             @Html.TextBoxFor(x => x.Territories.ElementAt(index).Name, new { @class = "form-control"})   
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                             @if (territory.Active)
                             {
-                            <a class="pull-right" onclick="showDeactivate(@territory.Id);">Deactivate</a>  
+                            <a onclick="showDeactivate(@territory.Id);">Deactivate</a>  
                             }
                             else
                             {
-                            <a class="pull-right" onclick="showActivate(@territory.Id);">Activate</a>  
+                            <a onclick="showActivate(@territory.Id);">Activate</a>  
+                            }
+                            </div>
+                            <div class="col-lg-3">
+                            @if(territory.References == 0)
+                            {
+                            <a onclick="showDelete(@territory.Id);">Delete</a>  
                             }
                             </div>
                         </div>
@@ -106,6 +112,29 @@
     </div>
 </div>
 
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Confirmation</h4>
+        </div>
+        @using (Html.BeginForm("Delete", "Territories", FormMethod.Post, new { @id = "activate_form" }))
+        {
+        <div class="modal-body">
+            Are you sure you would like to delete this @ViewBag.Item?   
+            <input type="hidden" id="delete_id" name="id" value="-1" />
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" onclick="">Delete</button>
+        </div>
+        }
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
     <script>
         function showDeactivate(id) {
@@ -116,6 +145,11 @@
         function showActivate(id) {
             $("#activate_id").val(id);
             $('#activateModal').modal('show')
+            return true;
+        }
+        function showDelete(id) {
+            $("#delete_id").val(id);
+            $('#deleteModal').modal('show')
             return true;
         }
     </script>

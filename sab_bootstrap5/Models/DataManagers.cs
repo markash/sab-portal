@@ -128,6 +128,26 @@ namespace Models
                 ctx.SubmitChanges();
             }
         }
+
+        public void Delete(int id)
+        {
+            var existing = ctx.categories.Where(category => category.category_id == id).SingleOrDefault();
+            if (existing != default(category))
+            {
+                ctx.categories.DeleteOnSubmit(existing);
+                ctx.SubmitChanges();
+            }
+        }
+
+        /// <summary>
+        /// Counts the number of campaigns refer to the category specified by the id
+        /// </summary>
+        /// <param name="id">The category id</param>
+        /// <returns>The number of campaigns that use/refer to this category</returns>
+        public int CountReferences(int id)
+        {
+            return ctx.campaigns.Where(campaign => campaign.category_id == id).Count();
+        }
     }
 
     public class TerritoryDataManager
@@ -197,6 +217,26 @@ namespace Models
                 ctx.SubmitChanges();
             }
         }
+
+        public void Delete(int id)
+        {
+            var existing = ctx.territories.Where(territory => territory.territory_id == id).SingleOrDefault();
+            if (existing != default(territory))
+            {
+                ctx.territories.DeleteOnSubmit(existing);
+                ctx.SubmitChanges();
+            }
+        }
+
+        /// <summary>
+        /// Counts the number of campaigns refer to the territory specified by the id
+        /// </summary>
+        /// <param name="id">The territory id</param>
+        /// <returns>The number of campaigns that use/refer to this territory</returns>
+        public int CountReferences(int id)
+        {
+            return ctx.campaigns.Where(campaign => campaign.territory_id == id).Count();
+        }
     }
 
     public class CampaignTypeDataManager
@@ -265,6 +305,26 @@ namespace Models
                 existing.update_ts = DateTime.Now;
                 ctx.SubmitChanges();
             }
+        }
+
+        public void Delete(int id)
+        {
+            var existing = ctx.campaign_types.Where(campaign_type => campaign_type.campaign_type_id == id).SingleOrDefault();
+            if (existing != default(campaign_type))
+            {
+                ctx.campaign_types.DeleteOnSubmit(existing);
+                ctx.SubmitChanges();
+            }
+        }
+
+        /// <summary>
+        /// Counts the number of campaigns refer to the campaign type specified by the id
+        /// </summary>
+        /// <param name="id">The campaign type id</param>
+        /// <returns>The number of campaigns that use/refer to this campaign type</returns>
+        public int CountReferences(int id)
+        {
+            return ctx.campaigns.Where(campaign => campaign.campaign_type_id == id).Count();
         }
     }
 
@@ -337,6 +397,26 @@ namespace Models
                 ctx.SubmitChanges();
             }
         }
+
+        public void Delete(int id)
+        {
+            var existing = ctx.brands.Where(brand => brand.brand_id == id).SingleOrDefault();
+            if (existing != default(brand))
+            {
+                ctx.brands.DeleteOnSubmit(existing);
+                ctx.SubmitChanges();
+            }
+        }
+
+        /// <summary>
+        /// Counts the number of campaigns refer to the brand specified by the id
+        /// </summary>
+        /// <param name="id">The brand id</param>
+        /// <returns>The number of campaigns that use/refer to this brand</returns>
+        public int CountReferences(int id)
+        {
+            return ctx.campaigns.Where(campaign => campaign.brand_id == id).Count();
+        }
     }
 
     public class CountryDataManager
@@ -405,6 +485,26 @@ namespace Models
                 existing.update_ts = DateTime.Now;
                 ctx.SubmitChanges();
             }
+        }
+
+        public void Delete(int id)
+        {
+            var existing = ctx.countries.Where(country => country.country_id == id).SingleOrDefault();
+            if (existing != default(country))
+            {
+                ctx.countries.DeleteOnSubmit(existing);
+                ctx.SubmitChanges();
+            }
+        }
+
+        /// <summary>
+        /// Counts the number of campaigns refer to the country specified by the id
+        /// </summary>
+        /// <param name="id">The country id</param>
+        /// <returns>The number of campaigns that use/refer to this country</returns>
+        public int CountReferences(int id)
+        {
+            return ctx.campaigns.Where(campaign => campaign.country_id == id).Count();
         }
     }
 

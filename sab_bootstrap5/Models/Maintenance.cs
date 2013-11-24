@@ -77,7 +77,8 @@ namespace Models
                                 {
                                     Id = territory.territory_id,
                                     Name = territory.territory_description,
-                                    Active = territory.active.HasValue ? (bool) territory.active : false
+                                    Active = territory.active.HasValue ? (bool)territory.active : false,
+                                    References = territoriesManager.CountReferences(territory.territory_id)
                                 })
                                 .ToList()
             };
@@ -96,7 +97,8 @@ namespace Models
                                 {
                                     Id = campaign_type.campaign_type_id,
                                     Name = campaign_type.campaign_type_description,
-                                    Active = campaign_type.active.HasValue ? (bool)campaign_type.active : false
+                                    Active = campaign_type.active.HasValue ? (bool)campaign_type.active : false,
+                                    References = manager.CountReferences(campaign_type.campaign_type_id)
                                 })
                                 .ToList()
             };
@@ -115,7 +117,8 @@ namespace Models
                                 {
                                     Id = brand.brand_id,
                                     Name = brand.brand_description,
-                                    Active = brand.active.HasValue ? (bool)brand.active : false
+                                    Active = brand.active.HasValue ? (bool)brand.active : false,
+                                    References = manager.CountReferences(brand.brand_id)
                                 })
                                 .ToList()
             };
@@ -134,7 +137,8 @@ namespace Models
                                 {
                                     Id = country.country_id,
                                     Name = country.country_description,
-                                    Active = country.active.HasValue ? (bool)country.active : false
+                                    Active = country.active.HasValue ? (bool)country.active : false,
+                                    References = manager.CountReferences(country.country_id)
                                 })
                                 .ToList()
             };
@@ -153,7 +157,8 @@ namespace Models
                                 {
                                     Id = category.category_id,
                                     Name = category.category_description,
-                                    Active = category.active.HasValue ? (bool)category.active : false
+                                    Active = category.active.HasValue ? (bool)category.active : false,
+                                    References = manager.CountReferences(category.category_id)
                                 })
                                 .ToList()
             };

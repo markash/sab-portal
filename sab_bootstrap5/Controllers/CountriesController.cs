@@ -52,5 +52,12 @@ namespace Marketing.Controllers
             manager.Activate(id);
             return RedirectToAction("Maintain");
         }
+
+        public ActionResult Delete(int id)
+        {
+            var manager = new CountryDataManager();
+            manager.Delete(id);
+            return RedirectToAction("Maintain");
+        }
     }
 }

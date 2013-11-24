@@ -113,6 +113,7 @@ namespace Models
         [Required]
         public string Name { get; set; }
         public bool Active { get; set; }
+        public int References { get; set; }
     }
 
     public class TerritoryModel
@@ -121,6 +122,7 @@ namespace Models
         [Required]
         public string Name { get; set; }
         public bool Active { get; set; }
+        public int References { get; set; }
     }
 
     public class CampaignTypeModel
@@ -129,6 +131,7 @@ namespace Models
         [Required]
         public string Name { get; set; }
         public bool Active { get; set; }
+        public int References { get; set; }
     }
 
     public class BrandModel
@@ -137,6 +140,7 @@ namespace Models
         [Required]
         public string Name { get; set; }
         public bool Active { get; set; }
+        public int References { get; set; }
     }
 
     public class CountryModel
@@ -145,6 +149,7 @@ namespace Models
         [Required]
         public string Name { get; set; }
         public bool Active { get; set; }
+        public int References { get; set; }
     }
 
     public class SearchModel
